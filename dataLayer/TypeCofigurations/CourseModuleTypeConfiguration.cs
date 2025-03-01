@@ -8,7 +8,12 @@ namespace dataLayer.TypeCofigurations
     {
         public void Configure(EntityTypeBuilder<CourseModule> builder)
         {
+            builder.HasMany(cm => cm.ModuleMarks)
+                .WithOne(mm => mm.CourseModule)
+                .HasForeignKey(mm => mm.CourseModuleId)
+                .IsRequired();
 
+            builder.Property(cm => cm.Description).HasColumnName("Description");
         }
     }
 }

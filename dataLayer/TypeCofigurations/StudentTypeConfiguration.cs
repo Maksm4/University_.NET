@@ -8,7 +8,15 @@ namespace dataLayer.TypeCofigurations
     {
         public void Configure(EntityTypeBuilder<Student> builder)
         {
-            throw new NotImplementedException();
+            builder.HasMany(s => s.ModuleMarks)
+                .WithOne(mm => mm.Student)
+                .HasForeignKey(s => s.StudentId)
+                .IsRequired();
+
+            builder.HasOne(s => s.LearningPlan)
+                .WithOne(lp => lp.Student)
+                .HasForeignKey<LearningPlan>(lp => lp.StudentId)
+                .IsRequired();
         }
     }
 }

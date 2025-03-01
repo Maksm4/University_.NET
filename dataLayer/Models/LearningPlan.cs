@@ -5,7 +5,7 @@
         public int LearningPlanId { get; set; }
         public string Name { get; set; }
         public int StudentId { get; set; }
-        public Student Student { get; set; }
-        public IList<IndividualCourse> individualCourses { get; set; }
+        public Student Student { get; set; } = null!;
+        public ICollection<IndividualCourse> IndividualCourses { get; set; } = new List<IndividualCourse>();
     }
 }

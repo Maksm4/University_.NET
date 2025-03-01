@@ -8,7 +8,7 @@ namespace dataLayer.TypeCofigurations
     {
         public void Configure(EntityTypeBuilder<IndividualCourse> builder)
         {
-            
+
         }
     }
 }

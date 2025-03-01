@@ -6,7 +6,7 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Deprecated { get; set; }
-        public IList<IndividualCourse> individualCourses { get; set; }
-        public IList<CourseModule> courseModules { get; set; }
+        public ICollection<IndividualCourse> individualCourses { get; } = new List<IndividualCourse>();
+        public ICollection<CourseModule> courseModules { get; } = new List<CourseModule>();
     }
 }

@@ -8,7 +8,7 @@ namespace dataLayer.TypeCofigurations
     {
         public void Configure(EntityTypeBuilder<ModuleMark> builder)
         {
-            throw new NotImplementedException();
+            builder.HasKey(mm => new { mm.CourseModuleId, mm.StudentId });
         }
     }
 }
