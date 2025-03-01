@@ -8,7 +8,11 @@ namespace dataLayer.TypeCofigurations
     {
         public void Configure(EntityTypeBuilder<ModuleMark> builder)
         {
-            builder.HasKey(mm => new { mm.CourseModuleId, mm.StudentId });
+            builder.HasKey(mm => new { mm.CourseModuleId, mm.StudentId })
+                .HasName("PK_ModuleMark");
+
+            builder.Property(mm => mm.Mark)
+                .IsRequired();
         }
     }
 }

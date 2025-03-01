@@ -13,7 +13,13 @@ namespace dataLayer.TypeCofigurations
                 .HasForeignKey(mm => mm.CourseModuleId)
                 .IsRequired();
 
-            builder.Property(cm => cm.Description).HasColumnName("Description");
+            builder.HasKey(cm => cm.CourseModuleId)
+                .HasName("PK_CourseModule");
+
+            builder.Property(cm => cm.Description)
+                .HasMaxLength(1000)
+                .IsRequired();
+
         }
     }
 }
