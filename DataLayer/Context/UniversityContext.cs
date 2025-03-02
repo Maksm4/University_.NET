@@ -6,6 +6,8 @@ namespace dataLayer.Context
 {
     public class UniversityContext : DbContext
     {
+        public UniversityContext(DbContextOptions<UniversityContext> options) : base(options) { }
+
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseModule> CourseModules { get; set; }
         public DbSet<IndividualCourse> IndividualCourses { get; set; }
@@ -13,12 +15,6 @@ namespace dataLayer.Context
         public DbSet<ModuleMark> ModuleMarks { get; set; }
         public DbSet<Student> Students { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(
-                "connStr"
-                );
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new CourseTypeConfiguration().Configure(modelBuilder.Entity<Course>());
