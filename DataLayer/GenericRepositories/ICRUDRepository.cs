@@ -7,5 +7,6 @@
         Task Update(T entity);
         Task Create(T entity);
         Task Delete(T entity);
+        Task Save();
     }
 }

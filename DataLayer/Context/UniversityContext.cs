@@ -7,6 +7,7 @@ namespace dataLayer.Context
     public class UniversityContext : DbContext
     {
         public UniversityContext(DbContextOptions<UniversityContext> options) : base(options) { }
+        public UniversityContext() { }
 
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseModule> CourseModules { get; set; }

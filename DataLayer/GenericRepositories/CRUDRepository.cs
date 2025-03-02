@@ -31,9 +31,15 @@ namespace DataLayer.GenericRepositories
             return await dbContext.Set<T>().FindAsync(id);
         }
 
-        public Task Update(T entity)
+        public async Task Update(T entity)
         {
-            throw new NotImplementedException();
+             dbContext.Set<T>().Update(entity);
         }
+
+        public async Task Save()
+        {
+            await dbContext.SaveChangesAsync();
+        }
+
     }
 }
