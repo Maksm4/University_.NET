@@ -1,4 +1,4 @@
-﻿namespace dataLayer.Models
+﻿namespace DataLayer.Models
 {
     public class IndividualCourse
     {

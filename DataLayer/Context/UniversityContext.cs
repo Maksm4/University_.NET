@@ -1,8 +1,8 @@
-﻿using dataLayer.Models;
-using dataLayer.TypeCofigurations;
+﻿using DataLayer.Models;
+using DataLayer.TypeCofigurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace dataLayer.Context
+namespace DataLayer.Context
 {
     public class UniversityContext : DbContext
     {
@@ -18,12 +18,25 @@ namespace dataLayer.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            new CourseTypeConfiguration().Configure(modelBuilder.Entity<Course>());
-            new CourseModuleTypeConfiguration().Configure(modelBuilder.Entity<CourseModule>());
-            new IndividualCourseTypeConfiguration().Configure(modelBuilder.Entity<IndividualCourse>());
-            new LearningPlanTypeConfiguration().Configure(modelBuilder.Entity<LearningPlan>());
-            new ModuleMarkTypeConfiguration().Configure(modelBuilder.Entity<ModuleMark>());
-            new StudentTypeConfiguration().Configure(modelBuilder.Entity<Student>());
+            //config of tables
+
+            modelBuilder.ApplyConfiguration(new CourseModuleTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CourseTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new IndividualCourseTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new LearningPlanTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ModuleMarkTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentTypeConfiguration());
+
+            //some initial data
+
+            modelBuilder.Entity<Course>().HasData(
+                    new Course { Name = "databases", Description = "designing databases in vertabelo", Deprecated = false},
+                    new Course { Name = "ML", Description = "intro to ml, pytorch fundamentals", Deprecated = true}
+                );
+
+            modelBuilder.Entity<CourseModule>().HasData(
+
+                );
         }
     }
 }

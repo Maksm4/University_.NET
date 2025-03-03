@@ -1,5 +1,5 @@
-﻿using dataLayer.Context;
-using dataLayer.Models;
+﻿using DataLayer.Context;
+using DataLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

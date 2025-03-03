@@ -1,4 +1,6 @@
-using dataLayer.Context;
+using DataLayer.Context;
+using DataLayer.IRepository;
+using Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace UniversityAPI
@@ -19,6 +21,9 @@ namespace UniversityAPI
             builder.Services.AddDbContext<UniversityContext>(
                 opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("UniversityCoonection"))
                 );
+
+            builder.Services.AddScoped<IUnitOfWork, UniversityUnitOfWork>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 
             var app = builder.Build();
 

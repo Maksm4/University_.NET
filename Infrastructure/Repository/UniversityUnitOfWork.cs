@@ -1,26 +1,19 @@
-﻿using dataLayer.Context;
-using DataLayer.Context;
-using DataLayer.IRepository;
+﻿using DataLayer.Context;
 
 namespace Infrastructure.Repository
 {
     public class UniversityUnitOfWork : IUnitOfWork
     {
-        public UniversityContext context { get; }
-        public IStudentRepository studentRepository { get; }
+        private readonly UniversityContext context;
 
-        public IStudentRepository StudentRepository => studentRepository;
-
-        public UniversityContext UniversityContext => context;
-
-        public UniversityUnitOfWork(UniversityContext universityContext, IStudentRepository studentRepository)
+        public UniversityUnitOfWork(UniversityContext universityContext)
         {
             this.context = universityContext;
-            this.studentRepository = studentRepository;
         }
 
         public async Task SaveAsync()
         {
+            //could add here some interceptors
             await context.SaveChangesAsync();
         }
     }

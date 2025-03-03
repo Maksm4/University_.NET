@@ -1,8 +1,8 @@
-﻿using dataLayer.Models;
+﻿using DataLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace dataLayer.TypeCofigurations
+namespace DataLayer.TypeCofigurations
 {
     public class ModuleMarkTypeConfiguration : IEntityTypeConfiguration<ModuleMark>
     {
