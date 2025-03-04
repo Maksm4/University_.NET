@@ -7,7 +7,6 @@ namespace DataLayer.Context
     public class UniversityContext : DbContext
     {
         public UniversityContext(DbContextOptions<UniversityContext> options) : base(options) { }
-        public UniversityContext() { }
 
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseModule> CourseModules { get; set; }
@@ -29,14 +28,18 @@ namespace DataLayer.Context
 
             //some initial data
 
-            modelBuilder.Entity<Course>().HasData(
-                    new Course { Name = "databases", Description = "designing databases in vertabelo", Deprecated = false},
-                    new Course { Name = "ML", Description = "intro to ml, pytorch fundamentals", Deprecated = true}
-                );
+            //modelBuilder.Entity<Student>().HasData(
+            //        new Student { FirstName = "max", LastName = "Moszynski",  }                
+            //    );
 
-            modelBuilder.Entity<CourseModule>().HasData(
+            //modelBuilder.Entity<Course>().HasData(
+            //        new Course { Name = "databases", Description = "designing databases in vertabelo", Deprecated = false},
+            //        new Course { Name = "ML", Description = "intro to ml, pytorch fundamentals", Deprecated = true}
+            //    );
 
-                );
+            //modelBuilder.Entity<CourseModule>().HasData(
+
+            //    );
         }
     }
 }
