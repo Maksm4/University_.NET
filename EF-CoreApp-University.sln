@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{261C0A66-AC90-482E-86AB-E5714427B1C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleUI", "ConsoleUI\ConsoleUI.csproj", "{26D6E170-DBAB-4A22-B561-DE0FA4DB8EA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{261C0A66-AC90-482E-86AB-E5714427B1C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{261C0A66-AC90-482E-86AB-E5714427B1C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{261C0A66-AC90-482E-86AB-E5714427B1C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26D6E170-DBAB-4A22-B561-DE0FA4DB8EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26D6E170-DBAB-4A22-B561-DE0FA4DB8EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26D6E170-DBAB-4A22-B561-DE0FA4DB8EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26D6E170-DBAB-4A22-B561-DE0FA4DB8EA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
