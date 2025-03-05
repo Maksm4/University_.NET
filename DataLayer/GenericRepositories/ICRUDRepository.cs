@@ -1,4 +1,4 @@
-﻿namespace DataLayer.GenericRepositories 
+﻿namespace ApplicationCore.GenericRepositories
 {
     public interface ICRUDRepository<T>
     {

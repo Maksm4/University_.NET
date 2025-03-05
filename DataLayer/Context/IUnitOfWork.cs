@@ -1,4 +1,4 @@
-﻿namespace DataLayer.Context
+﻿namespace ApplicationCore.Context
 {
     public interface IUnitOfWork
     {

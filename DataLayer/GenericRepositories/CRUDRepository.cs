@@ -1,13 +1,12 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace DataLayer.GenericRepositories
+namespace ApplicationCore.GenericRepositories
 {
     public class CRUDRepository<T> : ICRUDRepository<T> where T : class
     {
         private readonly DbContext dbContext;
 
-        public CRUDRepository(DbContext dbContext) 
+        public CRUDRepository(DbContext dbContext)
         {
             this.dbContext = dbContext;
         }
@@ -33,7 +32,7 @@ namespace DataLayer.GenericRepositories
 
         public async Task Update(T entity)
         {
-             dbContext.Set<T>().Update(entity);
+            dbContext.Set<T>().Update(entity);
         }
 
         public async Task Save()

@@ -1,8 +1,8 @@
-﻿using DataLayer.Context;
-using DataLayer.GenericRepositories;
-using DataLayer.IRepository;
-using DataLayer.Models;
-using DataLayer.Models.ValueObject;
+﻿using ApplicationCore.Context;
+using ApplicationCore.GenericRepositories;
+using ApplicationCore.IRepository;
+using ApplicationCore.Models;
+using ApplicationCore.Models.ValueObject;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
@@ -32,6 +32,15 @@ namespace Infrastructure.Repository
         {
             return await dbContext.ModuleMarks
                 .Where(mm => mm.StudentId == studentId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ModuleMark>> GetStudentmarks(int studentId)
+        {
+            return await dbContext.ModuleMarks
+                .Where(mm => mm.StudentId == studentId)
+                .Include(mm => mm.CourseModule)
+                .Include(mm => mm.Student)
                 .ToListAsync();
         }
         

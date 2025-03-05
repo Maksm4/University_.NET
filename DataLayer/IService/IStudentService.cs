@@ -1,7 +1,7 @@
-﻿using DataLayer.Models;
-using DataLayer.Models.ValueObject;
+﻿using ApplicationCore.Models;
+using ApplicationCore.Models.ValueObject;
 
-namespace DataLayer.IService
+namespace ApplicationCore.IService
 {
     public interface IStudentService
     {

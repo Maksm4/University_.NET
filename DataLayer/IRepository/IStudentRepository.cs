@@ -1,8 +1,8 @@
-﻿using DataLayer.GenericRepositories;
-using DataLayer.Models;
-using DataLayer.Models.ValueObject;
+﻿using ApplicationCore.GenericRepositories;
+using ApplicationCore.Models;
+using ApplicationCore.Models.ValueObject;
 
-namespace DataLayer.IRepository
+namespace ApplicationCore.IRepository
 {
     public interface IStudentRepository : ICRUDRepository<Student>
     {
@@ -12,5 +12,6 @@ namespace DataLayer.IRepository
         Task<IEnumerable<Student>> GetAllStudentsWithLearningPlans(int studentId);
         Task<IEnumerable<StudentGrade>> GetStudentsWithTheirAverageGrade();
         Task UpdateStudentLearningPlan(LearningPlan learningPlan, Student student);
+        public Task<IEnumerable<ModuleMark>> GetStudentmarks(int studentId);
     }
 }

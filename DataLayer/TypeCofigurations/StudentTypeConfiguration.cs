@@ -1,8 +1,8 @@
-﻿using DataLayer.Models;
+﻿using ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DataLayer.TypeCofigurations
+namespace ApplicationCore.TypeCofigurations
 {
     public class StudentTypeConfiguration : IEntityTypeConfiguration<Student>
     {

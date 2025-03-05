@@ -1,8 +1,8 @@
-﻿using DataLayer.Models;
+﻿using ApplicationCore.Models;
 using DataLayer.TypeCofigurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataLayer.Context
+namespace ApplicationCore.Context
 {
     public class UniversityContext : DbContext
     {

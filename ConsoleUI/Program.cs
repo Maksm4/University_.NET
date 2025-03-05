@@ -1,4 +1,4 @@
-﻿using DataLayer.Models;
+﻿using ApplicationCore.Models;
 
 namespace ConsoleUI
 {

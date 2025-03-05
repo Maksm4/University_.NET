@@ -1,4 +1,4 @@
-﻿namespace DataLayer.IService
+﻿namespace ApplicationCore.IService
 {
     public interface ICourseService
     {

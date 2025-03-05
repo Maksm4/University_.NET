@@ -1,8 +1,8 @@
-﻿using DataLayer.Models;
+﻿using ApplicationCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DataLayer.TypeCofigurations
+namespace ApplicationCore.TypeCofigurations
 {
     public class CourseTypeConfiguration : IEntityTypeConfiguration<Course>
     {
@@ -15,7 +15,7 @@ namespace DataLayer.TypeCofigurations
                  .WithOne(ic => ic.Course)
                  .HasForeignKey(ic => ic.CourseId)
                  .IsRequired();
-            
+
             builder.HasMany(c => c.CourseModules)
                 .WithOne(cm => cm.Course)
                 .HasForeignKey(cm => cm.CourseId)

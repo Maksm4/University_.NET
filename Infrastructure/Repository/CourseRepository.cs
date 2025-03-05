@@ -1,8 +1,8 @@
-﻿using DataLayer.Context;
-using DataLayer.GenericRepositories;
-using DataLayer.IRepository;
-using DataLayer.Models;
-using DataLayer.Models.ValueObject;
+﻿using ApplicationCore.Context;
+using ApplicationCore.GenericRepositories;
+using ApplicationCore.IRepository;
+using ApplicationCore.Models;
+using ApplicationCore.Models.ValueObject;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
@@ -24,6 +24,16 @@ namespace Infrastructure.Repository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Course>> GetCourses(int studentId)
+        {
+            return await dbContext.Courses
+                .Include(c => c.IndividualCourses)
+                .ThenInclude(ic => ic.LearningPlan)
+                .ThenInclude(lp => lp.Student.StudentId == studentId)
+                .ToListAsync();
+                
+        }
+
         public async Task<Course?> GetCourseInfo(int courseId)
         {
             return await dbContext.Courses
@@ -42,10 +52,11 @@ namespace Infrastructure.Repository
             }).ToListAsync();
         }
 
-        public async Task<IEnumerable<IndividualCourse>> GetStartedCourses()
+        public async Task<IEnumerable<IndividualCourse>> GetActiveCourses()
         {
             return await dbContext.IndividualCourses
                 .Where(ic => ic.StartDate != null)
+                .Include(ic => ic.Course)
                 .ToListAsync();
         }
     }

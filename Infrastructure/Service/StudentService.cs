@@ -1,7 +1,6 @@
-﻿using DataLayer.Context;
-using DataLayer.IRepository;
-using DataLayer.IService;
-using Infrastructure.Repository;
+﻿using ApplicationCore.Context;
+using ApplicationCore.IRepository;
+using ApplicationCore.IService;
 
 namespace Infrastructure.Service
 {

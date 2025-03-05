@@ -1,5 +1,5 @@
-using DataLayer.Context;
-using DataLayer.IRepository;
+using ApplicationCore.Context;
+using ApplicationCore.IRepository;
 using Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
