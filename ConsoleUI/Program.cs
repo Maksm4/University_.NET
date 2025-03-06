@@ -6,6 +6,8 @@ namespace ConsoleUI
     {
         public static void Main(string[] args)
         {
+            var app = Configuration.IntitializeServices(args);
+
             while (true)
             {
                 Console.WriteLine("1.Get all active courses");

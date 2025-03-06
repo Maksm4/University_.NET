@@ -14,14 +14,31 @@ namespace Infrastructure.Service
             StudentRepository = studentRepository;
         }
 
-        public Task<IEnumerable<StudentResponse>> GetAllStudents()
+        public async Task<IEnumerable<StudentResponse>> GetAllStudents()
         {
-            throw new NotImplementedException();
+            var students = await StudentRepository.GetAllStudentsWithLearningPlans();
+
+            if (students == null)
+            {
+                return Enumerable.Empty<StudentResponse>();
+            }
+
+            // map 
+
+
         }
 
-        public Task<IEnumerable<ModuleMark>> GetStudentMarksFromCourse(int studentId, int courseId)
+        public async Task<IEnumerable<MarkResponse>> GetStudentMarksFromCourse(int studentId, int courseId)
         {
-            throw new NotImplementedException();
+            var studentMarks = await StudentRepository.GetStudentmarks(studentId);
+            if (studentMarks == null)
+            {
+                return Enumerable.Empty<MarkResponse>();
+            }
+
+            studentMarks = studentMarks.Where(sm => sm.CourseModule.CourseId == courseId);
+
+            //map 
         }
     }
 }

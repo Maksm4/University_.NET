@@ -2,6 +2,7 @@
 using ApplicationCore.IService;
 using ApplicationCore.Models;
 using ApplicationCore.Models.DTOs;
+using AutoMapper;
 
 namespace Infrastructure.Service
 {
@@ -13,14 +14,42 @@ namespace Infrastructure.Service
         {
             this.courseRepository = courseRepository;
         }
-        public Task<IEnumerable<Course>> GetActiveCourses()
+        public async Task<IEnumerable<CourseResponse>> GetActiveCourses()
         {
-            throw new NotImplementedException();
+            var courses = await courseRepository.GetActiveCourses();
+
+            if (courses == null || courses.Count() == 0)
+            {
+                return Enumerable.Empty<CourseResponse>();
+            }
+
+            //inject this config
+            var config = new MapperConfiguration(conf => conf.CreateMap<Course, CourseResponse>());
+
+            var mapper = new Mapper(config);
+
+            var coursesResponse = mapper.Map<IEnumerable<Course>, IEnumerable<CourseResponse>>(courses);
+            if (coursesResponse == null)
+            {
+                throw new Exception(); //change to custom exception
+            }
+            return coursesResponse;
         }
 
-        public Task<IEnumerable<CourseResponse>> GetStudentCourses(int studentId)
+        public async Task<IEnumerable<CourseResponse>> GetStudentCourses(int studentId)
         {
-            throw new NotImplementedException();
+            if (studentId < 0)
+            {
+                return Enumerable.Empty<CourseResponse>();
+            }
+
+            var courses = await courseRepository.GetAllCoursesWithModules();
+            if (courses == null || courses.Count() == 0)
+            {
+                return Enumerable.Empty<CourseResponse>();
+            }
+
+            //map 
         }
     }
 }

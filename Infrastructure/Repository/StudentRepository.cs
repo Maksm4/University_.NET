@@ -21,7 +21,7 @@ namespace Infrastructure.Repository
             await dbContext.LearningPlans.AddAsync(learningPlan);
         }
 
-        public async Task<IEnumerable<Student>> GetAllStudentsWithLearningPlans(int studentId)
+        public async Task<IEnumerable<Student>> GetAllStudentsWithLearningPlans()
         {
             return await dbContext.Students
                 .Include(s => s.LearningPlan)

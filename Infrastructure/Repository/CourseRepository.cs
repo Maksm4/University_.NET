@@ -52,11 +52,10 @@ namespace Infrastructure.Repository
             }).ToListAsync();
         }
 
-        public async Task<IEnumerable<IndividualCourse>> GetActiveCourses()
+        public async Task<IEnumerable<Course>> GetActiveCourses()
         {
-            return await dbContext.IndividualCourses
-                .Where(ic => ic.StartDate != null)
-                .Include(ic => ic.Course)
+            return await dbContext.Courses
+                .Where(c => c.IndividualCourses.Any(ic => ic.StartDate != null))
                 .ToListAsync();
         }
     }
