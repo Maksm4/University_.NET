@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.Models;
-using DataLayer.TypeCofigurations;
+using Infrastructure.TypeCofigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApplicationCore.Context

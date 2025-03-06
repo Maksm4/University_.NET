@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Context;
+using ApplicationCore.IService;
 
 namespace Infrastructure.Repository
 {
