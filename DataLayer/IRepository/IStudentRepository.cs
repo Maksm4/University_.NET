@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.GenericRepositories;
-using ApplicationCore.Models;
-using ApplicationCore.Models.ValueObject;
+using Domain.Models;
+using Domain.Models.ValueObject;
 
 namespace ApplicationCore.IRepository
 {

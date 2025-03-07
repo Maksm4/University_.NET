@@ -1,13 +1,15 @@
-﻿using ApplicationCore.Models;
+﻿using Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApplicationCore.TypeCofigurations
 {
-    public class ModuleMarkTypeConfiguration : IEntityTypeConfiguration<ModuleMark>
+    public class ModuleMarkTypeConfiguration : IEntityTypeConfiguration<ModuleMarkEntity>
     {
-        public void Configure(EntityTypeBuilder<ModuleMark> builder)
+        public void Configure(EntityTypeBuilder<ModuleMarkEntity> builder)
         {
+            builder.ToTable("ModuleMark");
+
             builder.HasKey(mm => new { mm.CourseModuleId, mm.StudentId })
                 .HasName("PK_ModuleMark");
 

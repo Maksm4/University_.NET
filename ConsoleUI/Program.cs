@@ -1,12 +1,15 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.IService;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ConsoleUI
 {
     public class Program
     {
+        private static IStudentService studentService;
         public static void Main(string[] args)
         {
             var app = Configuration.IntitializeServices(args);
+            studentService = app.Services.GetRequiredService<IStudentService>();
 
             while (true)
             {
@@ -52,44 +55,47 @@ namespace ConsoleUI
                             break;
                         case 4:
                             {
-                                if (int.TryParse(Console.ReadLine(), out int studentId) && 
+                                if (int.TryParse(Console.ReadLine(), out int studentId) &&
                                     int.TryParse(Console.ReadLine(), out int courseId))
                                 {
                                     var studentMarks = GetMarksFromCourse(studentId, courseId);
                                     Console.WriteLine($"Marks for:\n studentId: {studentId} courseId: {courseId}");
-                                    foreach(var mark in studentMarks)
+                                    foreach (var mark in studentMarks)
                                     {
                                         Console.WriteLine($"courseModule:{mark.CourseModuleId} {mark.CourseModule.Description} mark: {mark.Mark}");
                                     }
                                 }
                             }
-                            break; 
+                            break;
                     }
                 }
                 Console.WriteLine("something went wrong, choose again");
             }
         }
 
-        private static IEnumerable<Course> GetActiveCourses()
+        private static IEnumerable<CourseDTO> GetActiveCourses()
         {
 
         }
 
-        private static IEnumerable<Student> GetStudents()
+        private static IEnumerable<StudentDTO> GetStudents()
         {
 
         }
-        private static IEnumerable<Course> GetStudentCourses(int studentId)
+        private static IEnumerable<CourseDTO> GetStudentCourses(int studentId)
         {
-            var student = GetStudent(studentId);
+            var student = studentService.GetStudent(studentId).Result;
+
+            //map to courseDTO
+
+            return student.GetCourses();
+        }
+        private static StudentDTO GetStudent(int studentId)
+        {
 
         }
-        private static Student GetStudent(int studentId)
-        {
 
-        }
-
-        private static IEnumerable<ModuleMark> GetMarksFromCourse(int studentId, int courseId)
+        private static IEnumerable<ModuleMarkDTo> GetMarksFromCourse(int studentId, int courseId)
         {
 
         }

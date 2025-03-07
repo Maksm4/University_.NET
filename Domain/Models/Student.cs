@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Models
+﻿namespace Domain.Models
 {
     public class Student
     {
@@ -9,5 +9,10 @@
         public DateTime BirthDate { get; set; }
         public LearningPlan LearningPlan { get; set; }
         public ICollection<ModuleMark> ModuleMarks { get; set; } = new List<ModuleMark>();
+
+        public IReadOnlyList<IndividualCourse> GetCourses()
+        {
+            return LearningPlan.IndividualCourses.ToList();
+        }
     }
 }

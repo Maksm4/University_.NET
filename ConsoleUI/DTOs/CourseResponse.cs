@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Models;
+﻿using Domain.Models;
 
 namespace ConsoleUI.DTOs
 {

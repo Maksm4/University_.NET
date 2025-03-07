@@ -1,13 +1,15 @@
-﻿using ApplicationCore.Models;
+﻿using Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApplicationCore.TypeCofigurations
 {
-    public class LearningPlanTypeConfiguration : IEntityTypeConfiguration<LearningPlan>
+    public class LearningPlanTypeConfiguration : IEntityTypeConfiguration<LearningPlanEntity>
     {
-        public void Configure(EntityTypeBuilder<LearningPlan> builder)
+        public void Configure(EntityTypeBuilder<LearningPlanEntity> builder)
         {
+            builder.ToTable("LearningPlan");
+
             builder.HasKey(lp => lp.LearningPlanId)
                 .HasName("PK_LearningPlan");
 

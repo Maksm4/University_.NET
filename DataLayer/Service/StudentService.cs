@@ -1,44 +1,54 @@
 ﻿using ApplicationCore.IRepository;
 using ApplicationCore.IService;
-using ApplicationCore.Models;
-using ApplicationCore.Models.DTOs;
+using Domain.Models;
 
 namespace Infrastructure.Service
 {
     public class StudentService : IStudentService
     {
-        private readonly IStudentRepository StudentRepository;
+        private readonly IStudentRepository studentRepository;
 
         public StudentService(IStudentRepository studentRepository)
         {
-            StudentRepository = studentRepository;
+            this.studentRepository = studentRepository;
         }
 
-        public async Task<IEnumerable<StudentResponse>> GetAllStudents()
+        public async Task<Student?> GetStudent(int studentId)
         {
-            var students = await StudentRepository.GetAllStudentsWithLearningPlans();
+            var student = await studentRepository.GetStudentInfo(studentId);
+
+            // for testing
+            if (student == null)
+            {
+                throw new Exception();
+            }
+            return student;
+        }
+
+        public async Task<IEnumerable<Student>> GetAllStudents()
+        {
+            var students = await studentRepository.GetAllStudentsWithLearningPlans();
 
             if (students == null)
             {
-                return Enumerable.Empty<StudentResponse>();
+                return Enumerable.Empty<Student>();
             }
 
-            // map 
-
-
+            return students;
         }
 
-        public async Task<IEnumerable<MarkResponse>> GetStudentMarksFromCourse(int studentId, int courseId)
+        public async Task<IEnumerable<ModuleMark>> GetStudentMarksFromCourse(int studentId, int courseId)
         {
-            var studentMarks = await StudentRepository.GetStudentmarks(studentId);
+            var studentMarks = await studentRepository.GetStudentmarks(studentId);
             if (studentMarks == null)
             {
-                return Enumerable.Empty<MarkResponse>();
+                return Enumerable.Empty<ModuleMark>();
             }
 
             studentMarks = studentMarks.Where(sm => sm.CourseModule.CourseId == courseId);
 
-            //map 
+            return studentMarks;
         }
+
     }
 }

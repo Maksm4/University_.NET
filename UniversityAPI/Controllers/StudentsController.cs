@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Context;
 using ApplicationCore.Models;
+using Infrastructure.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

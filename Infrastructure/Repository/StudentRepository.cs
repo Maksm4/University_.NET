@@ -3,6 +3,7 @@ using ApplicationCore.GenericRepositories;
 using ApplicationCore.IRepository;
 using ApplicationCore.Models;
 using ApplicationCore.Models.ValueObject;
+using Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository

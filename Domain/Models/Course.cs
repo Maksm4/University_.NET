@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Models
+﻿namespace Domain.Models
 {
     public class Course
     {
@@ -8,5 +8,7 @@
         public bool Deprecated { get; set; }
         public ICollection<IndividualCourse> IndividualCourses { get; } = new List<IndividualCourse>();
         public ICollection<CourseModule> CourseModules { get; } = new List<CourseModule>();
+
+        //add methods/funcionalities
     }
 }

@@ -1,13 +1,15 @@
-﻿using ApplicationCore.Models;
+﻿using Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApplicationCore.TypeCofigurations
 {
-    public class StudentTypeConfiguration : IEntityTypeConfiguration<Student>
+    public class StudentTypeConfiguration : IEntityTypeConfiguration<StudentEntity>
     {
-        public void Configure(EntityTypeBuilder<Student> builder)
+        public void Configure(EntityTypeBuilder<StudentEntity> builder)
         {
+            builder.ToTable("Student");
+
             builder.HasKey(s => s.StudentId)
                 .HasName("PK_Student");
 
@@ -18,7 +20,7 @@ namespace ApplicationCore.TypeCofigurations
 
             builder.HasOne(s => s.LearningPlan)
                 .WithOne(lp => lp.Student)
-                .HasForeignKey<LearningPlan>(lp => lp.StudentId)
+                .HasForeignKey<LearningPlanEntity>(lp => lp.StudentId)
                 .IsRequired();
 
             builder.Property(s => s.FirstName)

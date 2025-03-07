@@ -1,11 +1,10 @@
-﻿using ApplicationCore.Models;
-using ApplicationCore.Models.DTOs;
+﻿using Domain.Models;
 
 namespace ApplicationCore.IService
 {
     public interface ICourseService
     {
-        public Task<IEnumerable<CourseResponse>> GetActiveCourses();
-        public Task<IEnumerable<CourseResponse>> GetStudentCourses(int studentId);
+        public Task<IEnumerable<Course>> GetActiveCourses();
+        public Task<IEnumerable<Course>> GetStudentCourses(int studentId);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Models.ValueObject
+﻿namespace Domain.Models.ValueObject
 {
     public class StudentGrade
     {

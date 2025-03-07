@@ -1,5 +1,5 @@
-﻿using ApplicationCore.Models;
-using Infrastructure.TypeCofigurations;
+﻿using ApplicationCore.TypeCofigurations;
+using Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApplicationCore.Context
@@ -8,12 +8,12 @@ namespace ApplicationCore.Context
     {
         public UniversityContext(DbContextOptions<UniversityContext> options) : base(options) { }
 
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<CourseModule> CourseModules { get; set; }
-        public DbSet<IndividualCourse> IndividualCourses { get; set; }
-        public DbSet<LearningPlan> LearningPlans { get; set; }
-        public DbSet<ModuleMark> ModuleMarks { get; set; }
-        public DbSet<Student> Students { get; set; }
+        public DbSet<CourseEntity> Courses { get; set; }
+        public DbSet<CourseModuleEntity> CourseModules { get; set; }
+        public DbSet<IndividualCourseEntity> IndividualCourses { get; set; }
+        public DbSet<LearningPlanEntity> LearningPlans { get; set; }
+        public DbSet<ModuleMarkEntity> ModuleMarks { get; set; }
+        public DbSet<StudentEntity> Students { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

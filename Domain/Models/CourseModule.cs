@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Models
+﻿namespace Domain.Models
 {
     public class CourseModule
     {

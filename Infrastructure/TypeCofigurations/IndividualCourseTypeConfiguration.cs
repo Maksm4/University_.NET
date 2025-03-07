@@ -1,13 +1,15 @@
-﻿using ApplicationCore.Models;
+﻿using Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApplicationCore.TypeCofigurations
 {
-    public class IndividualCourseTypeConfiguration : IEntityTypeConfiguration<IndividualCourse>
+    public class IndividualCourseTypeConfiguration : IEntityTypeConfiguration<IndividualCourseEntity>
     {
-        public void Configure(EntityTypeBuilder<IndividualCourse> builder)
+        public void Configure(EntityTypeBuilder<IndividualCourseEntity> builder)
         {
+            builder.ToTable("IndividualCourse");
+
             builder.HasKey(ic => new { ic.CourseId, ic.LearningPlanId })
                 .HasName("PK_IndividualCourse");
 

@@ -15,7 +15,6 @@ namespace ConsoleUI
         {
             var builder = Host.CreateApplicationBuilder(args);
 
-            builder.Services.AddSingleton<IUnitOfWork, UniversityUnitOfWork>();
             builder.Services.AddSingleton<IStudentRepository, StudentRepository>();
             builder.Services.AddSingleton<ICourseRepository, CourseRepository>();
 

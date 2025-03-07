@@ -1,8 +1,8 @@
 ﻿using ApplicationCore.Context;
 using ApplicationCore.GenericRepositories;
 using ApplicationCore.IRepository;
-using ApplicationCore.Models;
-using ApplicationCore.Models.ValueObject;
+using Domain.Models;
+using Domain.Models.ValueObject;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
