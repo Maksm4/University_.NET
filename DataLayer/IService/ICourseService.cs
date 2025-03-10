@@ -4,6 +4,6 @@ namespace ApplicationCore.IService
 {
     public interface ICourseService
     {
-        public Task<IEnumerable<Course>> GetActiveCourses();
+        Task<IEnumerable<Course>> GetActiveCourses();
     }
 }

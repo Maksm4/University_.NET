@@ -30,7 +30,7 @@ namespace Domain.Models
         {
             return ModuleMarks
                 .Where(mm => mm.CourseModule.CourseId == courseId)
-                .Select(mm => new Grade(mm.Mark));
+                .Select(mm => new Grade(mm.Mark, mm.CourseModule));
         }
     }
 }

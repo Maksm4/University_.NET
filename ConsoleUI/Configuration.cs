@@ -1,9 +1,9 @@
 ﻿using ApplicationCore.Context;
 using ApplicationCore.IRepository;
 using ApplicationCore.IService;
+using ApplicationCore.Service;
 using Infrastructure.Mapper;
 using Infrastructure.Repository;
-using Infrastructure.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +27,7 @@ namespace ConsoleUI
             builder.Services.AddSingleton<ICourseService, CourseService>();
             builder.Services.AddSingleton<IStudentService, StudentService>();
 
-            builder.Services.AddAutoMapper(typeof(CourseProfile));
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return builder.Build();
         }
     }

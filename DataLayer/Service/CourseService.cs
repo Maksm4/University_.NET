@@ -1,9 +1,8 @@
 ﻿using ApplicationCore.IRepository;
 using ApplicationCore.IService;
-using AutoMapper;
 using Domain.Models;
 
-namespace Infrastructure.Service
+namespace ApplicationCore.Service
 {
     public class CourseService : ICourseService
     {

@@ -30,7 +30,7 @@ namespace ConsoleUI
                     {
                         case 1:
                             {
-                                var activeCourses = GetActiveCourses();
+                                var activeCourses = GetActiveCourses().Result;
                                 foreach (var course in activeCourses)
                                 {
                                     Console.WriteLine($"name: {course.Name} description: {course.Description}");
@@ -68,7 +68,7 @@ namespace ConsoleUI
                                     Console.WriteLine($"Marks for:\n studentId: {studentId} courseId: {courseId}");
                                     foreach (var mark in studentMarks)
                                     {
-                                        Console.WriteLine($"courseModule: {mark.CourseModuleName} mark: {mark.Mark}");
+                                        Console.WriteLine($"courseModule: {mark.CourseModuleId} mark: {mark.Mark}");
                                     }
                                 }
                             }
@@ -79,9 +79,9 @@ namespace ConsoleUI
             }
         }
 
-        private static IEnumerable<CourseResponse> GetActiveCourses()
+        private async static Task<IEnumerable<CourseResponse>> GetActiveCourses()
         {
-            var activeCourses = courseService.GetActiveCourses();
+            var activeCourses = await courseService.GetActiveCourses();
 
             return mapper.Map<IEnumerable<CourseResponse>>(activeCourses);
         }

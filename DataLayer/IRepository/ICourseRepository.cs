@@ -7,6 +7,6 @@ namespace ApplicationCore.IRepository
     {
         Task<Course?> GetCourseInfo(int courseId);
         Task<IEnumerable<Course>> GetAllCoursesWithModules();
-        public Task<IEnumerable<Course>> GetActiveCourses();
+        Task<IEnumerable<Course>> GetActiveCourses();
     }
 }

@@ -8,7 +8,5 @@
         public bool Deprecated { get; set; }
         public ICollection<IndividualCourse> IndividualCourses { get; } = new List<IndividualCourse>();
         public ICollection<CourseModule> CourseModules { get; } = new List<CourseModule>();
-
-        //add methods/funcionalities
     }
 }

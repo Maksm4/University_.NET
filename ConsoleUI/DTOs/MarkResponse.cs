@@ -2,7 +2,7 @@
 {
     public class MarkResponse
     {
-        public int CourseModuleName { get; set; }
+        public int CourseModuleId { get; set; }
         public int Mark { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using ApplicationCore.IService;
 using Domain.Models;
 using Domain.Models.ValueObject;
 
-namespace Infrastructure.Service
+namespace ApplicationCore.Service
 {
     public class StudentService : IStudentService
     {
@@ -36,7 +36,7 @@ namespace Infrastructure.Service
             }
 
             return student.GetGradesFromCourse(courseId);
-           
+
         }
 
         public async Task<IEnumerable<IndividualCourse>> GetStudentCourses(int studentId)
