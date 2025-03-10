@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.IRepository;
 using ApplicationCore.IService;
 using Domain.Models;
+using Domain.Models.ValueObject;
 
 namespace Infrastructure.Service
 {
@@ -11,18 +12,6 @@ namespace Infrastructure.Service
         public StudentService(IStudentRepository studentRepository)
         {
             this.studentRepository = studentRepository;
-        }
-
-        public async Task<Student?> GetStudent(int studentId)
-        {
-            var student = await studentRepository.GetStudentInfo(studentId);
-
-            // for testing
-            if (student == null)
-            {
-                throw new Exception();
-            }
-            return student;
         }
 
         public async Task<IEnumerable<Student>> GetAllStudents()
@@ -37,18 +26,43 @@ namespace Infrastructure.Service
             return students;
         }
 
-        public async Task<IEnumerable<ModuleMark>> GetStudentMarksFromCourse(int studentId, int courseId)
+        public async Task<IEnumerable<Grade>> GetStudentMarksFromCourse(int studentId, int courseId)
         {
-            var studentMarks = await studentRepository.GetStudentmarks(studentId);
-            if (studentMarks == null)
+            var student = await studentRepository.GetStudentInfo(studentId);
+
+            if (student == null)
             {
-                return Enumerable.Empty<ModuleMark>();
+                return Enumerable.Empty<Grade>();
             }
 
-            studentMarks = studentMarks.Where(sm => sm.CourseModule.CourseId == courseId);
-
-            return studentMarks;
+            return student.GetGradesFromCourse(courseId);
+           
         }
 
+        public async Task<IEnumerable<IndividualCourse>> GetStudentCourses(int studentId)
+        {
+            var student = await studentRepository.GetStudentInfo(studentId);
+
+            if (student == null)
+            {
+                return Enumerable.Empty<IndividualCourse>();
+            }
+
+            return student.GetCourses();
+        }
+
+        public async Task<Student> AddLearningPlan(int studentId, LearningPlan learningPlan)
+        {
+            var student = await studentRepository.GetStudentInfo(studentId);
+
+            if (student == null || learningPlan == null)
+            {
+                throw new Exception();
+            }
+
+            student.LearningPlan = learningPlan;
+            await studentRepository.Save();
+            return student;
+        }
     }
 }

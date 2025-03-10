@@ -1,4 +1,6 @@
 ﻿using ApplicationCore.IService;
+using AutoMapper;
+using ConsoleUI.DTOs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConsoleUI
@@ -6,10 +8,14 @@ namespace ConsoleUI
     public class Program
     {
         private static IStudentService studentService;
+        private static ICourseService courseService;
+        private static IMapper mapper;
         public static void Main(string[] args)
         {
             var app = Configuration.IntitializeServices(args);
             studentService = app.Services.GetRequiredService<IStudentService>();
+            courseService = app.Services.GetRequiredService<ICourseService>();
+            mapper = app.Services.GetRequiredService<IMapper>();
 
             while (true)
             {
@@ -73,31 +79,34 @@ namespace ConsoleUI
             }
         }
 
-        private static IEnumerable<CourseDTO> GetActiveCourses()
+        private static IEnumerable<CourseResponse> GetActiveCourses()
         {
+            var activeCourses = courseService.GetActiveCourses();
 
+            return mapper.Map<IEnumerable<CourseResponse>>(activeCourses);
         }
 
-        private static IEnumerable<StudentDTO> GetStudents()
+        private static IEnumerable<StudentResponse> GetStudents()
         {
+            var students = studentService.GetAllStudents();
 
+            return mapper.Map<IEnumerable<StudentResponse>>(students);
         }
-        private static IEnumerable<CourseDTO> GetStudentCourses(int studentId)
+        private static IEnumerable<CourseResponse> GetStudentCourses(int studentId)
         {
-            var student = studentService.GetStudent(studentId).Result;
+            var studentCourses = studentService.GetStudentCourses(studentId);
 
-            //map to courseDTO
-
-            return student.GetCourses();
+            return mapper.Map<IEnumerable<CourseResponse>>(studentCourses);
         }
+
         private static StudentDTO GetStudent(int studentId)
         {
-
+          
         }
 
         private static IEnumerable<ModuleMarkDTo> GetMarksFromCourse(int studentId, int courseId)
         {
-
+                
         }
     }
 }

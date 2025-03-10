@@ -39,6 +39,5 @@ namespace ApplicationCore.GenericRepositories
         {
             await dbContext.SaveChangesAsync();
         }
-
     }
-}
+} 

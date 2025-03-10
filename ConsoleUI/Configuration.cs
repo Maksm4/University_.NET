@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Context;
 using ApplicationCore.IRepository;
 using ApplicationCore.IService;
+using Infrastructure.Mapper;
 using Infrastructure.Repository;
 using Infrastructure.Service;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace ConsoleUI
             builder.Services.AddSingleton<IStudentService, StudentService>();
             builder.Services.AddSingleton<DbContext, UniversityContext>();
 
+            builder.Services.AddAutoMapper(typeof(CourseProfile));
             return builder.Build();
         }
     }
