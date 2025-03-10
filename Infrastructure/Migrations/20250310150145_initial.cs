@@ -1,17 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DataLayer.Migrations
+namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Courses",
+                name: "Course",
                 columns: table => new
                 {
                     CourseId = table.Column<int>(type: "int", nullable: false)
@@ -26,7 +27,7 @@ namespace DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
+                name: "Student",
                 columns: table => new
                 {
                     StudentId = table.Column<int>(type: "int", nullable: false)
@@ -42,7 +43,7 @@ namespace DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseModules",
+                name: "CourseModule",
                 columns: table => new
                 {
                     CourseModuleId = table.Column<int>(type: "int", nullable: false)
@@ -54,15 +55,15 @@ namespace DataLayer.Migrations
                 {
                     table.PrimaryKey("PK_CourseModule", x => x.CourseModuleId);
                     table.ForeignKey(
-                        name: "FK_CourseModules_Courses_CourseId",
+                        name: "FK_CourseModule_Course_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "Courses",
+                        principalTable: "Course",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "LearningPlans",
+                name: "LearningPlan",
                 columns: table => new
                 {
                     LearningPlanId = table.Column<int>(type: "int", nullable: false)
@@ -74,15 +75,15 @@ namespace DataLayer.Migrations
                 {
                     table.PrimaryKey("PK_LearningPlan", x => x.LearningPlanId);
                     table.ForeignKey(
-                        name: "FK_LearningPlans_Students_StudentId",
+                        name: "FK_LearningPlan_Student_StudentId",
                         column: x => x.StudentId,
-                        principalTable: "Students",
+                        principalTable: "Student",
                         principalColumn: "StudentId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ModuleMarks",
+                name: "ModuleMark",
                 columns: table => new
                 {
                     CourseModuleId = table.Column<int>(type: "int", nullable: false),
@@ -93,21 +94,21 @@ namespace DataLayer.Migrations
                 {
                     table.PrimaryKey("PK_ModuleMark", x => new { x.CourseModuleId, x.StudentId });
                     table.ForeignKey(
-                        name: "FK_ModuleMarks_CourseModules_CourseModuleId",
+                        name: "FK_ModuleMark_CourseModule_CourseModuleId",
                         column: x => x.CourseModuleId,
-                        principalTable: "CourseModules",
+                        principalTable: "CourseModule",
                         principalColumn: "CourseModuleId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ModuleMarks_Students_StudentId",
+                        name: "FK_ModuleMark_Student_StudentId",
                         column: x => x.StudentId,
-                        principalTable: "Students",
+                        principalTable: "Student",
                         principalColumn: "StudentId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "IndividualCourses",
+                name: "IndividualCourse",
                 columns: table => new
                 {
                     LearningPlanId = table.Column<int>(type: "int", nullable: false),
@@ -119,38 +120,38 @@ namespace DataLayer.Migrations
                 {
                     table.PrimaryKey("PK_IndividualCourse", x => new { x.CourseId, x.LearningPlanId });
                     table.ForeignKey(
-                        name: "FK_IndividualCourses_Courses_CourseId",
+                        name: "FK_IndividualCourse_Course_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "Courses",
+                        principalTable: "Course",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_IndividualCourses_LearningPlans_LearningPlanId",
+                        name: "FK_IndividualCourse_LearningPlan_LearningPlanId",
                         column: x => x.LearningPlanId,
-                        principalTable: "LearningPlans",
+                        principalTable: "LearningPlan",
                         principalColumn: "LearningPlanId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CourseModules_CourseId",
-                table: "CourseModules",
+                name: "IX_CourseModule_CourseId",
+                table: "CourseModule",
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IndividualCourses_LearningPlanId",
-                table: "IndividualCourses",
+                name: "IX_IndividualCourse_LearningPlanId",
+                table: "IndividualCourse",
                 column: "LearningPlanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LearningPlans_StudentId",
-                table: "LearningPlans",
+                name: "IX_LearningPlan_StudentId",
+                table: "LearningPlan",
                 column: "StudentId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ModuleMarks_StudentId",
-                table: "ModuleMarks",
+                name: "IX_ModuleMark_StudentId",
+                table: "ModuleMark",
                 column: "StudentId");
         }
 
@@ -158,22 +159,22 @@ namespace DataLayer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "IndividualCourses");
+                name: "IndividualCourse");
 
             migrationBuilder.DropTable(
-                name: "ModuleMarks");
+                name: "ModuleMark");
 
             migrationBuilder.DropTable(
-                name: "LearningPlans");
+                name: "LearningPlan");
 
             migrationBuilder.DropTable(
-                name: "CourseModules");
+                name: "CourseModule");
 
             migrationBuilder.DropTable(
-                name: "Students");
+                name: "Student");
 
             migrationBuilder.DropTable(
-                name: "Courses");
+                name: "Course");
         }
     }
 }

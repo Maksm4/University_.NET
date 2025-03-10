@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DataLayer.Migrations
+namespace Infrastructure.Migrations
 {
     [DbContext(typeof(UniversityContext))]
-    [Migration("20250304110135_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250310150145_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace DataLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DataLayer.Models.Course", b =>
+            modelBuilder.Entity("Infrastructure.Entity.CourseEntity", b =>
                 {
                     b.Property<int>("CourseId")
                         .ValueGeneratedOnAdd()
@@ -49,10 +49,10 @@ namespace DataLayer.Migrations
                     b.HasKey("CourseId")
                         .HasName("PK_Course");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Course", (string)null);
                 });
 
-            modelBuilder.Entity("DataLayer.Models.CourseModule", b =>
+            modelBuilder.Entity("Infrastructure.Entity.CourseModuleEntity", b =>
                 {
                     b.Property<int>("CourseModuleId")
                         .ValueGeneratedOnAdd()
@@ -73,10 +73,10 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("CourseModules");
+                    b.ToTable("CourseModule", (string)null);
                 });
 
-            modelBuilder.Entity("DataLayer.Models.IndividualCourse", b =>
+            modelBuilder.Entity("Infrastructure.Entity.IndividualCourseEntity", b =>
                 {
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
@@ -95,10 +95,10 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("LearningPlanId");
 
-                    b.ToTable("IndividualCourses");
+                    b.ToTable("IndividualCourse", (string)null);
                 });
 
-            modelBuilder.Entity("DataLayer.Models.LearningPlan", b =>
+            modelBuilder.Entity("Infrastructure.Entity.LearningPlanEntity", b =>
                 {
                     b.Property<int>("LearningPlanId")
                         .ValueGeneratedOnAdd()
@@ -120,10 +120,10 @@ namespace DataLayer.Migrations
                     b.HasIndex("StudentId")
                         .IsUnique();
 
-                    b.ToTable("LearningPlans");
+                    b.ToTable("LearningPlan", (string)null);
                 });
 
-            modelBuilder.Entity("DataLayer.Models.ModuleMark", b =>
+            modelBuilder.Entity("Infrastructure.Entity.ModuleMarkEntity", b =>
                 {
                     b.Property<int>("CourseModuleId")
                         .HasColumnType("int");
@@ -139,10 +139,10 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("ModuleMarks");
+                    b.ToTable("ModuleMark", (string)null);
                 });
 
-            modelBuilder.Entity("DataLayer.Models.Student", b =>
+            modelBuilder.Entity("Infrastructure.Entity.StudentEntity", b =>
                 {
                     b.Property<int>("StudentId")
                         .ValueGeneratedOnAdd()
@@ -171,12 +171,12 @@ namespace DataLayer.Migrations
                     b.HasKey("StudentId")
                         .HasName("PK_Student");
 
-                    b.ToTable("Students");
+                    b.ToTable("Student", (string)null);
                 });
 
-            modelBuilder.Entity("DataLayer.Models.CourseModule", b =>
+            modelBuilder.Entity("Infrastructure.Entity.CourseModuleEntity", b =>
                 {
-                    b.HasOne("DataLayer.Models.Course", "Course")
+                    b.HasOne("Infrastructure.Entity.CourseEntity", "Course")
                         .WithMany("CourseModules")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -185,15 +185,15 @@ namespace DataLayer.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("DataLayer.Models.IndividualCourse", b =>
+            modelBuilder.Entity("Infrastructure.Entity.IndividualCourseEntity", b =>
                 {
-                    b.HasOne("DataLayer.Models.Course", "Course")
+                    b.HasOne("Infrastructure.Entity.CourseEntity", "Course")
                         .WithMany("IndividualCourses")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DataLayer.Models.LearningPlan", "LearningPlan")
+                    b.HasOne("Infrastructure.Entity.LearningPlanEntity", "LearningPlan")
                         .WithMany("IndividualCourses")
                         .HasForeignKey("LearningPlanId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -204,26 +204,26 @@ namespace DataLayer.Migrations
                     b.Navigation("LearningPlan");
                 });
 
-            modelBuilder.Entity("DataLayer.Models.LearningPlan", b =>
+            modelBuilder.Entity("Infrastructure.Entity.LearningPlanEntity", b =>
                 {
-                    b.HasOne("DataLayer.Models.Student", "Student")
+                    b.HasOne("Infrastructure.Entity.StudentEntity", "Student")
                         .WithOne("LearningPlan")
-                        .HasForeignKey("DataLayer.Models.LearningPlan", "StudentId")
+                        .HasForeignKey("Infrastructure.Entity.LearningPlanEntity", "StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("DataLayer.Models.ModuleMark", b =>
+            modelBuilder.Entity("Infrastructure.Entity.ModuleMarkEntity", b =>
                 {
-                    b.HasOne("DataLayer.Models.CourseModule", "CourseModule")
+                    b.HasOne("Infrastructure.Entity.CourseModuleEntity", "CourseModule")
                         .WithMany("ModuleMarks")
                         .HasForeignKey("CourseModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DataLayer.Models.Student", "Student")
+                    b.HasOne("Infrastructure.Entity.StudentEntity", "Student")
                         .WithMany("ModuleMarks")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -234,26 +234,27 @@ namespace DataLayer.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("DataLayer.Models.Course", b =>
+            modelBuilder.Entity("Infrastructure.Entity.CourseEntity", b =>
                 {
                     b.Navigation("CourseModules");
 
                     b.Navigation("IndividualCourses");
                 });
 
-            modelBuilder.Entity("DataLayer.Models.CourseModule", b =>
+            modelBuilder.Entity("Infrastructure.Entity.CourseModuleEntity", b =>
                 {
                     b.Navigation("ModuleMarks");
                 });
 
-            modelBuilder.Entity("DataLayer.Models.LearningPlan", b =>
+            modelBuilder.Entity("Infrastructure.Entity.LearningPlanEntity", b =>
                 {
                     b.Navigation("IndividualCourses");
                 });
 
-            modelBuilder.Entity("DataLayer.Models.Student", b =>
+            modelBuilder.Entity("Infrastructure.Entity.StudentEntity", b =>
                 {
-                    b.Navigation("LearningPlan");
+                    b.Navigation("LearningPlan")
+                        .IsRequired();
 
                     b.Navigation("ModuleMarks");
                 });

@@ -20,12 +20,12 @@ namespace ConsoleUI
                opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("UniversityConnection"))
                );
 
-            builder.Services.AddSingleton<IStudentRepository, StudentRepository>();
-            builder.Services.AddSingleton<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
 
-            builder.Services.AddSingleton<ICourseService, CourseService>();
-            builder.Services.AddSingleton<IStudentService, StudentService>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return builder.Build();
