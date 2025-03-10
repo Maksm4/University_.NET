@@ -23,7 +23,6 @@ namespace UniversityAPI
                 opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("UniversityConnection"))
                 );
 
-            builder.Services.AddScoped<IUnitOfWork, UniversityUnitOfWork>();
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 

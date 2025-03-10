@@ -42,7 +42,7 @@ namespace ConsoleUI
                                 var students = GetStudents();
                                 foreach (var student in students)
                                 {
-                                    Console.WriteLine($"{student.FirstName} {student.LastName} learning plan name: {student.LearningPlan.Name}");
+                                    Console.WriteLine($"first name: {student.FirstName} last name: {student.LastName} birth date: {student.BirthDate}");
                                 }
                             }
                             break;
@@ -68,7 +68,7 @@ namespace ConsoleUI
                                     Console.WriteLine($"Marks for:\n studentId: {studentId} courseId: {courseId}");
                                     foreach (var mark in studentMarks)
                                     {
-                                        Console.WriteLine($"courseModule:{mark.CourseModuleId} {mark.CourseModule.Description} mark: {mark.Mark}");
+                                        Console.WriteLine($"courseModule: {mark.CourseModuleName} mark: {mark.Mark}");
                                     }
                                 }
                             }
@@ -86,12 +86,13 @@ namespace ConsoleUI
             return mapper.Map<IEnumerable<CourseResponse>>(activeCourses);
         }
 
-        private static IEnumerable<StudentResponse> GetStudents()
+        private  static IEnumerable<StudentResponse> GetStudents()
         {
             var students = studentService.GetAllStudents();
 
             return mapper.Map<IEnumerable<StudentResponse>>(students);
         }
+
         private static IEnumerable<CourseResponse> GetStudentCourses(int studentId)
         {
             var studentCourses = studentService.GetStudentCourses(studentId);
@@ -99,14 +100,11 @@ namespace ConsoleUI
             return mapper.Map<IEnumerable<CourseResponse>>(studentCourses);
         }
 
-        private static StudentDTO GetStudent(int studentId)
+        private static IEnumerable<MarkResponse> GetMarksFromCourse(int studentId, int courseId)
         {
-          
-        }
+            var grades = studentService.GetStudentMarksFromCourse(studentId, courseId);
 
-        private static IEnumerable<ModuleMarkDTo> GetMarksFromCourse(int studentId, int courseId)
-        {
-                
+            return mapper.Map<IEnumerable<MarkResponse>>(grades);
         }
     }
 }
