@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.GenericRepositories
+﻿namespace ApplicationCore.IRepository
 {
     public interface ICRUDRepository<T>
     {

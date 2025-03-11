@@ -1,6 +1,7 @@
 using ApplicationCore.Context;
 using ApplicationCore.IRepository;
 using ApplicationCore.IService;
+using ApplicationCore.Service;
 using Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,10 @@ namespace UniversityAPI
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
+            builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -36,7 +41,6 @@ namespace UniversityAPI
             }
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

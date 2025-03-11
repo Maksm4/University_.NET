@@ -28,7 +28,7 @@ namespace ApplicationCore.Service
 
         public async Task<IEnumerable<Grade>> GetStudentMarksFromCourse(int studentId, int courseId)
         {
-            var student = await studentRepository.GetStudentInfo(studentId);
+            var student = await studentRepository.FindById(studentId);
 
             if (student == null)
             {
@@ -41,7 +41,7 @@ namespace ApplicationCore.Service
 
         public async Task<IEnumerable<IndividualCourse>> GetStudentCourses(int studentId)
         {
-            var student = await studentRepository.GetStudentInfo(studentId);
+            var student = await studentRepository.FindById(studentId);
 
             if (student == null)
             {
@@ -53,7 +53,7 @@ namespace ApplicationCore.Service
 
         public async Task<Student> AddLearningPlan(int studentId, LearningPlan learningPlan)
         {
-            var student = await studentRepository.GetStudentInfo(studentId);
+            var student = await studentRepository.FindById(studentId);
 
             if (student == null || learningPlan == null)
             {
@@ -61,7 +61,7 @@ namespace ApplicationCore.Service
             }
 
             student.LearningPlan = learningPlan;
-            await studentRepository.Save();
+            //await studentRepository.Save();
             return student;
         }
     }

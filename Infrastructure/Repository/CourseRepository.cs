@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Context;
-using ApplicationCore.GenericRepositories;
 using ApplicationCore.IRepository;
 using AutoMapper;
 using Domain.Models;
@@ -18,7 +17,7 @@ namespace Infrastructure.Repository
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<Course>> GetAllCoursesWithModules()
+        public override async Task<IEnumerable<Course>> FindAll()
         {
             var entityCourses = await dbContext.Courses
                 .Include(c => c.CourseModules)
@@ -29,7 +28,7 @@ namespace Infrastructure.Repository
             return mapper.Map<IEnumerable<Course>>(entityCourses);
         }
 
-        public async Task<Course?> GetCourseInfo(int courseId)
+        public override async Task<Course?> FindById(int courseId)
         {
             var entityCourse = await dbContext.Courses
                 .Include(c => c.IndividualCourses)

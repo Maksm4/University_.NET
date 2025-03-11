@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Context;
-using ApplicationCore.GenericRepositories;
 using ApplicationCore.IRepository;
 using AutoMapper;
 using Domain.Models;
@@ -26,7 +25,7 @@ namespace Infrastructure.Repository
             return mapper.Map<IEnumerable<Student>>(entityStudents);
         }
  
-        public async Task<Student?> GetStudentInfo(int studentId)
+        public override async Task<Student?> FindById(int studentId)
         {
             var entityStudent = await dbContext.Students
                 .Include(s => s.LearningPlan)

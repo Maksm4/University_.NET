@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ApplicationCore.IRepository;
+using Microsoft.EntityFrameworkCore;
 
-namespace ApplicationCore.GenericRepositories
+namespace Infrastructure.Repository
 {
     public class CRUDRepository<T> : ICRUDRepository<T> where T : class
     {
@@ -10,27 +11,27 @@ namespace ApplicationCore.GenericRepositories
         {
             this.dbContext = dbContext;
         }
-        public async Task Create(T entity)
+        public virtual async Task Create(T entity)
         {
             await dbContext.Set<T>().AddAsync(entity);
         }
 
-        public async Task Delete(T entity)
+        public virtual async Task Delete(T entity)
         {
             dbContext.Set<T>().Remove(entity);
         }
 
-        public async Task<IEnumerable<T>> FindAll()
+        public virtual async Task<IEnumerable<T>> FindAll()
         {
             return await dbContext.Set<T>().ToListAsync();
         }
 
-        public async Task<T?> FindById(int id)
+        public virtual async Task<T?> FindById(int id)
         {
             return await dbContext.Set<T>().FindAsync(id);
         }
 
-        public async Task Update(T entity)
+        public virtual async Task Update(T entity)
         {
             dbContext.Set<T>().Update(entity);
         }
@@ -40,4 +41,4 @@ namespace ApplicationCore.GenericRepositories
             await dbContext.SaveChangesAsync();
         }
     }
-} 
+}

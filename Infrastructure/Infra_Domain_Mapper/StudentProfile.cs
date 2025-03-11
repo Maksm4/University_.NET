@@ -8,7 +8,9 @@ namespace Infrastructure.Mapper
     {
         public StudentProfile()
         {
-            CreateMap<StudentEntity, Student>();
+            CreateMap<StudentEntity, Student>()
+            .ForMember(dest => dest.Email.address, opt => opt.MapFrom(src => src.Email));
+
         }
     }
 }
