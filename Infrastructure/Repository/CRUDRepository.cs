@@ -1,9 +1,10 @@
 ﻿using ApplicationCore.IRepository;
+using Domain.Models.Aggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
 {
-    public class CRUDRepository<T> : ICRUDRepository<T> where T : class
+    public class CRUDRepository<T> : ICRUDRepository<T> where T : class, IAggregateRoot
     {
         private readonly DbContext dbContext;
 

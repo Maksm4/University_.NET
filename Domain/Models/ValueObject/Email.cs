@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models.ValueObject
 {
-    public class Email
+    public class Email 
     {
         public string address { get; set; }
 

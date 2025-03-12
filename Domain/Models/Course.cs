@@ -1,6 +1,8 @@
-﻿namespace Domain.Models
+﻿using Domain.Models.Aggregate;
+
+namespace Domain.Models
 {
-    public class Course
+    public class Course : BaseEntity, IAggregateRoot
     {
         public int CourseId { get; set; }
         public string Name { get; set; }

@@ -31,6 +31,7 @@ namespace ApplicationCore.TypeCofigurations
                 .HasMaxLength(100)
                 .IsRequired();
 
+            //make sure it works as its using valueobject from domain models
             builder.Property(s => s.Email)
                 .HasMaxLength(1000)
                 .IsRequired();

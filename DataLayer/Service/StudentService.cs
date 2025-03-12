@@ -61,7 +61,7 @@ namespace ApplicationCore.Service
             }
 
             student.LearningPlan = learningPlan;
-            //await studentRepository.Save();
+            await studentRepository.Save();
             return student;
         }
     }

@@ -1,8 +1,9 @@
-﻿using Domain.Models.ValueObject;
+﻿using Domain.Models.Aggregate;
+using Domain.Models.ValueObject;
 
 namespace Domain.Models
 {
-    public class Student
+    public class Student : BaseEntity, IAggregateRoot
     {
         public int StudentId { get; }
         public string FirstName { get; }
