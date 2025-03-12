@@ -1,12 +1,12 @@
-﻿using Infrastructure.Entity;
+﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApplicationCore.TypeCofigurations
 {
-    public class ModuleMarkTypeConfiguration : IEntityTypeConfiguration<ModuleMarkEntity>
+    public class ModuleMarkTypeConfiguration : IEntityTypeConfiguration<ModuleMark>
     {
-        public void Configure(EntityTypeBuilder<ModuleMarkEntity> builder)
+        public void Configure(EntityTypeBuilder<ModuleMark> builder)
         {
             builder.ToTable("ModuleMark");
 

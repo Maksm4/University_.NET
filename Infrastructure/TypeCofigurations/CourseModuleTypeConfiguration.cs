@@ -1,12 +1,12 @@
-﻿using Infrastructure.Entity;
+﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApplicationCore.TypeCofigurations
 {
-    public class CourseModuleTypeConfiguration : IEntityTypeConfiguration<CourseModuleEntity>
+    public class CourseModuleTypeConfiguration : IEntityTypeConfiguration<CourseModule>
     {
-        public void Configure(EntityTypeBuilder<CourseModuleEntity> builder)
+        public void Configure(EntityTypeBuilder<CourseModule> builder)
         {
             builder.ToTable("CourseModule");
 

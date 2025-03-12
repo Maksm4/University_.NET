@@ -1,12 +1,13 @@
-﻿using Infrastructure.Entity;
+﻿using Domain.Models;
+using Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApplicationCore.TypeCofigurations
 {
-    public class LearningPlanTypeConfiguration : IEntityTypeConfiguration<LearningPlanEntity>
+    public class LearningPlanTypeConfiguration : IEntityTypeConfiguration<LearningPlan>
     {
-        public void Configure(EntityTypeBuilder<LearningPlanEntity> builder)
+        public void Configure(EntityTypeBuilder<LearningPlan> builder)
         {
             builder.ToTable("LearningPlan");
 
