@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.Aggregate;
 
 namespace ApplicationCore.IService
 {
@@ -6,6 +7,6 @@ namespace ApplicationCore.IService
     {
         Task<IEnumerable<Student>> GetAllStudents();
         Task<IEnumerable<Course>> GetCoursesTakenByStudent(int studentId);
-        Task<IEnumerable<MarkedModule>> GetStudentMarksForCourse(int studentId, int courseId)
+        Task<IEnumerable<MarkedModule>> GetStudentMarksForCourse(int studentId, int courseId);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Domain.Models.ValueObject;
+﻿using Domain.Models.VObject;
 
 namespace Domain.Models
 {
@@ -7,8 +7,10 @@ namespace Domain.Models
         public int LearningPlanId { get; set; }
         public int CourseId { get; set; }
         public DateTimeRange DateTimeRange { get; private set; }
-        public ICollection<MarkedModule> moduleMarks { get; set; } = new List<MarkedModule>();
+        private readonly IList<MarkedModule> _moduleMarks = new List<MarkedModule>();
+        public IEnumerable<MarkedModule> MarkedModules => _moduleMarks.AsReadOnly();
 
+        private EnrolledCourse() { }
         public EnrolledCourse(int learningPlanId, int courseId, DateTimeRange dateTimeRange)
         {
             LearningPlanId = learningPlanId;
@@ -18,7 +20,7 @@ namespace Domain.Models
 
         public void FinishCourse()
         {
-            var updatedDateTimeRange = new DateTimeRange(DateTimeRange.StartTime, DateTime.Now);
+            var updatedDateTimeRange = new DateTimeRange(DateTimeRange.StartTime, DateOnly.FromDateTime(DateTime.Now));
             DateTimeRange = updatedDateTimeRange;
         }
     }

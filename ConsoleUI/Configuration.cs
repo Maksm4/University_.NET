@@ -2,7 +2,7 @@
 using ApplicationCore.IRepository;
 using ApplicationCore.IService;
 using ApplicationCore.Service;
-using Infrastructure.Mapper;
+using ConsoleUI.Domain_UI_Mapper;
 using Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +27,7 @@ namespace ConsoleUI
             builder.Services.AddScoped<ICourseReadService, CourseReadService>();
             builder.Services.AddScoped<IStudentReadService, StudentReadService>();
 
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddAutoMapper(typeof(ResponseProfile));
             return builder.Build();
         }
     }

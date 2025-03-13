@@ -95,16 +95,16 @@ namespace ConsoleUI
 
         private static IEnumerable<CourseResponse> GetStudentCourses(int studentId)
         {
-            var studentCourses = studentService.GetStudentCourses(studentId);
+            var studentCourses = studentService.GetCoursesTakenByStudent(studentId);
 
             return mapper.Map<IEnumerable<CourseResponse>>(studentCourses);
         }
 
         private static IEnumerable<MarkResponse> GetMarksFromCourse(int studentId, int courseId)
         {
-            var grades = studentService.GetStudentMarksFromCourse(studentId, courseId);
+            var markedModules = studentService.GetStudentMarksForCourse(studentId, courseId);
 
-            return mapper.Map<IEnumerable<MarkResponse>>(grades);
+            return mapper.Map<IEnumerable<MarkResponse>>(markedModules);
         }
     }
 }

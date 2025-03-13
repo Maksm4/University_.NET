@@ -1,6 +1,4 @@
-﻿using Domain.Models.Aggregate;
-
-namespace Domain.Models
+﻿namespace Domain.Models.Aggregate
 {
     public class Course : BaseEntity, IAggregateRoot
     {

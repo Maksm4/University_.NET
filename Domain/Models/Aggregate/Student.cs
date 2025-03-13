@@ -1,7 +1,6 @@
-﻿using Domain.Models.Aggregate;
-using Domain.Models.ValueObject;
+﻿using Domain.Models.ValueObject;
 
-namespace Domain.Models
+namespace Domain.Models.Aggregate
 {
     public class Student : BaseEntity, IAggregateRoot
     {
@@ -12,6 +11,7 @@ namespace Domain.Models
         public DateTime BirthDate { get; }
         public LearningPlan LearningPlan { get; private set; }
 
+        private Student() { }
         public Student(int studentId, string firstName, string lastName, Email email, DateTime birthDate, LearningPlan learning)
         {
             StudentId = studentId;
@@ -44,7 +44,7 @@ namespace Domain.Models
 
         public List<MarkedModule> GetMarksFromCourse(Course course)
         {
-           return LearningPlan.EnrolledCourses.SelectMany(ec => ec.moduleMarks).ToList();
+           return LearningPlan.EnrolledCourses.SelectMany(ec => ec.MarkedModules).ToList();
         }
     }
 }

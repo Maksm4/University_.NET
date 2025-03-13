@@ -2,10 +2,10 @@
 {
     public class DateTimeRange
     {
-        public DateTime StartTime { get; }
-        public DateTime? EndTime { get; }
+        public DateOnly StartTime { get; init; }
+        public DateOnly? EndTime { get; init; }
 
-        public DateTimeRange(DateTime startTime, DateTime? endTime)
+        public DateTimeRange(DateOnly startTime, DateOnly? endTime)
         {
             if (startTime > endTime && endTime != null)
             {

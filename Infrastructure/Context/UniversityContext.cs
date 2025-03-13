@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.TypeCofigurations;
 using Domain.Models;
+using Domain.Models.Aggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApplicationCore.Context
@@ -9,10 +10,6 @@ namespace ApplicationCore.Context
         public UniversityContext(DbContextOptions<UniversityContext> options) : base(options) { }
 
         public DbSet<Course> Courses { get; set; }
-        public DbSet<CourseModule> CourseModules { get; set; }
-        public DbSet<EnrolledCourse> IndividualCourses { get; set; }
-        public DbSet<LearningPlan> LearningPlans { get; set; }
-        public DbSet<MarkedModule> ModuleMarks { get; set; }
         public DbSet<Student> Students { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
