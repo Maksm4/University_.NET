@@ -2,7 +2,7 @@
 
 namespace ApplicationCore.IService
 {
-    public interface ICourseService
+    public interface ICourseReadService
     {
         Task<IEnumerable<Course>> GetActiveCourses();
     }

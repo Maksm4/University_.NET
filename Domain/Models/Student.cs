@@ -10,28 +10,41 @@ namespace Domain.Models
         public string LastName { get; }
         public Email Email { get; set; }
         public DateTime BirthDate { get; }
-        public LearningPlan LearningPlan { get; set; }
-        public ICollection<ModuleMark> ModuleMarks { get; set; } = new List<ModuleMark>();
+        public LearningPlan LearningPlan { get; private set; }
 
-        public Student(string FirstName, string lastName, Email email, DateTime birthDate, LearningPlan learningPlan)
+        public Student(int studentId, string firstName, string lastName, Email email, DateTime birthDate, LearningPlan learning)
         {
-            this.FirstName = FirstName;
-            this.LastName = lastName;
-            this.Email = email;
-            this.BirthDate = birthDate;
-            this.LearningPlan = learningPlan;
+            StudentId = studentId;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            BirthDate = birthDate;
+            LearningPlan = learning;
+        }
+        
+        public IEnumerable<EnrolledCourse> GetEnrolledCourses()
+        {
+            return LearningPlan.EnrolledCourses;
         }
 
-        public IReadOnlyList<IndividualCourse> GetCourses()
+        public void EnrollInCourse(Course course)
         {
-            return LearningPlan.IndividualCourses.ToList();
+            var enrolledCourse = new EnrolledCourse(LearningPlan.LearningPlanId, course.CourseId, new DateTimeRange(DateTime.Now, null));
+            LearningPlan.AddCourse(enrolledCourse);
         }
 
-        public IEnumerable<Grade> GetGradesFromCourse(int courseId)
+        public void FinishCourse(Course course)
         {
-            return ModuleMarks
-                .Where(mm => mm.CourseModule.CourseId == courseId)
-                .Select(mm => new Grade(mm.Mark, mm.CourseModule));
+            var enrolledCourse = LearningPlan.GetEnrolledCourse(course);
+            if (enrolledCourse != null)
+            {
+                enrolledCourse.FinishCourse();
+            }
+        }
+
+        public List<MarkedModule> GetMarksFromCourse(Course course)
+        {
+           return LearningPlan.EnrolledCourses.SelectMany(ec => ec.moduleMarks).ToList();
         }
     }
 }

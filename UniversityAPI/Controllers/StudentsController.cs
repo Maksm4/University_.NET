@@ -10,10 +10,10 @@ namespace UniversityAPI.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        private readonly IStudentService studentService;
-        private readonly ICourseService courseService;
+        private readonly IStudentReadService studentService;
+        private readonly ICourseReadService courseService;
 
-        public StudentsController(IStudentService studentService, ICourseService courseService)
+        public StudentsController(IStudentReadService studentService, ICourseReadService courseService)
         {
             this.studentService = studentService;
             this.courseService = courseService;

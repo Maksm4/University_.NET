@@ -10,9 +10,9 @@ namespace ApplicationCore.Context
 
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseModule> CourseModules { get; set; }
-        public DbSet<IndividualCourse> IndividualCourses { get; set; }
+        public DbSet<EnrolledCourse> IndividualCourses { get; set; }
         public DbSet<LearningPlan> LearningPlans { get; set; }
-        public DbSet<ModuleMark> ModuleMarks { get; set; }
+        public DbSet<MarkedModule> ModuleMarks { get; set; }
         public DbSet<Student> Students { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

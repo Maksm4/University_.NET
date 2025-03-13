@@ -8,7 +8,20 @@ namespace Domain.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Deprecated { get; set; }
-        public ICollection<IndividualCourse> IndividualCourses { get; } = new List<IndividualCourse>();
-        public ICollection<CourseModule> CourseModules { get; } = new List<CourseModule>();
+        private readonly List<CourseModule> _courseModules = new List<CourseModule>();
+        public IEnumerable<CourseModule> CourseModules => _courseModules.AsReadOnly();
+
+        public bool IsDeprecated => Deprecated;
+
+        private Course() { }
+
+        public Course(int courseId, string name, string description, bool deprecated)
+        {
+            CourseId = courseId;
+            Name = name;
+            Description = description;
+            Deprecated = deprecated;
+        }
+
     }
 }

@@ -4,11 +4,11 @@ using Domain.Models;
 
 namespace ApplicationCore.Service
 {
-    public class CourseService : ICourseService
+    public class CourseReadService : ICourseReadService
     {
         private readonly ICourseRepository courseRepository;
 
-        public CourseService(ICourseRepository courseRepository)
+        public CourseReadService(ICourseRepository courseRepository)
         {
             this.courseRepository = courseRepository;
         }

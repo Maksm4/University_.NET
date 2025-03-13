@@ -7,14 +7,14 @@ namespace ConsoleUI
 {
     public class Program
     {
-        private static IStudentService studentService;
-        private static ICourseService courseService;
+        private static IStudentReadService studentService;
+        private static ICourseReadService courseService;
         private static IMapper mapper;
         public static void Main(string[] args)
         {
             var app = Configuration.IntitializeServices(args);
-            studentService = app.Services.GetRequiredService<IStudentService>();
-            courseService = app.Services.GetRequiredService<ICourseService>();
+            studentService = app.Services.GetRequiredService<IStudentReadService>();
+            courseService = app.Services.GetRequiredService<ICourseReadService>();
             mapper = app.Services.GetRequiredService<IMapper>();
 
             while (true)

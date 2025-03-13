@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApplicationCore.TypeCofigurations
 {
-    public class ModuleMarkTypeConfiguration : IEntityTypeConfiguration<ModuleMark>
+    public class ModuleMarkTypeConfiguration : IEntityTypeConfiguration<MarkedModule>
     {
-        public void Configure(EntityTypeBuilder<ModuleMark> builder)
+        public void Configure(EntityTypeBuilder<MarkedModule> builder)
         {
             builder.ToTable("ModuleMark");
 

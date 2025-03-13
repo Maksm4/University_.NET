@@ -1,11 +1,9 @@
 ﻿namespace Domain.Models
 {
-    public class CourseModule
+    public class CourseModule : BaseEntity
     {
         public int CourseModuleId { get; set; }
         public int CourseId { get; set; }
-        public Course Course { get; set; }
         public string Description { get; set; }
-        public ICollection<ModuleMark> ModuleMarks { get; set; } = new List<ModuleMark>();
     }
 }

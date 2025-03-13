@@ -1,11 +1,20 @@
 ﻿namespace Domain.Models
 {
-    public class LearningPlan
+    public class LearningPlan : BaseEntity
     {
         public int LearningPlanId { get; set; }
         public string Name { get; set; }
         public int StudentId { get; set; }
-        public Student Student { get; set; } = null!;
-        public ICollection<IndividualCourse> IndividualCourses { get; set; } = new List<IndividualCourse>();
+        public ICollection<EnrolledCourse> EnrolledCourses { get; set; } = new List<EnrolledCourse>();
+
+        public void AddCourse(EnrolledCourse course)
+        {
+            EnrolledCourses.Add(course);
+        }
+
+        public EnrolledCourse? GetEnrolledCourse(Course course)
+        {
+            return EnrolledCourses.FirstOrDefault(ec => ec.CourseId == course.CourseId);
+        }
     }
 }

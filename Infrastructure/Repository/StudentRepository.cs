@@ -25,7 +25,7 @@ namespace Infrastructure.Repository
         {
             return await dbContext.Students
                 .Include(s => s.LearningPlan)
-                .ThenInclude(lp => lp.IndividualCourses)
+                .ThenInclude(lp => lp.EnrolledCourses)
                 .Include(s => s.ModuleMarks)
                 .FirstOrDefaultAsync(s => s.StudentId == studentId);
         }
