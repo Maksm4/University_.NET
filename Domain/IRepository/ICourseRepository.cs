@@ -1,4 +1,4 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Aggregate;
 
 namespace ApplicationCore.IRepository
 {

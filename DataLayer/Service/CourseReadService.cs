@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.IRepository;
 using ApplicationCore.IService;
-using Domain.Models;
+using Domain.Models.Aggregate;
 
 namespace ApplicationCore.Service
 {

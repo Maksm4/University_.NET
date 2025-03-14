@@ -14,7 +14,7 @@ namespace ApplicationCore.TypeCofigurations
                 .HasName("PK_LearningPlan");
 
             builder.HasMany(lp => lp.EnrolledCourses)
-                .WithOne(ic => ic.LearningPlan)
+                .WithOne()
                 .HasForeignKey(ic => ic.LearningPlanId)
                 .IsRequired();
 

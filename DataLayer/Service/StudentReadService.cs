@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.IRepository;
 using ApplicationCore.IService;
 using Domain.Models;
+using Domain.Models.Aggregate;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ApplicationCore.Service
@@ -19,7 +20,7 @@ namespace ApplicationCore.Service
 
         public async Task<IEnumerable<Student>> GetAllStudents()
         {
-            var students = await studentRepository.GetAllStudentsWithLearningPlans();
+            var students = await studentRepository.GetAllStudentsWithEnrolledCourses();
 
             if (students == null)
             {

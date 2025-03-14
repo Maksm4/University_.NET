@@ -1,4 +1,4 @@
-﻿using Domain.Models.ValueObject;
+﻿using Domain.Models.VObject;
 
 namespace Domain.Models.Aggregate
 {
@@ -29,7 +29,7 @@ namespace Domain.Models.Aggregate
 
         public void EnrollInCourse(Course course)
         {
-            var enrolledCourse = new EnrolledCourse(LearningPlan.LearningPlanId, course.CourseId, new DateTimeRange(DateTime.Now, null));
+            var enrolledCourse = new EnrolledCourse(LearningPlan.LearningPlanId, course.CourseId, new DateTimeRange(DateOnly.FromDateTime(DateTime.Now), null));
             LearningPlan.AddCourse(enrolledCourse);
         }
 

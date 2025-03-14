@@ -1,7 +1,6 @@
 ﻿using ApplicationCore.Context;
 using ApplicationCore.IRepository;
-using AutoMapper;
-using Domain.Models;
+using Domain.Models.Aggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
@@ -14,10 +13,11 @@ namespace Infrastructure.Repository
             this.dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Student>> GetAllStudentsWithLearningPlans()
+        public async Task<IEnumerable<Student>> GetAllStudentsWithEnrolledCourses()
         {
             return await dbContext.Students
                 .Include(s => s.LearningPlan)
+                .ThenInclude(lp => lp.EnrolledCourses)
                 .ToListAsync();
         }
 
@@ -26,7 +26,6 @@ namespace Infrastructure.Repository
             return await dbContext.Students
                 .Include(s => s.LearningPlan)
                 .ThenInclude(lp => lp.EnrolledCourses)
-                .Include(s => s.ModuleMarks)
                 .FirstOrDefaultAsync(s => s.StudentId == studentId);
         }
     }

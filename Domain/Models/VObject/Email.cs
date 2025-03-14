@@ -1,4 +1,4 @@
-﻿namespace Domain.Models.ValueObject
+﻿namespace Domain.Models.VObject
 {
     public class Email 
     {

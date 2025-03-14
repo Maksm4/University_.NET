@@ -18,9 +18,9 @@ namespace ApplicationCore.Context
 
             modelBuilder.ApplyConfiguration(new CourseModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CourseTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new IndividualCourseTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EnrolledCourseTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LearningPlanTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new ModuleMarkTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new MarkedModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StudentTypeConfiguration());
 
             //some initial data

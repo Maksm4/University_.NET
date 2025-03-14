@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.Aggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,13 +14,8 @@ namespace ApplicationCore.TypeCofigurations
             builder.HasKey(s => s.StudentId)
                 .HasName("PK_Student");
 
-            builder.HasMany(s => s.ModuleMarks)
-                .WithOne(mm => mm.Student)
-                .HasForeignKey(s => s.StudentId)
-                .IsRequired();
-
             builder.HasOne(s => s.LearningPlan)
-                .WithOne(lp => lp.Student)
+                .WithOne()
                 .HasForeignKey<LearningPlan>(lp => lp.StudentId)
                 .IsRequired();
 
