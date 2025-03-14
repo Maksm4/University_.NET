@@ -10,7 +10,7 @@ namespace Infrastructure.TypeCofigurations
         {
             builder.ToTable("ModuleMark");
 
-            builder.HasKey(mm => new { mm.CourseModuleId, mm.EnrolledCourseId })
+            builder.HasKey(mm => new { mm.CourseModuleId, mm.CourseId, mm.LearningPlanId })
                 .HasName("PK_ModuleMark");
 
             builder.HasOne<CourseModule>()

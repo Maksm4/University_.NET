@@ -16,6 +16,13 @@ namespace Infrastructure.Context
         {
             //config of tables
 
+            //toogle off default delete cascades
+
+            foreach (var fk in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                fk.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             modelBuilder.ApplyConfiguration(new CourseModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CourseTypeConfiguration());
             modelBuilder.ApplyConfiguration(new EnrolledCourseTypeConfiguration());

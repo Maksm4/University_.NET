@@ -4,7 +4,6 @@ namespace Domain.Models
 {
     public class EnrolledCourse : BaseEntity
     {
-        public int EnrolledCourseId { get; set; }
         public int LearningPlanId { get; set; }
         public int CourseId { get; set; }
         public DateTimeRange DateTimeRange { get; private set; }
@@ -12,9 +11,8 @@ namespace Domain.Models
         public IEnumerable<MarkedModule> MarkedModules => _moduleMarks.AsReadOnly();
 
         private EnrolledCourse() { }
-        public EnrolledCourse(int EnrolledCourseId, int learningPlanId, int courseId, DateTimeRange dateTimeRange)
+        public EnrolledCourse(int learningPlanId, int courseId, DateTimeRange dateTimeRange)
         {
-            this.EnrolledCourseId = EnrolledCourseId;
             LearningPlanId = learningPlanId;
             CourseId = courseId;
             DateTimeRange = dateTimeRange;

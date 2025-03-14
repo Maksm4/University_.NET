@@ -11,7 +11,7 @@ namespace Infrastructure.TypeCofigurations
         {
             builder.ToTable("EnrolledCourse");
 
-            builder.HasKey(ic => ic.EnrolledCourseId)
+            builder.HasKey(ec => new { ec.CourseId, ec.LearningPlanId })
                 .HasName("PK_EnrolledCourse");
 
             builder.HasOne<Course>()
@@ -20,8 +20,7 @@ namespace Infrastructure.TypeCofigurations
 
             builder.HasMany(ec => ec.MarkedModules)
                 .WithOne()
-                .HasForeignKey(mm => mm.EnrolledCourseId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey("LearningPlanId", "CourseId");
 
             builder.OwnsOne(ec => ec.DateTimeRange, timeRange =>
             {

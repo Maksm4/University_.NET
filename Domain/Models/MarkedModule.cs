@@ -2,14 +2,16 @@
 {
     public class MarkedModule : BaseEntity
     {
-        public int EnrolledCourseId { get; set; }
+        public int CourseId { get; set; }
         public int CourseModuleId { get; set; }
+        public int LearningPlanId { get; set; }
         public int Mark { get; private set; }
         private MarkedModule() { }
 
-        public MarkedModule(int enrolledCourseId, int courseModuleId, int mark)
+        public MarkedModule(int learningPlanId, int courseId, int courseModuleId, int mark)
         {
-            EnrolledCourseId = enrolledCourseId;
+            LearningPlanId = learningPlanId;
+            CourseId = courseId;
             CourseModuleId = courseModuleId;
             if (mark < 3 || mark > 5)
             {
