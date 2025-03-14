@@ -1,8 +1,5 @@
-﻿using ApplicationCore.Context;
-using ApplicationCore.IService;
-using Domain.Models;
+﻿using ApplicationCore.IService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace UniversityAPI.Controllers
 {

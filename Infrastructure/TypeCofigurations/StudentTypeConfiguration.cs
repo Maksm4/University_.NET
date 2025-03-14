@@ -3,7 +3,7 @@ using Domain.Models.Aggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ApplicationCore.TypeCofigurations
+namespace Infrastructure.TypeCofigurations
 {
     public class StudentTypeConfiguration : IEntityTypeConfiguration<Student>
     {

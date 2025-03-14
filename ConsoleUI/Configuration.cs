@@ -1,8 +1,8 @@
-﻿using ApplicationCore.Context;
-using ApplicationCore.IRepository;
+﻿using ApplicationCore.IRepository;
 using ApplicationCore.IService;
 using ApplicationCore.Service;
 using ConsoleUI.Domain_UI_Mapper;
+using Infrastructure.Context;
 using Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

@@ -1,9 +1,9 @@
 ﻿using ApplicationCore.TypeCofigurations;
-using Domain.Models;
 using Domain.Models.Aggregate;
+using Infrastructure.TypeCofigurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApplicationCore.Context
+namespace Infrastructure.Context
 {
     public class UniversityContext : DbContext
     {

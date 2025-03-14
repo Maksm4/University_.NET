@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ApplicationCore.TypeCofigurations
+namespace Infrastructure.TypeCofigurations
 {
     public class LearningPlanTypeConfiguration : IEntityTypeConfiguration<LearningPlan>
     {
