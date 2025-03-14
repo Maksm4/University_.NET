@@ -28,9 +28,13 @@ namespace Infrastructure.TypeCofigurations
                 .IsRequired();
 
             //make sure it works as its using valueobject from domain models
-            builder.Property(s => s.Email)
-                .HasMaxLength(1000)
-                .IsRequired();
+            builder.OwnsOne(s => s.Email, email =>
+            {
+                email.Property(e => e.address)
+                 .HasColumnName("Email")
+                 .HasMaxLength(1000)
+                 .IsRequired();
+            });
         }
     }
 }
