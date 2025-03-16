@@ -8,18 +8,18 @@ namespace Domain.Models.Aggregate
         public string FirstName { get; }
         public string LastName { get; }
         public Email Email { get; set; }
-        public DateTime BirthDate { get; }
+        public DateOnly BirthDate { get; }
         public LearningPlan LearningPlan { get; private set; }
 
         private Student() { }
-        public Student(int studentId, string firstName, string lastName, Email email, DateTime birthDate, LearningPlan learning)
+        public Student(int studentId, string firstName, string lastName, Email email, DateOnly birthDate, LearningPlan learningPlan)
         {
             StudentId = studentId;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
             BirthDate = birthDate;
-            LearningPlan = learning;
+            LearningPlan = learningPlan;
         }
         
         public IEnumerable<EnrolledCourse> GetEnrolledCourses()

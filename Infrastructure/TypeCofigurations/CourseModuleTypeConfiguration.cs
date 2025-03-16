@@ -13,6 +13,9 @@ namespace Infrastructure.TypeCofigurations
             builder.HasKey(cm => cm.CourseModuleId)
                 .HasName("PK_CourseModule");
 
+            builder.Property(cm => cm.CourseModuleId)
+                .ValueGeneratedOnAdd();
+
             builder.Property(cm => cm.Description)
                 .HasMaxLength(1000)
                 .IsRequired();

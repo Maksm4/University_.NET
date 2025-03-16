@@ -14,6 +14,9 @@ namespace ApplicationCore.TypeCofigurations
             builder.HasKey(c => c.CourseId)
                 .HasName("PK_Course");
 
+            builder.Property(c => c.CourseId)   
+                .ValueGeneratedOnAdd();
+
             builder.HasMany(c => c.CourseModules)
                 .WithOne()
                 .HasForeignKey(cm => cm.CourseId)

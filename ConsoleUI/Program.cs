@@ -39,7 +39,7 @@ namespace ConsoleUI
                             break;
                         case 2:
                             {
-                                var students = GetStudents();
+                                var students = GetStudents().Result;
                                 foreach (var student in students)
                                 {
                                     Console.WriteLine($"first name: {student.FirstName} last name: {student.LastName} birth date: {student.BirthDate}");
@@ -51,7 +51,7 @@ namespace ConsoleUI
                                 Console.WriteLine("enter student id");
                                 if (int.TryParse(Console.ReadLine(), out int studentId))
                                 {
-                                    var courses = GetStudentCourses(studentId);
+                                    var courses = GetStudentCourses(studentId).Result;
                                     foreach (var course in courses)
                                     {
                                         Console.WriteLine($"{course.Name} {course.Description}");
@@ -61,10 +61,11 @@ namespace ConsoleUI
                             break;
                         case 4:
                             {
+                                Console.WriteLine("enter student id and click enter. then courseId and enter again");
                                 if (int.TryParse(Console.ReadLine(), out int studentId) &&
                                     int.TryParse(Console.ReadLine(), out int courseId))
                                 {
-                                    var studentMarks = GetMarksFromCourse(studentId, courseId);
+                                    var studentMarks = GetMarksFromCourse(studentId, courseId).Result;
                                     Console.WriteLine($"Marks for:\n studentId: {studentId} courseId: {courseId}");
                                     foreach (var mark in studentMarks)
                                     {
@@ -73,9 +74,13 @@ namespace ConsoleUI
                                 }
                             }
                             break;
+                        default :
+                            {
+                                Console.WriteLine("you choose not viable option, choose again");
+                            }
+                            break;
                     }
                 }
-                Console.WriteLine("something went wrong, choose again");
             }
         }
 
@@ -86,23 +91,23 @@ namespace ConsoleUI
             return mapper.Map<IEnumerable<CourseResponse>>(activeCourses);
         }
 
-        private  static IEnumerable<StudentResponse> GetStudents()
+        private async static Task<IEnumerable<StudentResponse>> GetStudents()
         {
-            var students = studentService.GetAllStudents();
+            var students = await studentService.GetAllStudents();
 
             return mapper.Map<IEnumerable<StudentResponse>>(students);
         }
 
-        private static IEnumerable<CourseResponse> GetStudentCourses(int studentId)
+        private async static Task<IEnumerable<CourseResponse>> GetStudentCourses(int studentId)
         {
-            var studentCourses = studentService.GetCoursesTakenByStudent(studentId);
+            var studentCourses = await studentService.GetCoursesTakenByStudent(studentId);
 
             return mapper.Map<IEnumerable<CourseResponse>>(studentCourses);
         }
 
-        private static IEnumerable<MarkResponse> GetMarksFromCourse(int studentId, int courseId)
+        private async static Task<IEnumerable<MarkResponse>> GetMarksFromCourse(int studentId, int courseId)
         {
-            var markedModules = studentService.GetStudentMarksForCourse(studentId, courseId);
+            var markedModules =await studentService.GetStudentMarksForCourse(studentId, courseId);
 
             return mapper.Map<IEnumerable<MarkResponse>>(markedModules);
         }

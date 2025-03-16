@@ -2,7 +2,7 @@
 {
     public class Email 
     {
-        public string address { get; set; }
+        public string Address { get; set; }
 
         public Email(string address)
         {
@@ -12,7 +12,7 @@
             }
             //could add some regex to cvheck vlaidity
 
-            this.address = address;
+            this.Address = address;
         }
     }
 }

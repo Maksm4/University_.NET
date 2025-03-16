@@ -14,6 +14,9 @@ namespace Infrastructure.TypeCofigurations
             builder.HasKey(s => s.StudentId)
                 .HasName("PK_Student");
 
+            builder.Property(s => s.StudentId)
+                .ValueGeneratedOnAdd();
+
             builder.HasOne(s => s.LearningPlan)
                 .WithOne()
                 .HasForeignKey<LearningPlan>(lp => lp.StudentId)
@@ -27,10 +30,13 @@ namespace Infrastructure.TypeCofigurations
                 .HasMaxLength(100)
                 .IsRequired();
 
+            builder.Property(s => s.BirthDate)
+                .HasColumnType("date");
+
             //make sure it works as its using valueobject from domain models
             builder.OwnsOne(s => s.Email, email =>
             {
-                email.Property(e => e.address)
+                email.Property(e => e.Address)
                  .HasColumnName("Email")
                  .HasMaxLength(1000)
                  .IsRequired();

@@ -57,6 +57,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
 
+                    b.Property<DateOnly>("BirthDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -167,7 +170,7 @@ namespace Infrastructure.Migrations
                             b1.Property<int>("StudentId")
                                 .HasColumnType("int");
 
-                            b1.Property<string>("address")
+                            b1.Property<string>("Address")
                                 .IsRequired()
                                 .HasMaxLength(1000)
                                 .HasColumnType("nvarchar(1000)")

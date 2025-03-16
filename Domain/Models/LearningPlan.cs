@@ -10,6 +10,13 @@ namespace Domain.Models
         private readonly IList<EnrolledCourse> _enrolledCourses = new List<EnrolledCourse>();
         public IEnumerable<EnrolledCourse> EnrolledCourses => _enrolledCourses.AsReadOnly();
 
+        public LearningPlan(int learningPlanId, string name, int studentId)
+        {
+            LearningPlanId = learningPlanId;
+            Name = name;
+            StudentId = studentId;
+        }
+
         public void AddCourse(EnrolledCourse course)
         {
             _enrolledCourses.Add(course);
