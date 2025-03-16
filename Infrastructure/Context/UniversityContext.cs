@@ -16,8 +16,6 @@ namespace Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //config of tables
-
             //toogle off default delete cascades
 
             foreach (var fk in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
@@ -31,7 +29,6 @@ namespace Infrastructure.Context
             modelBuilder.ApplyConfiguration(new LearningPlanTypeConfiguration());
             modelBuilder.ApplyConfiguration(new MarkedModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StudentTypeConfiguration());
-
         }
     }
 }
