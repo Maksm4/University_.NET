@@ -2,15 +2,14 @@
 {
     public class CourseModule : BaseEntity
     {
-        public int CourseModuleId { get; set; }
-        public int CourseId { get; set; }
-        public string Description { get; set; }
+        public int CourseModuleId { get; private set; }
+        public int CourseId { get; private set; }
+        public string Description { get; private set; }
 
         private CourseModule() { }
 
-        public CourseModule(int courseModuleId, int courseId, string description)
+        internal CourseModule(int courseId, string description)
         {
-            CourseModuleId = courseModuleId;
             CourseId = courseId;
             Description = description;
         }

@@ -8,7 +8,7 @@
         public int Mark { get; private set; }
         private MarkedModule() { }
 
-        public MarkedModule(int learningPlanId, int courseId, int courseModuleId, int mark)
+        internal MarkedModule(int learningPlanId, int courseId, int courseModuleId, int mark)
         {
             LearningPlanId = learningPlanId;
             CourseId = courseId;

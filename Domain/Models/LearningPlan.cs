@@ -22,9 +22,9 @@ namespace Domain.Models
             _enrolledCourses.Add(course);
         }
 
-        public EnrolledCourse? GetEnrolledCourse(Course course)
+        public EnrolledCourse? GetEnrolledCourse(int courseId)
         {
-            return EnrolledCourses.FirstOrDefault(ec => ec.CourseId == course.CourseId);
+            return EnrolledCourses.FirstOrDefault(ec => ec.CourseId == courseId);
         }
     }
 }

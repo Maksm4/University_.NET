@@ -11,7 +11,7 @@ namespace Domain.Models
         public IEnumerable<MarkedModule> MarkedModules => _moduleMarks.AsReadOnly();
 
         private EnrolledCourse() { }
-        public EnrolledCourse(int learningPlanId, int courseId, DateTimeRange dateTimeRange)
+        internal EnrolledCourse(int learningPlanId, int courseId, DateTimeRange dateTimeRange)
         {
             LearningPlanId = learningPlanId;
             CourseId = courseId;
@@ -22,6 +22,11 @@ namespace Domain.Models
         {
             var updatedDateTimeRange = new DateTimeRange(DateTimeRange.StartTime, DateOnly.FromDateTime(DateTime.Now));
             DateTimeRange = updatedDateTimeRange;
+        }
+
+        public void AddMarkedModule(MarkedModule markedModule)
+        {
+            _moduleMarks.Add(markedModule);
         }
     }
 }

@@ -21,5 +21,10 @@
             Deprecated = deprecated;
         }
 
+        public void AddModule(string description)
+        {
+            var module = new CourseModule(CourseId, description);
+            _courseModules.Add(module);
+        }
     }
 }
