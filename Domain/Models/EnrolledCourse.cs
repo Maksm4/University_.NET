@@ -7,8 +7,8 @@ namespace Domain.Models
         public int LearningPlanId { get; set; }
         public int CourseId { get; set; }
         public DateTimeRange DateTimeRange { get; private set; }
-        private readonly IList<MarkedModule> _moduleMarks = new List<MarkedModule>();
-        public IReadOnlyCollection<MarkedModule> MarkedModules => _moduleMarks.AsReadOnly();
+        private readonly IList<MarkedModule> _markedModules = new List<MarkedModule>();
+        public IReadOnlyCollection<MarkedModule> MarkedModules => _markedModules.AsReadOnly();
 
         private EnrolledCourse() { }
         internal EnrolledCourse(int learningPlanId, int courseId, DateTimeRange dateTimeRange)
@@ -26,7 +26,7 @@ namespace Domain.Models
 
         public void AddMarkedModule(MarkedModule markedModule)
         {
-            _moduleMarks.Add(markedModule);
+            _markedModules.Add(markedModule);
         }
     }
 }
