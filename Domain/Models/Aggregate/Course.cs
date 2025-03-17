@@ -1,13 +1,13 @@
 ﻿namespace Domain.Models.Aggregate
 {
-    public class Course : BaseEntity, IAggregateRoot
+    public class Course : IAggregateRoot
     {
         public int CourseId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Deprecated { get; set; }
         private readonly List<CourseModule> _courseModules = new List<CourseModule>();
-        public IEnumerable<CourseModule> CourseModules => _courseModules.AsReadOnly();
+        public IReadOnlyCollection<CourseModule> CourseModules => _courseModules.AsReadOnly();
 
         public bool IsDeprecated => Deprecated;
 

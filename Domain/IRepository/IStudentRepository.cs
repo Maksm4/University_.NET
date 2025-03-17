@@ -5,6 +5,6 @@ namespace ApplicationCore.IRepository
 {
     public interface IStudentRepository : ICRUDRepository<Student>
     {
-        Task<IEnumerable<Student>> GetAllStudentsWithEnrolledCourses();
+        Task<IReadOnlyCollection<Student>> GetAllStudentsWithEnrolledCoursesAsync();
     }
 }

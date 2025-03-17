@@ -5,11 +5,11 @@ namespace ApplicationCore.IRepository
 {
     public interface ICRUDRepository<T> where T : class, IAggregateRoot
     {
-        Task<IEnumerable<T>> FindAll();
-        Task<T?> FindById(int id);
-        Task Update(T entity);
-        Task Create(T entity);
-        Task Delete(T entity);
-        Task Save();
+        Task<IReadOnlyCollection<T>> FindAllAsync();
+        Task<T?> FindByIdAsync(int id);
+        Task UpdateAsync(T entity);
+        Task CreateAsync(T entity);
+        Task DeleteAsync(T entity);
+        Task SaveAsync();
     }
 }

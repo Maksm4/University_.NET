@@ -7,10 +7,10 @@ namespace UniversityAPI.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        private readonly IStudentReadService studentService;
-        private readonly ICourseReadService courseService;
+        private readonly IStudentService studentService;
+        private readonly ICourseService courseService;
 
-        public StudentsController(IStudentReadService studentService, ICourseReadService courseService)
+        public StudentsController(IStudentService studentService, ICourseService courseService)
         {
             this.studentService = studentService;
             this.courseService = courseService;
@@ -19,7 +19,7 @@ namespace UniversityAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
         {
-            var students = studentService.GetAllStudents();
+            var students = studentService.GetAllStudentsAsync();
             return Ok(students);
         }
     }

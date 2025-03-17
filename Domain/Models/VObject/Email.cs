@@ -14,5 +14,19 @@
 
             this.Address = address;
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Email email)
+            {
+                return false;
+            }
+            return Address == email.Address;
+        }
+
+        public override int GetHashCode()
+        {
+            return Address.GetHashCode();
+        }
     }
 }

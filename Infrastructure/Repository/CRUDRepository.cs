@@ -12,32 +12,32 @@ namespace Infrastructure.Repository
         {
             this.dbContext = dbContext;
         }
-        public virtual async Task Create(T entity)
+        public virtual async Task CreateAsync(T entity)
         {
             await dbContext.Set<T>().AddAsync(entity);
         }
 
-        public virtual async Task Delete(T entity)
+        public virtual async Task DeleteAsync(T entity)
         {
             dbContext.Set<T>().Remove(entity);
         }
 
-        public virtual async Task<IEnumerable<T>> FindAll()
+        public virtual async Task<IReadOnlyCollection<T>> FindAllAsync()
         {
             return await dbContext.Set<T>().ToListAsync();
         }
 
-        public virtual async Task<T?> FindById(int id)
+        public virtual async Task<T?> FindByIdAsync(int id)
         {
             return await dbContext.Set<T>().FindAsync(id);
         }
 
-        public virtual async Task Update(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             dbContext.Set<T>().Update(entity);
         }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await dbContext.SaveChangesAsync();
         }

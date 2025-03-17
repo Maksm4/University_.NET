@@ -2,7 +2,7 @@
 
 namespace Domain.Models.Aggregate
 {
-    public class Student : BaseEntity, IAggregateRoot
+    public class Student : IAggregateRoot
     {
         public int StudentId { get; }
         public string FirstName { get; }
@@ -22,9 +22,9 @@ namespace Domain.Models.Aggregate
             LearningPlan = learningPlan;
         }
         
-        public IEnumerable<EnrolledCourse> GetEnrolledCourses()
+        public IReadOnlyCollection<EnrolledCourse> GetEnrolledCourses()
         {
-            return LearningPlan.EnrolledCourses;
+            return LearningPlan.EnrolledCourses.ToList();
         }
 
         public void EnrollInCourse(Course course)
@@ -42,7 +42,7 @@ namespace Domain.Models.Aggregate
             }
         }
 
-        public List<MarkedModule> GetMarksFromCourse(Course course)
+        public IReadOnlyCollection<MarkedModule> GetMarksFromCourse(Course course)
         {
            return LearningPlan.EnrolledCourses.SelectMany(ec => ec.MarkedModules).ToList();
         }

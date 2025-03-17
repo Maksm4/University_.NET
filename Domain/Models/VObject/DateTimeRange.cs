@@ -1,4 +1,5 @@
-﻿namespace Domain.Models.VObject
+﻿
+namespace Domain.Models.VObject
 {
     public class DateTimeRange
     {
@@ -13,6 +14,20 @@
             }
             StartTime = startTime;
             EndTime = endTime;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(StartTime, EndTime);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not DateTimeRange other)
+            {
+                return false;
+            }
+            return StartTime == other.StartTime && EndTime == other.EndTime;
         }
     }
 }

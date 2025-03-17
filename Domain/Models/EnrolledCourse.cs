@@ -2,13 +2,13 @@
 
 namespace Domain.Models
 {
-    public class EnrolledCourse : BaseEntity
+    public class EnrolledCourse 
     {
         public int LearningPlanId { get; set; }
         public int CourseId { get; set; }
         public DateTimeRange DateTimeRange { get; private set; }
         private readonly IList<MarkedModule> _moduleMarks = new List<MarkedModule>();
-        public IEnumerable<MarkedModule> MarkedModules => _moduleMarks.AsReadOnly();
+        public IReadOnlyCollection<MarkedModule> MarkedModules => _moduleMarks.AsReadOnly();
 
         private EnrolledCourse() { }
         internal EnrolledCourse(int learningPlanId, int courseId, DateTimeRange dateTimeRange)

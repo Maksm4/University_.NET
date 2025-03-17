@@ -13,25 +13,32 @@ namespace Infrastructure.Repository
             this.dbContext = dbContext;
         }
 
-        public override async Task<IEnumerable<Course>> FindAll()
+        public override async Task<IReadOnlyCollection<Course>> FindAllAsync()
         {
             return await dbContext.Courses
                 .Include(c => c.CourseModules)
                 .ToListAsync();
         }
 
-        public override async Task<Course?> FindById(int courseId)
+        public override async Task<Course?> FindByIdAsync(int courseId)
         {
             return await dbContext.Courses
                 .Include(c => c.CourseModules)
                 .FirstOrDefaultAsync(c => c.CourseId == courseId);
         }
 
-        public async Task<IEnumerable<Course>> GetActiveCourses()
+        public async Task<IReadOnlyCollection<Course>> GetActiveCoursesAsync()
         {
             return await dbContext.Courses
                .Where(c => !c.Deprecated)
                .ToListAsync();
+        }
+
+        public async Task<IReadOnlyCollection<Course>> GetActiveCoursesAsync(IEnumerable<int> courseIds)
+        {
+            return await dbContext.Courses
+                .Where(c => courseIds.Contains(c.CourseId))
+                .ToListAsync();
         }
     }
 }

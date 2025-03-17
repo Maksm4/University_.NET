@@ -7,14 +7,14 @@ namespace ConsoleUI
 {
     public class Program
     {
-        private static IStudentReadService studentService;
-        private static ICourseReadService courseService;
+        private static IStudentService studentService;
+        private static ICourseService courseService;
         private static IMapper mapper;
         public static void Main(string[] args)
         {
             var app = Configuration.IntitializeServices(args);
-            studentService = app.Services.GetRequiredService<IStudentReadService>();
-            courseService = app.Services.GetRequiredService<ICourseReadService>();
+            studentService = app.Services.GetRequiredService<IStudentService>();
+            courseService = app.Services.GetRequiredService<ICourseService>();
             mapper = app.Services.GetRequiredService<IMapper>();
 
             while (true)
@@ -86,28 +86,28 @@ namespace ConsoleUI
 
         private async static Task<IEnumerable<CourseResponse>> GetActiveCourses()
         {
-            var activeCourses = await courseService.GetActiveCourses();
+            var activeCourses = await courseService.GetActiveCoursesAsync();
 
             return mapper.Map<IEnumerable<CourseResponse>>(activeCourses);
         }
 
         private async static Task<IEnumerable<StudentResponse>> GetStudents()
         {
-            var students = await studentService.GetAllStudents();
+            var students = await studentService.GetAllStudentsAsync();
 
             return mapper.Map<IEnumerable<StudentResponse>>(students);
         }
 
         private async static Task<IEnumerable<CourseResponse>> GetStudentCourses(int studentId)
         {
-            var studentCourses = await studentService.GetCoursesTakenByStudent(studentId);
+            var studentCourses = await studentService.GetCoursesTakenByStudentAsync(studentId);
 
             return mapper.Map<IEnumerable<CourseResponse>>(studentCourses);
         }
 
         private async static Task<IEnumerable<MarkResponse>> GetMarksFromCourse(int studentId, int courseId)
         {
-            var markedModules =await studentService.GetStudentMarksForCourse(studentId, courseId);
+            var markedModules =await studentService.GetStudentMarksForCourseAsync(studentId, courseId);
 
             return mapper.Map<IEnumerable<MarkResponse>>(markedModules);
         }

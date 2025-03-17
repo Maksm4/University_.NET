@@ -27,8 +27,8 @@ namespace UniversityAPI
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
-            builder.Services.AddScoped<ICourseReadService, CourseReadService>();
-            builder.Services.AddScoped<IStudentReadService, StudentReadService>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             var app = builder.Build();

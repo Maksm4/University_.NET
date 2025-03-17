@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models
 {
-    public class CourseModule : BaseEntity
+    public class CourseModule
     {
         public int CourseModuleId { get; private set; }
         public int CourseId { get; private set; }

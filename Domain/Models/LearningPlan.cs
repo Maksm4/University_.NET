@@ -2,13 +2,13 @@
 
 namespace Domain.Models
 {
-    public class LearningPlan : BaseEntity
+    public class LearningPlan
     {
         public int LearningPlanId { get; set; }
         public string Name { get; set; }
         public int StudentId { get; set; }
         private readonly IList<EnrolledCourse> _enrolledCourses = new List<EnrolledCourse>();
-        public IEnumerable<EnrolledCourse> EnrolledCourses => _enrolledCourses.AsReadOnly();
+        public IReadOnlyCollection<EnrolledCourse> EnrolledCourses => _enrolledCourses.AsReadOnly();
 
         public LearningPlan(int learningPlanId, string name, int studentId)
         {

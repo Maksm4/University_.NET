@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models
 {
-    public class MarkedModule : BaseEntity
+    public class MarkedModule
     {
         public int CourseId { get; set; }
         public int CourseModuleId { get; set; }

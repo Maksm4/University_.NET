@@ -24,8 +24,8 @@ namespace ConsoleUI
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
 
-            builder.Services.AddScoped<ICourseReadService, CourseReadService>();
-            builder.Services.AddScoped<IStudentReadService, StudentReadService>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
 
             builder.Services.AddAutoMapper(typeof(ResponseProfile));
             return builder.Build();

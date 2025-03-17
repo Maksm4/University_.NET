@@ -13,7 +13,7 @@ namespace Infrastructure.Repository
             this.dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Student>> GetAllStudentsWithEnrolledCourses()
+        public async Task<IReadOnlyCollection<Student>> GetAllStudentsWithEnrolledCoursesAsync()
         {
             return await dbContext.Students
                 .Include(s => s.LearningPlan)
@@ -21,7 +21,7 @@ namespace Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public override async Task<Student?> FindById(int studentId)
+        public override async Task<Student?> FindByIdAsync(int studentId)
         {
             return await dbContext.Students
                 .Include(s => s.LearningPlan)
