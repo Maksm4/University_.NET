@@ -1,7 +1,5 @@
 ﻿using ApplicationCore.TypeCofigurations;
-using Domain.Models;
 using Domain.Models.Aggregate;
-using Domain.Models.VObject;
 using Infrastructure.TypeCofigurations;
 using Microsoft.EntityFrameworkCore;
 
