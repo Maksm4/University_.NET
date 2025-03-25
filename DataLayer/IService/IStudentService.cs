@@ -8,5 +8,6 @@ namespace ApplicationCore.IService
         Task<IReadOnlyCollection<Student>> GetAllStudentsAsync();
         Task<IReadOnlyCollection<Course>> GetCoursesTakenByStudentAsync(int studentId);
         Task<IReadOnlyCollection<MarkedModule>> GetStudentMarksForCourseAsync(int studentId, int courseId);
+        Task<Student?> GetStudent(int studentId);
     }
 }

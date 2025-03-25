@@ -4,6 +4,8 @@ using ApplicationCore.IService;
 using ApplicationCore.Service;
 using Infrastructure.Context;
 using Infrastructure.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,19 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<UniversityContext>(
     opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("UniversityConnection"))
     );
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<UniversityContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+//could add here google twitter etc.
+
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddMvc();
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
@@ -37,6 +52,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

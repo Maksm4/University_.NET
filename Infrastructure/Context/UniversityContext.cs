@@ -1,11 +1,12 @@
 ﻿using ApplicationCore.TypeCofigurations;
 using Domain.Models.Aggregate;
 using Infrastructure.TypeCofigurations;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Context
 {
-    public class UniversityContext : DbContext
+    public class UniversityContext : IdentityDbContext<User>
     {
         public UniversityContext(DbContextOptions<UniversityContext> options) : base(options) { }
 
@@ -14,6 +15,7 @@ namespace Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             //toogle off default delete cascades
 
             foreach (var fk in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))

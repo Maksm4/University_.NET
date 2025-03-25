@@ -38,6 +38,11 @@ namespace ApplicationCore.Service
             return await courseRepository.GetActiveCoursesAsync(courseIds);
         }
 
+        public async Task<Student?> GetStudent(int studentId)
+        {
+            return await studentRepository.FindByIdAsync(studentId);
+        }
+
         public async Task<IReadOnlyCollection<MarkedModule>> GetStudentMarksForCourseAsync(int studentId, int courseId)
         {
             var student = await studentRepository.FindByIdAsync(studentId);
