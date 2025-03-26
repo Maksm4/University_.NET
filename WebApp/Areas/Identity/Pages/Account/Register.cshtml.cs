@@ -132,8 +132,16 @@ namespace WebApp.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 await _userManager.AddToRoleAsync(user, "Student");
+
                 var student = new Student(Input.FirstName, Input.LastName, Input.BirthDate);
-                await _studentService.CreateStudent(student);
+                student = await _studentService.SaveStudent(student);
+
+                var learningPlan = new LearningPlan(user.Id + student.StudentId, student.StudentId);
+                student.AssignLearningPlan(learningPlan);
+                await _studentService.SaveStudent(student);
+
+                user.student = student;
+                user.studentId = student.StudentId; 
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -159,7 +167,7 @@ namespace WebApp.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
+            Console.WriteLine(ModelState.ErrorCount);
             // If we got this far, something failed, redisplay form
             return Page();
         }

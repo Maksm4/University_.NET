@@ -1,4 +1,5 @@
 ﻿using Domain.Models.VObject;
+using System.Collections.ObjectModel;
 
 namespace Domain.Models.Aggregate
 {
@@ -8,7 +9,7 @@ namespace Domain.Models.Aggregate
         public string FirstName { get; }
         public string LastName { get; }
         public DateOnly BirthDate { get; }
-        public LearningPlan LearningPlan { get; private set; }
+        public LearningPlan? LearningPlan { get; private set; }
 
         private Student() { }
         public Student(string firstName, string lastName, DateOnly birthDate, LearningPlan learningPlan)
@@ -18,24 +19,44 @@ namespace Domain.Models.Aggregate
             BirthDate = birthDate;
             LearningPlan = learningPlan;
         }
-        
+
+        public Student(string firstName, string lastName, DateOnly birthDate)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            BirthDate = birthDate;
+        }
+        public void AssignLearningPlan(LearningPlan learningPlan)
+        {
+            LearningPlan = learningPlan;
+        }
         public IReadOnlyCollection<EnrolledCourse> GetEnrolledCourses()
         {
-            return LearningPlan.EnrolledCourses.ToList();
+            if (LearningPlan != null)
+            {
+                return LearningPlan.EnrolledCourses.ToList();
+            }
+            return ReadOnlyCollection<EnrolledCourse>.Empty;
         }
 
         public void EnrollInCourse(Course course)
         {
-            var enrolledCourse = new EnrolledCourse(LearningPlan.LearningPlanId, course.CourseId, new DateTimeRange(DateOnly.FromDateTime(DateTime.Now), null));
-            LearningPlan.AddCourse(enrolledCourse);
+            if (LearningPlan != null)
+            {
+                var enrolledCourse = new EnrolledCourse(LearningPlan.LearningPlanId, course.CourseId, new DateTimeRange(DateOnly.FromDateTime(DateTime.Now), null));
+                LearningPlan.AddCourse(enrolledCourse);
+            }
         }
 
         public void FinishCourse(Course course)
         {
-            var enrolledCourse = LearningPlan.GetEnrolledCourse(course.CourseId);
-            if (enrolledCourse != null)
+            if (LearningPlan != null)
             {
-                enrolledCourse.FinishCourse();
+                var enrolledCourse = LearningPlan.GetEnrolledCourse(course.CourseId);
+                if (enrolledCourse != null)
+                {
+                    enrolledCourse.FinishCourse();
+                }
             }
         }
 

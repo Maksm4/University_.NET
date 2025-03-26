@@ -40,5 +40,6 @@ namespace Infrastructure.Repository
                 .Where(c => courseIds.Contains(c.CourseId))
                 .ToListAsync();
         }
+
     }
 }

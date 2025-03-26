@@ -12,9 +12,10 @@ namespace Infrastructure.Repository
         {
             this.dbContext = dbContext;
         }
-        public virtual async Task CreateAsync(T entity)
+        public virtual async Task<T> CreateAsync(T entity)
         {
-            await dbContext.Set<T>().AddAsync(entity);
+            var changeTracking = await dbContext.Set<T>().AddAsync(entity);
+            return changeTracking.Entity;
         }
 
         public virtual async Task DeleteAsync(T entity)

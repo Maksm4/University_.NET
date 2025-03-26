@@ -17,6 +17,20 @@ namespace ApplicationCore.Service
             this.courseRepository = courseRepository;
         }
 
+        public async Task<Student> SaveStudent(Student student)
+        {
+            if (student == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (studentRepository.FindByIdAsync(student.StudentId) == null)
+            {
+                return await studentRepository.CreateAsync(student);
+            }
+            await studentRepository.UpdateAsync(student);
+            return student;
+        }
+
         public async Task<IReadOnlyCollection<Student>> GetAllStudentsAsync()
         {
             return await studentRepository.GetAllStudentsWithEnrolledCoursesAsync();
