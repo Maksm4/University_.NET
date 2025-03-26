@@ -29,6 +29,11 @@ namespace Infrastructure.Context
             modelBuilder.ApplyConfiguration(new LearningPlanTypeConfiguration());
             modelBuilder.ApplyConfiguration(new MarkedModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StudentTypeConfiguration());
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.student)
+                .WithOne()
+                .HasForeignKey<User>(u => u.studentId);
         }
     }
 }

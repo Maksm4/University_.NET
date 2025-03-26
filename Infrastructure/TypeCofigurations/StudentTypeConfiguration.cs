@@ -34,13 +34,13 @@ namespace Infrastructure.TypeCofigurations
                 .HasColumnType("date");
 
             //make sure it works as its using valueobject from domain models
-            builder.OwnsOne(s => s.Email, email =>
-            {
-                email.Property(e => e.Address)
-                 .HasColumnName("Email")
-                 .HasMaxLength(1000)
-                 .IsRequired();
-            });
+            //builder.OwnsOne(s => s.Email, email =>
+            //{
+            //    email.Property(e => e.Address)
+            //     .HasColumnName("Email")
+            //     .HasMaxLength(1000)
+            //     .IsRequired();
+            //});
         }
     }
 }

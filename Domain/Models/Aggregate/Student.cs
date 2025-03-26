@@ -7,17 +7,14 @@ namespace Domain.Models.Aggregate
         public int StudentId { get; }
         public string FirstName { get; }
         public string LastName { get; }
-        public Email Email { get; }
         public DateOnly BirthDate { get; }
         public LearningPlan LearningPlan { get; private set; }
 
         private Student() { }
-        public Student(int studentId, string firstName, string lastName, Email email, DateOnly birthDate, LearningPlan learningPlan)
+        public Student(string firstName, string lastName, DateOnly birthDate, LearningPlan learningPlan)
         {
-            StudentId = studentId;
             FirstName = firstName;
             LastName = lastName;
-            Email = email;
             BirthDate = birthDate;
             LearningPlan = learningPlan;
         }

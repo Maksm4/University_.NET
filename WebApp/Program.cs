@@ -1,4 +1,3 @@
-
 using ApplicationCore.IRepository;
 using ApplicationCore.IService;
 using ApplicationCore.Service;
@@ -6,7 +5,9 @@ using Infrastructure.Context;
 using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using WebApp.externalServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie();
 //could add here google twitter etc.
 
+builder.Services.AddScoped<IEmailSender, ConsoleEmialSender>();
 
 builder.Services.AddAuthorization();
 
@@ -56,6 +58,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",

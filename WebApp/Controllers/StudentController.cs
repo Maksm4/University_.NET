@@ -18,8 +18,9 @@ namespace WebApp.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AllStudents()
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
+        public async Task<IActionResult> List()
         {
             var students = await studentService.GetAllStudentsAsync();
             return View(students);
@@ -34,9 +35,9 @@ namespace WebApp.Controllers
             {
                 return View();
             }
-            var student = studentService.GetStudent(userName);
+            //var student = studentService.GetStudent();
 
-            return View(student);
+            return View();
         }
 
         public IActionResult Add(Student student)

@@ -25,7 +25,7 @@ namespace WebApp.Controllers
         
         public IActionResult Enroll(int courseId)
         {
-
+            return View();
         }
 
     }
