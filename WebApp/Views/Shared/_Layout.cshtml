@@ -21,6 +21,23 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User?.Identity != null && User.Identity.IsAuthenticated)
                         {
+                            @* @if (User != null && User.IsInRole("Admin")) *@
+                            @* { *@
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">AddStudent</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="List">Students</a>
+                            </li>
+                            @* }else *@
+                            @* { *@
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Profile">Profile</a>
+                            </li>
+                            @* } *@
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="List">Courses</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                             </li>
@@ -30,15 +47,6 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
                         }
-                        @* @if (User != null && User.IsInRole("Admin")) *@
-                        @* { *@
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">AddStudent</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="List">ViewAllStudents</a>
-                            </li>
-                        @* } *@
                     </ul>
                 </div>
             </div>

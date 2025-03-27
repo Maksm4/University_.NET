@@ -1,0 +1,9 @@
+﻿@model User
+
+@if (Model.student != null)
+{
+    <h1>  @Model.student.FirstName </h1>
+    <h1>@Model.student.LastName </h1>
+    <h1>@Model.student.BirthDate </h1>
+    <h1>@Model.Email </h1>
+}

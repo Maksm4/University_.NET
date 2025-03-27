@@ -2,8 +2,8 @@ USE EfCore;
 
 INSERT INTO Student
 VALUES 
-	('john', 'doe', 'john.doe@gmail.com', '2004/11/17'),
-	('mary', 'skibidi', 'mary.skibidi@gmail.com', '1994/1/17');
+	('john', 'doe', '2004/11/17'),
+	('mary', 'skibidi', '1994/1/17');
 
 
 INSERT INTO Course
@@ -30,3 +30,4 @@ INSERT INTO ModuleMark
 VALUES 
 	(1,1,1,4),
 	(2,2,2,5);
+

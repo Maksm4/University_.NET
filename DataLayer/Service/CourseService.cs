@@ -16,5 +16,10 @@ namespace ApplicationCore.Service
         {
             return await courseRepository.GetActiveCoursesAsync();
         }
+
+        public async Task<Course?> GetCourseAsync(int courseId)
+        {
+            return await courseRepository.FindByIdAsync(courseId);
+        }
     }
 }

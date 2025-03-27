@@ -1,4 +1,6 @@
-﻿@foreach (var student in Model)
+﻿@model IReadOnlyCollection<Student>
+
+@foreach (var student in Model)
 {
     <section>
         <header>student no. @student.StudentId</header>
