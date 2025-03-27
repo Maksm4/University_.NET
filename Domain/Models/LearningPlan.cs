@@ -10,6 +10,7 @@ namespace Domain.Models
         private readonly IList<EnrolledCourse> _enrolledCourses = new List<EnrolledCourse>();
         public IReadOnlyCollection<EnrolledCourse> EnrolledCourses => _enrolledCourses.AsReadOnly();
 
+        private LearningPlan() { }
         public LearningPlan(string name, int studentId)
         {
             Name = name;

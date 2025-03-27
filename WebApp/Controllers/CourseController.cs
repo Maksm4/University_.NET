@@ -20,10 +20,6 @@ namespace WebApp.Controllers
             UserManager = userManager;
             
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         [Authorize(Roles = "Admin, Student")]
         public async Task<IActionResult> List()
@@ -36,7 +32,6 @@ namespace WebApp.Controllers
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Enroll(int courseId)
         {
-            Console.WriteLine("I was enrolled");
             var currentUser = await UserManager.Users
                 .Include(u => u.student)
                 .ThenInclude(s => s.LearningPlan)
@@ -54,6 +49,7 @@ namespace WebApp.Controllers
             
             //something doesnt work here
             currentUser.student.EnrollInCourse(course);
+            await StudentService.SaveStudent(currentUser.student);
 
             return RedirectToAction("List", "Enrollment", new { studentId = currentUser.studentId });
         }

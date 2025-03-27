@@ -133,15 +133,15 @@ namespace WebApp.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 await _userManager.AddToRoleAsync(user, "Student");
 
-                var student = new Student(Input.FirstName, Input.LastName, Input.BirthDate);
-                student = await _studentService.SaveStudent(student);
+                //var student = new Student(Input.FirstName, Input.LastName, Input.BirthDate);
+                //student = await _studentService.SaveStudent(student);
 
-                var learningPlan = new LearningPlan(user.Id + student.StudentId, student.StudentId);
-                student.AssignLearningPlan(learningPlan);
-                await _studentService.SaveStudent(student);
+                //var learningPlan = new LearningPlan(user.Id + student.StudentId, student.StudentId);
+                //student.AssignLearningPlan(learningPlan);
+                //await _studentService.SaveStudent(student);
 
-                user.student = student;
-                user.studentId = student.StudentId; 
+                //user.student = student;
+                //user.studentId = student.StudentId; 
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 

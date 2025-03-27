@@ -3,6 +3,7 @@ using Domain.Models.Aggregate;
 using Infrastructure.TypeCofigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Infrastructure.Context
 {
@@ -22,6 +23,7 @@ namespace Infrastructure.Context
             {
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
 
             modelBuilder.ApplyConfiguration(new CourseModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CourseTypeConfiguration());

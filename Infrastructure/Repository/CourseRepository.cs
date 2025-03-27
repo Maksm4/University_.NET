@@ -30,7 +30,6 @@ namespace Infrastructure.Repository
         public async Task<IReadOnlyCollection<Course>> GetActiveCoursesAsync()
         {
             return await dbContext.Courses
-               .Where(c => !c.Deprecated)
                .ToListAsync();
         }
 

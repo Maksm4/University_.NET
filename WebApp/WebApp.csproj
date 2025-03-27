@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\DTO\" />
+    <Folder Include="Models\ViewModel\" />
     <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
 
