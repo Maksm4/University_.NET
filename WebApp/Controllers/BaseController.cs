@@ -6,5 +6,7 @@ namespace WebApp.Controllers
     public class BaseController : Controller
     {
         protected User currentUser { get; }
+
+
     }
 }

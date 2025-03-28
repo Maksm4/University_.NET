@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.IService;
 using AutoMapper;
+using Domain.Models.VObject;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -42,9 +43,20 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
+            var enrolledCourses = student.GetEnrolledCourses();
             var courses = await StudentService.GetCoursesTakenByStudentAsync(student.StudentId);
-            return View(Mapper.Map<IReadOnlyCollection<CourseViewModel>>(courses));
+
+            var viewModel = enrolledCourses.Select(ec =>
+            new CourseEnrolledViewModel
+            {
+                CourseId = ec.CourseId,
+                Name = courses.First(c => c.CourseId == ec.CourseId).Name,
+                Description = courses.First(c => c.CourseId == ec.CourseId).Description,
+                IsActive = !courses.First(c => c.CourseId == ec.CourseId).IsDeprecated,
+                DateTimeRange = new DateTimeRange(ec.DateTimeRange.StartTime, ec.DateTimeRange.EndTime)
+            });
+
+            return View(viewModel);
         }
 
         [HttpGet("courseId")]

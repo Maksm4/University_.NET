@@ -26,7 +26,8 @@ namespace WebApp.Controllers
         }
 
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> List()
+        [Route("List")]
+        public async Task<IActionResult> AllStudents()
         {
             var students = await StudentService.GetAllStudentsAsync();
             return View(Mapper.Map<IReadOnlyCollection<StudentInfoViewModel>>(students));
@@ -49,7 +50,8 @@ namespace WebApp.Controllers
         }
 
         [Authorize(Roles = Role.Student)]
-        public async Task<IActionResult> Marks(int courseId)
+        [Route("Marks")]
+        public async Task<IActionResult> MarksFromCourse(int courseId)
         {
             var userId = UserManager.GetUserId(User);
 

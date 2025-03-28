@@ -28,8 +28,45 @@ namespace WebApp.Controllers
         [Authorize(Roles = $"{Role.Admin}, {Role.Student}")]
         public async Task<IActionResult> AllCourses()
         {
+            var currUser = await UserManager.GetUserAsync(User);
             var courses = await CourseService.GetActiveCoursesAsync();
-            return View(Mapper.Map<IReadOnlyCollection<CourseViewModel>>(courses));
+
+            if (currUser == null)
+            {
+                return NotFound();
+            }
+
+            if (await UserManager.IsInRoleAsync(currUser, Role.Admin))
+            {
+                return View(courses.Select(
+                    c => 
+                    new CourseViewModel
+                    {
+                       CourseId = c.CourseId,
+                       Name = c.Name,
+                       Description = c.Description,
+                       IsActive = !c.IsDeprecated,
+                       isEnrolled = null
+                    }));
+            }
+
+            var student = await StudentService.GetStudentByUserId(currUser.Id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var studentCourses = student.GetEnrolledCourses();
+
+            return View(courses.Select(c =>
+            new CourseViewModel
+            {
+                CourseId =c.CourseId,
+                Name = c.Name,
+                Description =c.Description,
+                IsActive = !c.IsDeprecated,
+                isEnrolled = studentCourses.Any(sc => sc.CourseId == c.CourseId)
+            }));
         }
     }
 }

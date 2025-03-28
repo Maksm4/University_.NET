@@ -6,9 +6,9 @@ using WebApp.Models.ViewModel;
 
 namespace WebApp.ViewModelMappers
 {
-    public class ViewModelMapperProfile : Profile
+    public class MapperViewModelProfile : Profile
     {
-        public ViewModelMapperProfile()
+        public MapperViewModelProfile()
         {
             CreateMap<User, ProfileViewModel>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.student != null ? src.student.FirstName : ""))
@@ -17,7 +17,7 @@ namespace WebApp.ViewModelMappers
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
 
             CreateMap<Course, CourseViewModel>()
-                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.Deprecated));
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => !src.Deprecated));
 
             CreateMap<Student, StudentInfoViewModel>();
             CreateMap<MarkedModule, MarkViewModel>();

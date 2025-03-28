@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.IRepository;
+using Domain.Models;
 using Domain.Models.Aggregate;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,5 @@ namespace Infrastructure.Repository
                 .Where(c => courseIds.Contains(c.CourseId))
                 .ToListAsync();
         }
-
     }
 }

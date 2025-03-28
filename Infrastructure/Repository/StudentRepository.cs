@@ -34,6 +34,8 @@ namespace Infrastructure.Repository
         {
             var user = await dbContext.Users
                 .Include(u => u.student)
+                .ThenInclude(s => s.LearningPlan)
+                .ThenInclude(lp => lp.EnrolledCourses)
                 .FirstOrDefaultAsync(u => u.Id.Equals(userId));
 
             if(user == null)

@@ -1,0 +1,18 @@
+﻿@model IEnumerable<CourseEnrolledViewModel>
+
+<h1>Your enrolled courses:</h1>
+<br />
+@foreach (var course in Model)
+{
+    <h1>Name: @course.Name</h1>
+    <h1>Description: @course.Description</h1>
+    <h1>Started: @course.DateTimeRange.StartTime</h1>
+    @if(course.DateTimeRange.EndTime != null)
+    {
+        <h1>Ended: @course.DateTimeRange.EndTime</h1>
+    }else
+    {
+        <h1>Still in progress</h1>
+    }
+    <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId">View Marks</a>
+}
