@@ -1,1 +1,8 @@
-﻿
+﻿@model IReadOnlyCollection<Course>
+
+@foreach (var course in Model)
+{
+    <h1>Name: @course.Name</h1>
+    <h1>Description: @course.Description</h1>
+    <h1>Is Active: !@course.Deprecated</h1>
+}

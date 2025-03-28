@@ -19,10 +19,6 @@ namespace Domain.Models.Aggregate
             LearningPlan = learningPlan;
         }
 
-        public void AssignLearningPlan(LearningPlan learningPlan)
-        {
-            LearningPlan = learningPlan;
-        }
         public IReadOnlyCollection<EnrolledCourse> GetEnrolledCourses()
         {
             return LearningPlan.EnrolledCourses.ToList();

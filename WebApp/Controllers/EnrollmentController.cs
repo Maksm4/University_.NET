@@ -18,7 +18,7 @@ namespace WebApp.Controllers
             UserManager = userManager;
         }
 
-        [HttpGet("studentId")]
+        [HttpGet]
         [Authorize(Roles = "Admin, Student")]
         public async Task<IActionResult> List(int studentId)
         {

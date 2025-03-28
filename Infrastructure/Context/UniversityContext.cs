@@ -4,6 +4,7 @@ using Infrastructure.TypeCofigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Context
 {
@@ -36,6 +37,13 @@ namespace Infrastructure.Context
                 .HasOne(u => u.student)
                 .WithOne()
                 .HasForeignKey<User>(u => u.studentId);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+             optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
         }
     }
 }

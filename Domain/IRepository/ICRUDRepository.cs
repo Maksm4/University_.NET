@@ -7,9 +7,9 @@ namespace ApplicationCore.IRepository
     {
         Task<IReadOnlyCollection<T>> FindAllAsync();
         Task<T?> FindByIdAsync(int id);
-        Task UpdateAsync(T entity);
+        void Update(T entity);
         Task<T> CreateAsync(T entity);
-        Task DeleteAsync(T entity);
+        void Delete(T entity);
         Task SaveAsync();
     }
 }

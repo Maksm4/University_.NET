@@ -18,7 +18,7 @@ namespace Infrastructure.Repository
             return changeTracking.Entity;
         }
 
-        public virtual async Task DeleteAsync(T entity)
+        public virtual void Delete(T entity)
         {
             dbContext.Set<T>().Remove(entity);
         }
@@ -33,7 +33,7 @@ namespace Infrastructure.Repository
             return await dbContext.Set<T>().FindAsync(id);
         }
 
-        public virtual async Task UpdateAsync(T entity)
+        public virtual void Update(T entity)
         {
             dbContext.Set<T>().Update(entity);
         }

@@ -27,7 +27,8 @@ namespace ApplicationCore.Service
             {
                 return await studentRepository.CreateAsync(student);
             }
-            await studentRepository.UpdateAsync(student);
+            studentRepository.Update(student);
+            await studentRepository.SaveAsync();
             return student;
         }
 
