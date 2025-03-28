@@ -1,9 +1,7 @@
-﻿@model User
+﻿@model ProfileViewModel
 
-@if (Model.student != null)
-{
-    <h1>  @Model.student.FirstName </h1>
-    <h1>@Model.student.LastName </h1>
-    <h1>@Model.student.BirthDate </h1>
-    <h1>@Model.Email </h1>
-}
+<h1>@Model.FirstName </h1>
+<h1>@Model.LastName </h1>
+<h1>@Model.BirthDate </h1>
+<h1>@Model.Email </h1>
+<a asp-controller="CourseEnrollment" asp-action="List">Your Courses</a>

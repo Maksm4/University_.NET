@@ -61,14 +61,25 @@ namespace ApplicationCore.Service
         public async Task<IReadOnlyCollection<MarkedModule>> GetStudentMarksForCourseAsync(int studentId, int courseId)
         {
             var student = await studentRepository.FindByIdAsync(studentId);
-            var course = await courseRepository.FindByIdAsync(courseId);
 
-            if (student == null || course == null)
+            if (student == null)
             {
                 return [];
             }
 
-            return student.GetMarksFromCourse(course);
+            return student.GetMarksFromCourse(courseId);
+        }
+
+        public async Task<Student?> GetStudentByUserId(string userId)
+        {
+            var student = await studentRepository.GetStudentByUserId(userId);
+
+            if (student == null)
+            {
+                return null;
+            }
+
+            return student;
         }
     }
 }

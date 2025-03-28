@@ -1,0 +1,11 @@
+﻿@model IReadOnlyCollection<CourseViewModel>
+
+<h1>Your enrolled courses:</h1>
+<br />
+@foreach (var course in Model)
+{
+    <h1>Name: @course.Name</h1>
+    <h1>Description: @course.Description</h1>
+    <h1>Is Active: @(!course.IsActive)</h1>
+    <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId">View Marks</a>
+}

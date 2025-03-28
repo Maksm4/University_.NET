@@ -10,5 +10,6 @@ namespace ApplicationCore.IService
         Task<IReadOnlyCollection<MarkedModule>> GetStudentMarksForCourseAsync(int studentId, int courseId);
         Task<Student?> GetStudent(int studentId);
         Task<Student> SaveStudent(Student student);
+        Task<Student?> GetStudentByUserId(string userId);
     }
 }

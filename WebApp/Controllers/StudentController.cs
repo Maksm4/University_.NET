@@ -5,34 +5,37 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using WebApp.Models.ViewModel;
 
 namespace WebApp.Controllers
 {
+    [Route("[controller]")]
+    [Controller]
     public class StudentController : Controller
     {
         private readonly IStudentService StudentService;
-        private readonly ICourseService CourseService;
         private readonly UserManager<User> UserManager;
+        private readonly IMapper Mapper;
 
-        public StudentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager)
+        public StudentController(IStudentService studentService, UserManager<User> userManager, IMapper mapper)
         {
-            this.StudentService = studentService;
-            this.CourseService = courseService;
-            this.UserManager = userManager;
+            StudentService = studentService;
+            UserManager = userManager;
+            Mapper = mapper;
         }
 
-
-        //[Authorize(Roles = "Admin")]
-        [AllowAnonymous]
+        [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> List()
         {
             var students = await StudentService.GetAllStudentsAsync();
-            return View(students);
+            return View(Mapper.Map<IReadOnlyCollection<StudentInfoViewModel>>(students));
         }
 
-
+        [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> Profile()
         {
+            //extract to repiository
             var user = await UserManager.Users
                 .Include(u => u.student)
                 .FirstOrDefaultAsync(u => u.Id == UserManager.GetUserId(User));
@@ -41,13 +44,30 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-           
-            return View(user);
+
+            return View(Mapper.Map<ProfileViewModel>(user));
         }
 
-        public IActionResult Add(Student student)
+        [Authorize(Roles = Role.Student)]
+        public async Task<IActionResult> Marks(int courseId)
         {
-            return View(student);
+            var userId = UserManager.GetUserId(User);
+
+            if (userId == null)
+            {
+                return NotFound();
+            }
+
+            var student = await StudentService.GetStudentByUserId(userId);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var marks = await StudentService.GetStudentMarksForCourseAsync(student.StudentId, courseId);
+
+            return View(Mapper.Map<IReadOnlyCollection<MarkViewModel>>(marks));
         }
     }
 }

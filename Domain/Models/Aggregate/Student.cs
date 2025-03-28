@@ -39,9 +39,9 @@ namespace Domain.Models.Aggregate
             }
         }
 
-        public IReadOnlyCollection<MarkedModule> GetMarksFromCourse(Course course)
+        public IReadOnlyCollection<MarkedModule> GetMarksFromCourse(int courseId)
         {
-            return LearningPlan.EnrolledCourses.SelectMany(ec => ec.MarkedModules).ToList();
+            return LearningPlan.EnrolledCourses.Where(ec => ec.CourseId == courseId).SelectMany(ec => ec.MarkedModules).ToList();
         }
 
         public bool GiveMark(CourseModule courseModule, int grade)

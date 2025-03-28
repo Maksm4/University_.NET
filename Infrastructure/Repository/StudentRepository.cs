@@ -29,5 +29,19 @@ namespace Infrastructure.Repository
                 .ThenInclude(ec => ec.MarkedModules)
                 .FirstOrDefaultAsync(s => s.StudentId == studentId);
         }
+
+        public async Task<Student?> GetStudentByUserId(string userId)
+        {
+            var user = await dbContext.Users
+                .Include(u => u.student)
+                .FirstOrDefaultAsync(u => u.Id.Equals(userId));
+
+            if(user == null)
+            {
+                return null;
+            }
+
+            return user.student;
+        }
     }
 }
