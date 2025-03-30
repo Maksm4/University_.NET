@@ -13,9 +13,15 @@
     {
         <h1>Still in progress</h1>
     }
-    @if(User.Identity != null && User.Identity.IsAuthenticated)
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
     {
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId" asp-route-studentId="@course.StudentId">View Marks</a>
 
+        }else
+        {
+            <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId">View Marks</a>
+        }
     }
-    <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId">View Marks</a>
 }

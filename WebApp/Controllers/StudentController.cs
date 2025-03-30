@@ -51,16 +51,28 @@ namespace WebApp.Controllers
 
         [Authorize(Roles = $"{Role.Student}, {Role.Admin}")]
         [Route("Marks")]
-        public async Task<IActionResult> MarksFromCourse(int courseId)
+        public async Task<IActionResult> MarksFromCourse(int? studentId, int courseId)
         {
-            var userId = UserManager.GetUserId(User);
-
-            if (userId == null)
+            Student? student = null;
+            if (User.IsInRole(Role.Admin))
             {
-                return NotFound();
-            }
+                if (studentId == null)
+                {
+                    return NotFound();
+                }
 
-            var student = await StudentService.GetStudentByUserId(userId);
+                student = await StudentService.GetStudent(studentId.Value);
+            }else
+            {
+                var userId = UserManager.GetUserId(User);
+
+                if (userId == null)
+                {
+                    return NotFound();
+                }
+
+                student = await StudentService.GetStudentByUserId(userId);
+            }
 
             if (student == null)
             {
@@ -72,15 +84,19 @@ namespace WebApp.Controllers
             return View(Mapper.Map<IReadOnlyCollection<MarkViewModel>>(marks));
         }
 
+
+        //from Marks from course form somehow add the courseModules here in the equation
+        [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> GiveMark(int mark, int studentId)
+        public async Task<IActionResult> GiveMark(int studentId, int courseId, int mark)
         {
-            var student = StudentService.GetStudent(studentId);
+            var student = await StudentService.GetStudent(studentId);
             if (student == null)
             {
                 return NotFound();
             }
-
+           
+            student.GiveMark();
 
         }
     }

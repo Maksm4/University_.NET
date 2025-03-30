@@ -42,7 +42,7 @@ namespace WebApp.Controllers
 
                 student = await StudentService.GetStudent(studentId.Value);
 
-            }else if (User.IsInRole(Role.Student))
+            }else
             {
                 var userId = UserManager.GetUserId(User);
                 if (userId == null)
@@ -68,7 +68,8 @@ namespace WebApp.Controllers
                 Name = courses.First(c => c.CourseId == ec.CourseId).Name,
                 Description = courses.First(c => c.CourseId == ec.CourseId).Description,
                 IsActive = !courses.First(c => c.CourseId == ec.CourseId).IsDeprecated,
-                DateTimeRange = new DateTimeRange(ec.DateTimeRange.StartTime, ec.DateTimeRange.EndTime)
+                DateTimeRange = new DateTimeRange(ec.DateTimeRange.StartTime, ec.DateTimeRange.EndTime),
+                StudentId = student.StudentId
             });
 
             return View(viewModel);

@@ -1,11 +1,17 @@
-﻿@model IReadOnlyCollection<MarkViewModel>
+﻿@model MarkedModulesViewModel
 
-@foreach (var mark in Model)
+@foreach (var mark in Model.markViewModels)
 {
     <h1>grade: @mark.Mark</h1>
 }
 
-<form>
-
-
-</form>
+@if (User.IsInRole("Admin"))
+{
+    <form asp-action="GiveMark" method="post">
+        <input type="hidden" name="studentId" value="@Model.StudentId"/>
+        <input type="hidden" name="studentId" value="@Model.CourseId" />
+        <label> Enter Mark:</label>
+        <input type="number" name="grade" required/>
+        <button type="submit"> Give mark</button>
+    </form>
+}
