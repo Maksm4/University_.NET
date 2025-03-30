@@ -4,5 +4,8 @@
 {
     <section>
         <header>student no. @student.StudentId</header>
+        <p>@student.FirstName</p>
+        <p>@student.LastName</p>
+        <a asp-controller="CourseEnrollment" asp-action="List" asp-route-studentId="@student.StudentId">enrolled courses</a>
     </section>
 }

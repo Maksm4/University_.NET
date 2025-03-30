@@ -4,8 +4,7 @@
 <br />
 @foreach (var course in Model)
 {
-    <h1>Name: @course.Name</h1>
-    <h1>Description: @course.Description</h1>
+    @await Html.PartialAsync("_StatusPartial", course)
     <h1>Started: @course.DateTimeRange.StartTime</h1>
     @if(course.DateTimeRange.EndTime != null)
     {
@@ -13,6 +12,10 @@
     }else
     {
         <h1>Still in progress</h1>
+    }
+    @if(User.Identity != null && User.Identity.IsAuthenticated)
+    {
+
     }
     <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId">View Marks</a>
 }

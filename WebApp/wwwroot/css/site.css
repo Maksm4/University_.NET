@@ -20,3 +20,14 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.status {
+    font-size : 14px;
+    font-weight : bold;
+}
+
+.small-img {
+    width : 50px;
+    height : auto;
+    margin-left : 5px;
+}

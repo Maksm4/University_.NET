@@ -2,7 +2,7 @@
 
 namespace WebApp.externalServices
 {
-    public class ConsoleEmialSender : IEmailSender
+    public class ConsoleEmailSender : IEmailSender
     {
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {

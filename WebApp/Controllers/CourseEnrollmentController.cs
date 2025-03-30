@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.IService;
 using AutoMapper;
+using Domain.Models.Aggregate;
 using Domain.Models.VObject;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
@@ -29,20 +30,34 @@ namespace WebApp.Controllers
         [HttpGet]
         [Route("List")]
         [Authorize(Roles = $"{Role.Admin}, {Role.Student}")]
-        public async Task<IActionResult> StudentEnrolledCourses()
+        public async Task<IActionResult> StudentEnrolledCourses(int? studentId)
         {
-            var userId = UserManager.GetUserId(User);
-            if (userId == null)
+            Student? student = null; 
+            if (User.IsInRole(Role.Admin))
             {
-                return NotFound();
-            }
+                if (studentId == null)
+                {
+                    return NotFound();
+                }
 
-            var student = await StudentService.GetStudentByUserId(userId);
+                student = await StudentService.GetStudent(studentId.Value);
+
+            }else if (User.IsInRole(Role.Student))
+            {
+                var userId = UserManager.GetUserId(User);
+                if (userId == null)
+                {
+                    return NotFound();
+                }
+
+                student = await StudentService.GetStudentByUserId(userId);
+            }
 
             if (student == null)
             {
                 return NotFound();
             }
+            
             var enrolledCourses = student.GetEnrolledCourses();
             var courses = await StudentService.GetCoursesTakenByStudentAsync(student.StudentId);
 

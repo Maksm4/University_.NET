@@ -25,7 +25,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie();
 //could add here google twitter etc.
 
-builder.Services.AddScoped<IEmailSender, ConsoleEmialSender>();
+builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
 
 builder.Services.AddAuthorization();
 

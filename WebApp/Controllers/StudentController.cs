@@ -49,7 +49,7 @@ namespace WebApp.Controllers
             return View(Mapper.Map<ProfileViewModel>(user));
         }
 
-        [Authorize(Roles = Role.Student)]
+        [Authorize(Roles = $"{Role.Student}, {Role.Admin}")]
         [Route("Marks")]
         public async Task<IActionResult> MarksFromCourse(int courseId)
         {
@@ -70,6 +70,18 @@ namespace WebApp.Controllers
             var marks = await StudentService.GetStudentMarksForCourseAsync(student.StudentId, courseId);
 
             return View(Mapper.Map<IReadOnlyCollection<MarkViewModel>>(marks));
+        }
+
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> GiveMark(int mark, int studentId)
+        {
+            var student = StudentService.GetStudent(studentId);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+
         }
     }
 }

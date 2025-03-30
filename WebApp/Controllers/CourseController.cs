@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.IService;
 using AutoMapper;
+using Domain.Models.Aggregate;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,12 +22,31 @@ namespace WebApp.Controllers
             StudentService = studentService;
             CourseService = courseService;
             UserManager = userManager;
-            Mapper = mapper; 
+            Mapper = mapper;
+        }
+
+        [Route("ListAdmin")]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> AllCoursesAdmin()
+        {
+            var courses = await CourseService.GetActiveCoursesAsync();
+
+            var model = courses.Select(
+                c =>
+            new BaseCourseViewModel
+            {
+                CourseId = c.CourseId,
+                Name = c.Name,
+                Description = c.Description,
+                IsActive = !c.IsDeprecated
+            });
+
+            return View(model);
         }
 
         [Route("List")]
-        [Authorize(Roles = $"{Role.Admin}, {Role.Student}")]
-        public async Task<IActionResult> AllCourses()
+        [Authorize(Roles = Role.Student)]
+        public async Task<IActionResult> AllCoursesStudent()
         {
             var currUser = await UserManager.GetUserAsync(User);
             var courses = await CourseService.GetActiveCoursesAsync();
@@ -34,20 +54,6 @@ namespace WebApp.Controllers
             if (currUser == null)
             {
                 return NotFound();
-            }
-
-            if (await UserManager.IsInRoleAsync(currUser, Role.Admin))
-            {
-                return View(courses.Select(
-                    c => 
-                    new CourseViewModel
-                    {
-                       CourseId = c.CourseId,
-                       Name = c.Name,
-                       Description = c.Description,
-                       IsActive = !c.IsDeprecated,
-                       isEnrolled = null
-                    }));
             }
 
             var student = await StudentService.GetStudentByUserId(currUser.Id);
@@ -61,9 +67,9 @@ namespace WebApp.Controllers
             return View(courses.Select(c =>
             new CourseViewModel
             {
-                CourseId =c.CourseId,
+                CourseId = c.CourseId,
                 Name = c.Name,
-                Description =c.Description,
+                Description = c.Description,
                 IsActive = !c.IsDeprecated,
                 isEnrolled = studentCourses.Any(sc => sc.CourseId == c.CourseId)
             }));

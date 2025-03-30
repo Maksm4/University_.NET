@@ -1,0 +1,15 @@
+﻿@model IEnumerable<CourseViewModel>
+
+@foreach (var course in Model)
+{
+    //jako tabela
+    @await Html.PartialAsync("_StatusPartial", course)
+
+    @if (User.IsInRole("Student"))
+    {
+        @if (course.IsActive && course.isEnrolled == false)
+        {
+            <a asp-controller="CourseEnrollment" asp-action="Enroll" asp-route-courseId="@course.CourseId">Enroll</a>
+        }
+    }
+}
