@@ -4,7 +4,7 @@
     {
         public int CourseId { get; set; }
         public int StudentId { get; set; }
-        public IReadOnlyCollection<MarkViewModel> markViewModels { get; set; }
+        public Dictionary<int, List<int>> CourseModuleMarks { get; set; }
 
     }
 }

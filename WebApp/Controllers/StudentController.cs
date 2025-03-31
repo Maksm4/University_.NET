@@ -15,12 +15,14 @@ namespace WebApp.Controllers
     public class StudentController : Controller
     {
         private readonly IStudentService StudentService;
+        private readonly ICourseService CourseService;
         private readonly UserManager<User> UserManager;
         private readonly IMapper Mapper;
 
-        public StudentController(IStudentService studentService, UserManager<User> userManager, IMapper mapper)
+        public StudentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper)
         {
             StudentService = studentService;
+            CourseService = courseService;
             UserManager = userManager;
             Mapper = mapper;
         }
@@ -81,23 +83,47 @@ namespace WebApp.Controllers
 
             var marks = await StudentService.GetStudentMarksForCourseAsync(student.StudentId, courseId);
 
-            return View(Mapper.Map<IReadOnlyCollection<MarkViewModel>>(marks));
+
+            var model = new MarkedModulesViewModel
+            {
+                StudentId = student.StudentId,
+                CourseId = courseId,
+                CourseModuleMarks = marks.GroupBy(m => m.CourseModuleId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(m => m.Mark).ToList()
+                    )
+            };
+
+            return View(model);
         }
 
 
-        //from Marks from course form somehow add the courseModules here in the equation
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> GiveMark(int studentId, int courseId, int mark)
+        public async Task<IActionResult> GiveMark(int studentId, int courseId, int courseModuleId, int mark)
         {
             var student = await StudentService.GetStudent(studentId);
-            if (student == null)
+            var course = await CourseService.GetCourseAsync(courseId);
+
+            if (student == null || course == null)
             {
                 return NotFound();
             }
-           
-            student.GiveMark();
 
+            var courseModule = course.CourseModules.FirstOrDefault(cm => cm.CourseModuleId == courseModuleId);
+
+            if (courseModule == null)
+
+            {
+                return NotFound();
+            }
+
+            student.GiveMark(courseModule, mark);
+            await StudentService.SaveStudent(student);
+
+            Console.WriteLine("mark given");
+            return RedirectToAction("List", "Student");
         }
     }
 }

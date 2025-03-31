@@ -2,8 +2,7 @@
 {
     public class MarkViewModel
     {
-        public int Mark { get; set; }
-        public int CourseId { get; set; }
-        public int StudentId { get; set; }
+        public int Grade { get; set; }
+        public int CourseModuleId { get; set; }
     }
 }

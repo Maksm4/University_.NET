@@ -1,17 +1,23 @@
 ﻿@model MarkedModulesViewModel
 
-@foreach (var mark in Model.markViewModels)
+@foreach (var keyValue in Model.CourseModuleMarks)
 {
-    <h1>grade: @mark.Mark</h1>
-}
+    <h1>courseModule ID: @keyValue.Key</h1>
+    <p>Grades: </p>
+    @foreach (var mark in keyValue.Value)
+    {
+        <p> @mark</p>
+    }
 
-@if (User.IsInRole("Admin"))
-{
-    <form asp-action="GiveMark" method="post">
-        <input type="hidden" name="studentId" value="@Model.StudentId"/>
-        <input type="hidden" name="studentId" value="@Model.CourseId" />
-        <label> Enter Mark:</label>
-        <input type="number" name="grade" required/>
-        <button type="submit"> Give mark</button>
-    </form>
+    @if (User.IsInRole("Admin"))
+    {
+        <form asp-controller="Student" asp-action="GiveMark" method="post">
+            <input type="hidden" name="studentId" value="@Model.StudentId" />
+            <input type="hidden" name="studentId" value="@Model.CourseId" />
+            <input type="hidden" name="courseModuleId" value="@keyValue.Key" />
+            <label> Enter Mark:</label>
+            <input type="number" name="grade" required />
+            <button type="submit"> Give mark</button>
+        </form>
+    }
 }
