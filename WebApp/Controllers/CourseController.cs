@@ -11,17 +11,15 @@ namespace WebApp.Controllers
 {
     [Route("[controller]")]
     [Controller]
-    public class CourseController : Controller
+    public class CourseController : BaseController
     {
         private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
-        private readonly UserManager<User> UserManager;
         private readonly IMapper Mapper;
-        public CourseController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper)
+        public CourseController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) : base(userManager)
         {
             StudentService = studentService;
             CourseService = courseService;
-            UserManager = userManager;
             Mapper = mapper;
         }
 
@@ -48,15 +46,14 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> AllCoursesStudent()
         {
-            var currUser = await UserManager.GetUserAsync(User);
             var courses = await CourseService.GetActiveCoursesAsync();
 
-            if (currUser == null)
+            if (CurrentUser == null)
             {
                 return NotFound();
             }
 
-            var student = await StudentService.GetStudentByUserId(currUser.Id);
+            var student = await StudentService.GetStudentByUserId(CurrentUser.Id);
             if (student == null)
             {
                 return NotFound();

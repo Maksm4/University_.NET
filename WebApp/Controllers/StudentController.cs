@@ -7,19 +7,20 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using WebApp.Models.ViewModel;
+using WebApp.Models.InputModel;
 
 namespace WebApp.Controllers
 {
     [Route("[controller]")]
     [Controller]
-    public class StudentController : Controller
+    public class StudentController : BaseController
     {
         private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
         private readonly UserManager<User> UserManager;
         private readonly IMapper Mapper;
 
-        public StudentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper)
+        public StudentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) : base(userManager)
         {
             StudentService = studentService;
             CourseService = courseService;
@@ -36,19 +37,14 @@ namespace WebApp.Controllers
         }
 
         [Authorize(Roles = Role.Student)]
-        public async Task<IActionResult> Profile()
+        public IActionResult Profile()
         {
-            //extract to repiository
-            var user = await UserManager.Users
-                .Include(u => u.student)
-                .FirstOrDefaultAsync(u => u.Id == UserManager.GetUserId(User));
-
-            if (user == null)
+            if (CurrentUser == null)
             {
                 return NotFound();
             }
 
-            return View(Mapper.Map<ProfileViewModel>(user));
+            return View(Mapper.Map<ProfileViewModel>(CurrentUser));
         }
 
         [Authorize(Roles = $"{Role.Student}, {Role.Admin}")]
@@ -66,14 +62,12 @@ namespace WebApp.Controllers
                 student = await StudentService.GetStudent(studentId.Value);
             }else
             {
-                var userId = UserManager.GetUserId(User);
-
-                if (userId == null)
+                if (CurrentUser == null)
                 {
                     return NotFound();
                 }
 
-                student = await StudentService.GetStudentByUserId(userId);
+                student = await StudentService.GetStudentByUserId(CurrentUser.Id);
             }
 
             if (student == null)
@@ -124,6 +118,48 @@ namespace WebApp.Controllers
 
             Console.WriteLine("mark given");
             return RedirectToAction("List", "Student");
+        }
+
+        [HttpGet]
+        //[Authorize(Roles = Role.Admin)]
+        [Route("Register")]
+        public async Task<IActionResult> RegisterStudent()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        //[Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> RegisterStudent(RegisterStudentModel student)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(student);
+            }
+
+            var user = CreateUser();
+
+            user.Email = student.Email;
+            user.UserName = student.Email;
+
+            await UserManager.CreateAsync(user, student.Password);
+
+            await UserManager.AddToRoleAsync(user, Role.Admin);
+
+            return RedirectToAction("List", "Student");
+        }
+
+
+        private User CreateUser()
+        {
+            try
+            {
+                return Activator.CreateInstance<User>();
+            }
+            catch
+            {
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}");
+            }
         }
     }
 }

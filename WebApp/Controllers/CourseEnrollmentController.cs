@@ -13,17 +13,15 @@ namespace WebApp.Controllers
 {
     [Route("[controller]")]
     [Controller]
-    public class CourseEnrollmentController : Controller
+    public class CourseEnrollmentController : BaseController
     {
         private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
-        private readonly UserManager<User> UserManager;
         private readonly IMapper Mapper;
-        public CourseEnrollmentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper)
+        public CourseEnrollmentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) : base(userManager)
         {
             StudentService = studentService;
             CourseService = courseService;
-            UserManager = userManager;
             Mapper = mapper;
         }
 
@@ -44,13 +42,11 @@ namespace WebApp.Controllers
 
             }else
             {
-                var userId = UserManager.GetUserId(User);
-                if (userId == null)
+                if (CurrentUser == null)
                 {
                     return NotFound();
                 }
-
-                student = await StudentService.GetStudentByUserId(userId);
+                student = await StudentService.GetStudentByUserId(CurrentUser.Id);
             }
 
             if (student == null)
@@ -80,12 +76,7 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> CourseEnroll(int courseId)
         {
-            //repository extract
-            var currentUser = await UserManager.Users
-                .Include(u => u.student)
-                .FirstOrDefaultAsync(u => u.Id == UserManager.GetUserId(User));
-
-            if (currentUser == null || currentUser.student == null)
+            if (CurrentUser == null || CurrentUser.student == null)
             {
                 return NotFound();
             }
@@ -96,11 +87,11 @@ namespace WebApp.Controllers
             }
 
             //check if already enrolled
-            var coursesTaken = await StudentService.GetCoursesTakenByStudentAsync(currentUser.student.StudentId);
+            var coursesTaken = await StudentService.GetCoursesTakenByStudentAsync(CurrentUser.student.StudentId);
             if (!coursesTaken.Contains(course))
             {
-                currentUser.student.EnrollInCourse(course);
-                await StudentService.SaveStudent(currentUser.student);
+                CurrentUser.student.EnrollInCourse(course);
+                await StudentService.SaveStudent(CurrentUser.student);
             }
             return RedirectToAction("List");
         }
