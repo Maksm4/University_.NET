@@ -165,7 +165,6 @@ namespace WebApp.Controllers
             return RedirectToAction("List", "Student");
         }
 
-
         private User CreateUser()
         {
             try

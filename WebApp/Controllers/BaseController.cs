@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {
@@ -23,10 +24,10 @@ namespace WebApp.Controllers
 
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole(Role.Admin))
+                if (User.IsInRole(Role.Admin.ToString()))
                 {
                     CurrentUser = UserManager.GetUserAsync(User).Result;
-                }else if (User.IsInRole(Role.Student))
+                }else if (User.IsInRole(Role.Student.ToString()))
                 {
                     CurrentUser = UserManager.Users.Include(u => u.student)
                         .FirstOrDefault(u => u.Id == UserManager.GetUserId(User));

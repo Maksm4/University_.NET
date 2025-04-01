@@ -5,6 +5,7 @@ using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Models;
 using WebApp.Models.ViewModel;
 
 namespace WebApp.Controllers

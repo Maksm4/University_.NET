@@ -1,4 +1,4 @@
-﻿namespace WebApp.Controllers
+﻿namespace WebApp.Models
 {
     public static class Role
     {
