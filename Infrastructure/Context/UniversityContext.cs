@@ -42,8 +42,8 @@ namespace Infrastructure.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-
-             optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+            optionsBuilder.EnableSensitiveDataLogging();
+            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
         }
     }
 }

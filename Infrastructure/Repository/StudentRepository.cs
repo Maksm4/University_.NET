@@ -45,5 +45,10 @@ namespace Infrastructure.Repository
 
             return user.student;
         }
+
+        public bool IsDetached(Student student)
+        {
+            return dbContext.Entry(student).State == EntityState.Detached;
+        }
     }
 }

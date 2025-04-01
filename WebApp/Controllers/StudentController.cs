@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using WebApp.Models.ViewModel;
 using WebApp.Models.InputModel;
+using ApplicationCore.Service;
 
 namespace WebApp.Controllers
 {
@@ -49,7 +50,7 @@ namespace WebApp.Controllers
 
         [Authorize(Roles = $"{Role.Student}, {Role.Admin}")]
         [Route("Marks")]
-        public async Task<IActionResult> MarksFromCourse(int? studentId, int courseId)
+        public async Task<IActionResult> MarksFromCourse([FromQuery]int? studentId, [FromQuery]int courseId)
         {
             Student? student = null;
             if (User.IsInRole(Role.Admin))
@@ -76,36 +77,44 @@ namespace WebApp.Controllers
             }
 
             var marks = await StudentService.GetStudentMarksForCourseAsync(student.StudentId, courseId);
+            var course = await CourseService.GetCourseAsync(courseId);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            var courseModules = course.CourseModules;
 
 
             var model = new MarkedModulesViewModel
             {
                 StudentId = student.StudentId,
                 CourseId = courseId,
-                CourseModuleMarks = marks.GroupBy(m => m.CourseModuleId)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(m => m.Mark).ToList()
-                    )
+                CourseModuleMarks = courseModules.Select( cm =>
+                    new MarkViewModel
+                    {
+                        CourseModuleId = cm.CourseModuleId,
+                        Mark = marks.FirstOrDefault(m => m.CourseModuleId == cm.CourseModuleId)?.Mark
+                    }).ToList()
             };
 
             return View(model);
         }
 
-
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> GiveMark(int studentId, int courseId, int courseModuleId, int mark)
+        public async Task<IActionResult> GiveMark([FromForm]GiveMarkModel model)
         {
-            var student = await StudentService.GetStudent(studentId);
-            var course = await CourseService.GetCourseAsync(courseId);
+            var student = await StudentService.GetStudent(model.StudentId);
+            var course = await CourseService.GetCourseAsync(model.CourseId);
 
             if (student == null || course == null)
             {
                 return NotFound();
             }
 
-            var courseModule = course.CourseModules.FirstOrDefault(cm => cm.CourseModuleId == courseModuleId);
+            var courseModule = course.CourseModules.FirstOrDefault(cm => cm.CourseModuleId == model.CourseModuleId);
 
             if (courseModule == null)
 
@@ -113,7 +122,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            student.GiveMark(courseModule, mark);
+            student.GiveMark(courseModule, model.Mark);
             await StudentService.SaveStudent(student);
 
             Console.WriteLine("mark given");
@@ -121,16 +130,17 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = Role.Admin)]
         [Route("Register")]
-        public async Task<IActionResult> RegisterStudent()
+        [Authorize(Roles = Role.Admin)]
+        public IActionResult RegisterStudent()
         {
             return View();
         }
 
         [HttpPost]
-        //[Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> RegisterStudent(RegisterStudentModel student)
+        [Route("Register")]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> RegisterStudent([FromForm] RegisterStudentModel student)
         {
             if (!ModelState.IsValid)
             {
@@ -144,7 +154,7 @@ namespace WebApp.Controllers
 
             await UserManager.CreateAsync(user, student.Password);
 
-            await UserManager.AddToRoleAsync(user, Role.Admin);
+            await UserManager.AddToRoleAsync(user, Role.Student);
 
             return RedirectToAction("List", "Student");
         }

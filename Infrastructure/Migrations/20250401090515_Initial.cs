@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class userAdded : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -244,7 +244,7 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EnrolledCourse", x => new { x.CourseId, x.LearningPlanId });
+                    table.PrimaryKey("PK_EnrolledCourse", x => new { x.LearningPlanId, x.CourseId });
                     table.ForeignKey(
                         name: "FK_EnrolledCourse_Course_CourseId",
                         column: x => x.CourseId,
@@ -281,7 +281,7 @@ namespace Infrastructure.Migrations
                         name: "FK_ModuleMark_EnrolledCourse_LearningPlanId_CourseId",
                         columns: x => new { x.LearningPlanId, x.CourseId },
                         principalTable: "EnrolledCourse",
-                        principalColumns: new[] { "CourseId", "LearningPlanId" },
+                        principalColumns: new[] { "LearningPlanId", "CourseId" },
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -337,9 +337,9 @@ namespace Infrastructure.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EnrolledCourse_LearningPlanId",
+                name: "IX_EnrolledCourse_CourseId",
                 table: "EnrolledCourse",
-                column: "LearningPlanId");
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LearningPlan_StudentId",

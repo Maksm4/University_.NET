@@ -1,23 +1,41 @@
 ﻿@model MarkedModulesViewModel
 
-@foreach (var keyValue in Model.CourseModuleMarks)
+@foreach (var markedModule in Model.CourseModuleMarks)
 {
-    <h1>courseModule ID: @keyValue.Key</h1>
-    <p>Grades: </p>
-    @foreach (var mark in keyValue.Value)
-    {
-        <p> @mark</p>
-    }
+    <h1>courseModule ID: @markedModule.CourseModuleId</h1>
 
-    @if (User.IsInRole("Admin"))
+    @if (markedModule.Mark != null)
     {
-        <form asp-controller="Student" asp-action="GiveMark" method="post">
-            <input type="hidden" name="studentId" value="@Model.StudentId" />
-            <input type="hidden" name="studentId" value="@Model.CourseId" />
-            <input type="hidden" name="courseModuleId" value="@keyValue.Key" />
-            <label> Enter Mark:</label>
-            <input type="number" name="grade" required />
-            <button type="submit"> Give mark</button>
-        </form>
+        @if (User.IsInRole("Admin"))
+        {
+            <form asp-controller="Student" asp-action="GiveMark" method="post">
+                <input type="hidden" name="studentId" value="@Model.StudentId" />
+                <input type="hidden" name="CourseId" value="@Model.CourseId" />
+                <input type="hidden" name="courseModuleId" value="@markedModule.CourseModuleId" />
+                <label>Grade: @markedModule.Mark Edit Mark:</label>
+                <input type="number" name="Mark" required />
+                <button type="submit"> Change Mark</button>
+            </form>
+        }else
+        {
+            <p>Grade: @markedModule.Mark</p>
+        }
+    }
+    else
+    {
+        @if (User.IsInRole("Admin"))
+        {
+            <form asp-controller="Student" asp-action="GiveMark" method="post">
+                <input type="hidden" name="studentId" value="@Model.StudentId" />
+                <input type="hidden" name="CourseId" value="@Model.CourseId" />
+                <input type="hidden" name="courseModuleId" value="@markedModule.CourseModuleId" />
+                <label> Enter Mark:</label>
+                <input type="number" name="Mark" required />
+                <button type="submit"> Give mark</button>
+            </form>
+        }else
+        {
+            <p>Grade: @markedModule.Mark</p>
+        }
     }
 }

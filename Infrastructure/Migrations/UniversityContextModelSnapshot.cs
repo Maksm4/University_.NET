@@ -102,16 +102,16 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.EnrolledCourse", b =>
                 {
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
                     b.Property<int>("LearningPlanId")
                         .HasColumnType("int");
 
-                    b.HasKey("CourseId", "LearningPlanId")
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LearningPlanId", "CourseId")
                         .HasName("PK_EnrolledCourse");
 
-                    b.HasIndex("LearningPlanId");
+                    b.HasIndex("CourseId");
 
                     b.ToTable("EnrolledCourse", (string)null);
                 });
@@ -393,10 +393,10 @@ namespace Infrastructure.Migrations
 
                     b.OwnsOne("Domain.Models.VObject.DateTimeRange", "DateTimeRange", b1 =>
                         {
-                            b1.Property<int>("EnrolledCourseCourseId")
+                            b1.Property<int>("EnrolledCourseLearningPlanId")
                                 .HasColumnType("int");
 
-                            b1.Property<int>("EnrolledCourseLearningPlanId")
+                            b1.Property<int>("EnrolledCourseCourseId")
                                 .HasColumnType("int");
 
                             b1.Property<DateOnly?>("EndTime")
@@ -407,12 +407,12 @@ namespace Infrastructure.Migrations
                                 .HasColumnType("date")
                                 .HasColumnName("StartDate");
 
-                            b1.HasKey("EnrolledCourseCourseId", "EnrolledCourseLearningPlanId");
+                            b1.HasKey("EnrolledCourseLearningPlanId", "EnrolledCourseCourseId");
 
                             b1.ToTable("EnrolledCourse");
 
                             b1.WithOwner()
-                                .HasForeignKey("EnrolledCourseCourseId", "EnrolledCourseLearningPlanId");
+                                .HasForeignKey("EnrolledCourseLearningPlanId", "EnrolledCourseCourseId");
                         });
 
                     b.Navigation("DateTimeRange")

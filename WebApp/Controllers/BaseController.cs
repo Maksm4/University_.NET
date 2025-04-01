@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Controllers
 {
-    public class BaseController : Controller
+    public abstract class BaseController : Controller
     {
         protected User? CurrentUser { get; private set; }
 

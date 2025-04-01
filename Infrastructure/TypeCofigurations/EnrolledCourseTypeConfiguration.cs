@@ -11,7 +11,7 @@ namespace Infrastructure.TypeCofigurations
         {
             builder.ToTable("EnrolledCourse");
 
-            builder.HasKey(ec => new { ec.CourseId, ec.LearningPlanId })
+            builder.HasKey(ec => new { ec.LearningPlanId, ec.CourseId })
                 .HasName("PK_EnrolledCourse");
 
             builder.HasOne<Course>()

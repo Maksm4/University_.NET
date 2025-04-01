@@ -7,5 +7,6 @@ namespace ApplicationCore.IRepository
     {
         Task<IReadOnlyCollection<Student>> GetAllStudentsWithEnrolledCoursesAsync();
         Task<Student?> GetStudentByUserId(string userId);
+        bool IsDetached(Student student);
     }
 }

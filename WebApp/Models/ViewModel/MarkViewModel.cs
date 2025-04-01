@@ -2,7 +2,7 @@
 {
     public class MarkViewModel
     {
-        public int Grade { get; set; }
+        public int? Mark { get; set; }
         public int CourseModuleId { get; set; }
     }
 }

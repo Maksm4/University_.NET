@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form id="registerForm" method="post">
+        <form asp-controller="Student" asp-action="Register" method="post">
             <h2>Create a new account for student</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
@@ -31,7 +31,7 @@
                 <label asp-for="@Model.BirthDate"> Birth Date</label>
                 <span asp-validation-for="@Model.BirthDate" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register Student</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Register Student</button>
         </form>
     </div>
 </div>

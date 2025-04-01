@@ -23,11 +23,11 @@ namespace ApplicationCore.Service
             {
                 throw new ArgumentNullException();
             }
-            if (studentRepository.FindByIdAsync(student.StudentId) == null)
+            if (studentRepository.IsDetached(student))
             {
-                return await studentRepository.CreateAsync(student);
+                 studentRepository.Update(student);
             }
-            studentRepository.Update(student);
+
             await studentRepository.SaveAsync();
             return student;
         }

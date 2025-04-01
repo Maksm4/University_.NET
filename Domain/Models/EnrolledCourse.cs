@@ -26,7 +26,21 @@ namespace Domain.Models
 
         public void AddMarkedModule(MarkedModule markedModule)
         {
-            _markedModules.Add(markedModule);
+            if (markedModule == null)
+            {
+                throw new ArgumentNullException(nameof(markedModule));
+            }
+
+            var markedModuleToEdit = _markedModules.FirstOrDefault(mm => mm.CourseModuleId == markedModule.CourseModuleId && mm.LearningPlanId == markedModule.LearningPlanId);
+
+            if (markedModuleToEdit == null)
+            {
+                _markedModules.Add(markedModule);
+            }else
+            {
+                _markedModules.Remove(markedModuleToEdit);
+                _markedModules.Add(markedModule);
+            }
         }
     }
 }
