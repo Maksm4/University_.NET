@@ -6,7 +6,7 @@ namespace ApplicationCore.IRepository
     public interface IStudentRepository : ICRUDRepository<Student>
     {
         Task<IReadOnlyCollection<Student>> GetAllStudentsWithEnrolledCoursesAsync();
-        Task<Student?> GetStudentByUserId(string userId);
+        Task<Student?> GetStudentByUserIdAsync(string userId);
         bool IsDetached(Student student);
     }
 }

@@ -28,7 +28,7 @@ namespace WebApp.Controllers
         [HttpGet]
         [Route("List")]
         [Authorize(Roles = $"{Role.Admin}, {Role.Student}")]
-        public async Task<IActionResult> StudentEnrolledCourses(int? studentId)
+        public async Task<IActionResult> StudentEnrolledCoursesAsync([FromQuery] int? studentId)
         {
             Student? student = null; 
             if (User.IsInRole(Role.Admin))
@@ -38,7 +38,7 @@ namespace WebApp.Controllers
                     return NotFound();
                 }
 
-                student = await StudentService.GetStudent(studentId.Value);
+                student = await StudentService.GetStudentAsync(studentId.Value);
 
             }else
             {
@@ -46,7 +46,7 @@ namespace WebApp.Controllers
                 {
                     return NotFound();
                 }
-                student = await StudentService.GetStudentByUserId(CurrentUser.Id);
+                student = await StudentService.GetStudentByUserIdAsync(CurrentUser.Id);
             }
 
             if (student == null)
@@ -74,7 +74,7 @@ namespace WebApp.Controllers
         [HttpGet("courseId")]
         [Route("Enroll")]
         [Authorize(Roles = Role.Student)]
-        public async Task<IActionResult> CourseEnroll(int courseId)
+        public async Task<IActionResult> CourseEnrollAsync([FromQuery] int courseId)
         {
             if (CurrentUser == null || CurrentUser.student == null)
             {
@@ -91,7 +91,7 @@ namespace WebApp.Controllers
             if (!coursesTaken.Contains(course))
             {
                 CurrentUser.student.EnrollInCourse(course);
-                await StudentService.SaveStudent(CurrentUser.student);
+                await StudentService.SaveStudentAsync(CurrentUser.student);
             }
             return RedirectToAction("List");
         }

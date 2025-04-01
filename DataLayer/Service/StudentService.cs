@@ -17,7 +17,7 @@ namespace ApplicationCore.Service
             this.courseRepository = courseRepository;
         }
 
-        public async Task<Student> SaveStudent(Student student)
+        public async Task<Student> SaveStudentAsync(Student student)
         {
             if (student == null)
             {
@@ -53,7 +53,7 @@ namespace ApplicationCore.Service
             return await courseRepository.GetActiveCoursesAsync(courseIds);
         }
 
-        public async Task<Student?> GetStudent(int studentId)
+        public async Task<Student?> GetStudentAsync(int studentId)
         {
             return await studentRepository.FindByIdAsync(studentId);
         }
@@ -70,9 +70,9 @@ namespace ApplicationCore.Service
             return student.GetMarksFromCourse(courseId);
         }
 
-        public async Task<Student?> GetStudentByUserId(string userId)
+        public async Task<Student?> GetStudentByUserIdAsync(string userId)
         {
-            var student = await studentRepository.GetStudentByUserId(userId);
+            var student = await studentRepository.GetStudentByUserIdAsync(userId);
 
             if (student == null)
             {

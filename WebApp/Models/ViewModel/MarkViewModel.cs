@@ -4,5 +4,6 @@
     {
         public int? Mark { get; set; }
         public int CourseModuleId { get; set; }
+        public required string CourseDescription { get; set; }
     }
 }

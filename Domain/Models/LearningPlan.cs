@@ -1,6 +1,4 @@
-﻿using Domain.Models.Aggregate;
-
-namespace Domain.Models
+﻿namespace Domain.Models
 {
     public class LearningPlan
     {
@@ -11,6 +9,11 @@ namespace Domain.Models
         public IReadOnlyCollection<EnrolledCourse> EnrolledCourses => _enrolledCourses.AsReadOnly();
 
         private LearningPlan() { }
+
+        public LearningPlan(string name)
+        {
+            Name = name;
+        }
         public LearningPlan(string name, int studentId)
         {
             Name = name;

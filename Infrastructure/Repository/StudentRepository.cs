@@ -30,7 +30,7 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync(s => s.StudentId == studentId);
         }
 
-        public async Task<Student?> GetStudentByUserId(string userId)
+        public async Task<Student?> GetStudentByUserIdAsync(string userId)
         {
             var user = await dbContext.Users
                 .Include(u => u.student)

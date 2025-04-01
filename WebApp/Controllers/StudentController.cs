@@ -1,14 +1,13 @@
 ﻿using ApplicationCore.IService;
-using Domain.Models.Aggregate;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using WebApp.Models.ViewModel;
+using Domain.Models;
+using Domain.Models.Aggregate;
+using Infrastructure.Context;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using WebApp.Models.InputModel;
-using ApplicationCore.Service;
+using WebApp.Models.ViewModel;
 
 namespace WebApp.Controllers
 {
@@ -31,7 +30,7 @@ namespace WebApp.Controllers
 
         [Authorize(Roles = Role.Admin)]
         [Route("List")]
-        public async Task<IActionResult> AllStudents()
+        public async Task<IActionResult> AllStudentsAsync()
         {
             var students = await StudentService.GetAllStudentsAsync();
             return View(Mapper.Map<IReadOnlyCollection<StudentInfoViewModel>>(students));
@@ -50,7 +49,7 @@ namespace WebApp.Controllers
 
         [Authorize(Roles = $"{Role.Student}, {Role.Admin}")]
         [Route("Marks")]
-        public async Task<IActionResult> MarksFromCourse([FromQuery]int? studentId, [FromQuery]int courseId)
+        public async Task<IActionResult> MarksFromCourseAsync([FromQuery] int? studentId, [FromQuery] int courseId)
         {
             Student? student = null;
             if (User.IsInRole(Role.Admin))
@@ -60,15 +59,16 @@ namespace WebApp.Controllers
                     return NotFound();
                 }
 
-                student = await StudentService.GetStudent(studentId.Value);
-            }else
+                student = await StudentService.GetStudentAsync(studentId.Value);
+            }
+            else
             {
                 if (CurrentUser == null)
                 {
                     return NotFound();
                 }
 
-                student = await StudentService.GetStudentByUserId(CurrentUser.Id);
+                student = await StudentService.GetStudentByUserIdAsync(CurrentUser.Id);
             }
 
             if (student == null)
@@ -91,11 +91,12 @@ namespace WebApp.Controllers
             {
                 StudentId = student.StudentId,
                 CourseId = courseId,
-                CourseModuleMarks = courseModules.Select( cm =>
+                CourseModuleMarks = courseModules.Select(cm =>
                     new MarkViewModel
                     {
                         CourseModuleId = cm.CourseModuleId,
-                        Mark = marks.FirstOrDefault(m => m.CourseModuleId == cm.CourseModuleId)?.Mark
+                        Mark = marks.FirstOrDefault(m => m.CourseModuleId == cm.CourseModuleId)?.Mark,
+                        CourseDescription = cm.Description
                     }).ToList()
             };
 
@@ -104,9 +105,9 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> GiveMark([FromForm]GiveMarkModel model)
+        public async Task<IActionResult> GiveMarkAsync([FromForm] GiveMarkModel model)
         {
-            var student = await StudentService.GetStudent(model.StudentId);
+            var student = await StudentService.GetStudentAsync(model.StudentId);
             var course = await CourseService.GetCourseAsync(model.CourseId);
 
             if (student == null || course == null)
@@ -123,7 +124,7 @@ namespace WebApp.Controllers
             }
 
             student.GiveMark(courseModule, model.Mark);
-            await StudentService.SaveStudent(student);
+            await StudentService.SaveStudentAsync(student);
 
             Console.WriteLine("mark given");
             return RedirectToAction("List", "Student");
@@ -140,19 +141,24 @@ namespace WebApp.Controllers
         [HttpPost]
         [Route("Register")]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> RegisterStudent([FromForm] RegisterStudentModel student)
+        public async Task<IActionResult> RegisterStudentAsync([FromForm] RegisterStudentModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(student);
+                return View(model);
             }
 
             var user = CreateUser();
 
-            user.Email = student.Email;
-            user.UserName = student.Email;
+            user.Email = model.Email;
+            user.UserName = model.Email;
 
-            await UserManager.CreateAsync(user, student.Password);
+            await UserManager.CreateAsync(user, model.Password);
+
+            var student = new Student(model.FirstName, model.LastName, model.BirthDate, new LearningPlan(model.FirstName+ user.Id));
+          
+            user.student = student;
+            await StudentService.SaveStudentAsync(student);
 
             await UserManager.AddToRoleAsync(user, Role.Student);
 

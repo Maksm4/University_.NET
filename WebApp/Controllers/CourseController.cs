@@ -25,7 +25,7 @@ namespace WebApp.Controllers
 
         [Route("ListAdmin")]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> AllCoursesAdmin()
+        public async Task<IActionResult> AllCoursesAdminAsync()
         {
             var courses = await CourseService.GetActiveCoursesAsync();
 
@@ -44,7 +44,7 @@ namespace WebApp.Controllers
 
         [Route("List")]
         [Authorize(Roles = Role.Student)]
-        public async Task<IActionResult> AllCoursesStudent()
+        public async Task<IActionResult> AllCoursesStudentAsync()
         {
             var courses = await CourseService.GetActiveCoursesAsync();
 
@@ -53,7 +53,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var student = await StudentService.GetStudentByUserId(CurrentUser.Id);
+            var student = await StudentService.GetStudentByUserIdAsync(CurrentUser.Id);
             if (student == null)
             {
                 return NotFound();
