@@ -4,7 +4,7 @@
     {
         public string GenerateRandom()
         {
-            return "Password123!";
+            return "Password123$";
         }
     }
 }

@@ -6,6 +6,7 @@ using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.externalServices;
 using WebApp.Models;
 using WebApp.Models.InputModel;
 using WebApp.Models.ViewModel;
@@ -19,13 +20,17 @@ namespace WebApp.Controllers
         private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
         private readonly UserManager<User> UserManager;
+        private readonly IPasswordGenerator PasswordGenerator;
+        private readonly IEmailSender EmailSender;
         private readonly IMapper Mapper;
 
-        public StudentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper)
+        public StudentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper, IPasswordGenerator passwordGenerator, IEmailSender emailSender)
         {
             StudentService = studentService;
             CourseService = courseService;
             UserManager = userManager;
+            PasswordGenerator = passwordGenerator;
+            EmailSender = emailSender;
             Mapper = mapper;
         }
 
@@ -153,8 +158,11 @@ namespace WebApp.Controllers
 
             user.Email = model.Email;
             user.UserName = model.Email;
+            user.defaultpassword = true;
 
-            await UserManager.CreateAsync(user, model.Password);
+            var password = PasswordGenerator.GenerateRandom();
+
+            await UserManager.CreateAsync(user, password);
 
             var student = new Student(model.FirstName, model.LastName, model.BirthDate, new LearningPlan(model.FirstName+ user.Id));
           
@@ -163,6 +171,7 @@ namespace WebApp.Controllers
 
             await UserManager.AddToRoleAsync(user, Role.Student);
 
+            EmailSender.SendEmail($"your temporarry password: {password}", user.Email);
             return RedirectToAction("List", "Student");
         }
 

@@ -10,12 +10,6 @@ namespace WebApp.Models.InputModel
         public required string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public required string Password { get; set; }
-
-        [Required]
         [StringLength(100)]
         [Display(Name = "First Name")]
         public required string FirstName { get; set; }

@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
-
-namespace WebApp.externalServices
+﻿namespace WebApp.externalServices
 {
     public class ConsoleEmailSender : IEmailSender
     {
-        public Task SendEmailAsync(string email, string subject, string htmlMessage)
+        public void SendEmail(string Content, string emailAddress)
         {
-            Console.WriteLine($"email sent to: {email} subject: {subject} {htmlMessage}");
-            return Task.CompletedTask;
+            Console.WriteLine($"to address: {emailAddress}: content: {Content}");
         }
     }
 }

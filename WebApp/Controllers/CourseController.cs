@@ -54,6 +54,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
+
             var student = await StudentService.GetStudentByUserIdAsync(CurrentUser.Id);
             if (student == null)
             {

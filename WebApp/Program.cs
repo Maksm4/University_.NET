@@ -5,7 +5,6 @@ using Infrastructure.Context;
 using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using WebApp.externalServices;
 
@@ -25,7 +24,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie();
 //could add here google twitter etc.
 
-builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
+builder.Services.AddSession();
+
+builder.Services.ConfigureApplicationCookie(opt =>
+{
+    opt.LoginPath = "/Account/Login";
+    opt.LogoutPath = "/Account/logout";
+    opt.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+    opt.SlidingExpiration = true;
+});
+
 
 builder.Services.AddAuthorization();
 
@@ -36,6 +44,9 @@ builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+
+builder.Services.AddScoped<IPasswordGenerator, PasswordGenerator>();
+builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -62,6 +73,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthentication();
 
 app.UseAuthorization();

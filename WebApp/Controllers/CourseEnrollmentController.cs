@@ -77,7 +77,7 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> CourseEnrollAsync([FromQuery] int courseId)
         {
-            if (CurrentUser == null || CurrentUser.student == null)
+            if (CurrentUser == null || CurrentUser.studentId ==  null)
             {
                 return NotFound();
             }
@@ -88,11 +88,17 @@ namespace WebApp.Controllers
             }
 
             //check if already enrolled
-            var coursesTaken = await StudentService.GetCoursesTakenByStudentAsync(CurrentUser.student.StudentId);
+            var student = await StudentService.GetStudentAsync(CurrentUser.studentId.Value);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var coursesTaken = await StudentService.GetCoursesTakenByStudentAsync(student.StudentId);
             if (!coursesTaken.Contains(course))
             {
-                CurrentUser.student.EnrollInCourse(course);
-                await StudentService.SaveStudentAsync(CurrentUser.student);
+                student.EnrollInCourse(course);
+                await StudentService.SaveStudentAsync(student);
             }
             return RedirectToAction("List");
         }
