@@ -12,11 +12,6 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         @if (User?.Identity != null && User.Identity.IsAuthenticated)
@@ -24,32 +19,34 @@
                             @if (User != null && User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Register">RegisterStudent</a>
+                                    <a class="nav-link text-dark" asp-controller="Student" asp-action="Register">RegisterStudent</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="List">Students</a>
+                                    <a class="nav-link text-dark" asp-controller="Student" asp-action="List">Students</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="ListAdmin">Courses</a>
+                                    <a class="nav-link text-dark" asp-controller="Course" asp-action="ListAdmin">Courses</a>
                                 </li>
                             }
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Profile">Profile</a>
+                                    <a class="nav-link text-dark" asp-controller="Student" asp-action="Profile">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="List">Courses</a>
+                                    <a class="nav-link text-dark" asp-controller="Course" asp-action="List">Courses</a>
                                 </li>
                             }
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn  btn-link">Logout</button>
+                                </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link text-dark"  asp-controller="Account" asp-action="Login">Login</a>
                             </li>
                         }
                     </ul>

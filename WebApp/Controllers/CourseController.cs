@@ -17,7 +17,7 @@ namespace WebApp.Controllers
         private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
         private readonly IMapper Mapper;
-        public CourseController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) : base(userManager)
+        public CourseController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) 
         {
             StudentService = studentService;
             CourseService = courseService;

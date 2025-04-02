@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Models;
 using WebApp.Models.ViewModel;
 
 namespace WebApp.Controllers
@@ -18,7 +19,7 @@ namespace WebApp.Controllers
         private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
         private readonly IMapper Mapper;
-        public CourseEnrollmentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) : base(userManager)
+        public CourseEnrollmentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) 
         {
             StudentService = studentService;
             CourseService = courseService;

@@ -6,6 +6,7 @@ using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Models;
 using WebApp.Models.InputModel;
 using WebApp.Models.ViewModel;
 
@@ -20,7 +21,7 @@ namespace WebApp.Controllers
         private readonly UserManager<User> UserManager;
         private readonly IMapper Mapper;
 
-        public StudentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) : base(userManager)
+        public StudentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper)
         {
             StudentService = studentService;
             CourseService = courseService;
