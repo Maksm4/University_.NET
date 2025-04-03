@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WebApp.Extension;
 using WebApp.Models;
 using WebApp.Models.ViewModel;
@@ -32,7 +33,7 @@ namespace WebApp.Controllers
         [Authorize(Roles = $"{Role.Admin}, {Role.Student}")]
         public async Task<IActionResult> StudentEnrolledCoursesAsync([FromQuery] int? studentId)
         {
-            Student? student = null; 
+            Student? student = null;
             if (User.IsInRole(Role.Admin))
             {
                 if (studentId == null)
@@ -44,8 +45,8 @@ namespace WebApp.Controllers
 
             }else
             {
-                var userId = User.GetUserId();
-                if (userId == null)
+                var userId = HttpContext.Session.GetUserId();
+                if (string.IsNullOrEmpty(userId))
                 {
                     return NotFound();
                 }
@@ -79,16 +80,16 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> CourseEnrollAsync([FromQuery] int courseId)
         {
-            var studentId = User.GetStudentId();
+            var userId = HttpContext.Session.GetUserId();
            
             var course = await CourseService.GetCourseAsync(courseId);
-            if (course == null || studentId == null)
+            if (course == null || string.IsNullOrEmpty(userId))
             {
                 return NotFound();
             }
 
             //check if already enrolled
-            var student = await StudentService.GetStudentAsync(studentId.Value);
+            var student = await StudentService.GetStudentByUserIdAsync(userId);
             if (student == null)
             {
                 return NotFound();

@@ -40,36 +40,26 @@ namespace WebApp.Controllers
                     return View(model);
                 }
 
-                var result = await SignInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: false);
+                var result = await SignInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ExtensionClaimTypes.UserId.ToString(), user.Id)
-                    };
+                    HttpContext.Session.SetString(SessionData.UserId.ToString(), user.Id);
 
                     if (await UserManager.IsInRoleAsync(user, Role.Admin))
                     {
-                        await SignInManager.SignInWithClaimsAsync(user, model.RememberMe, claims);
                         return RedirectToAction("List", "Student");
                     }
                     else
                     {
+                        HttpContext.Session.SetString(SessionData.HasDefaultPassword.ToString(), user.HasDefaultpassword.ToString());
+                        HttpContext.Session.SetString(SessionData.Email.ToString(), model.Email);
                         if (user.studentId == null)
                         {
                             return NotFound();
                         }
 
-                        claims.AddRange(new List<Claim>()
-                        {
-                            new Claim(ExtensionClaimTypes.StudentId.ToString(), user.studentId.Value.ToString()),
-                            new Claim(ExtensionClaimTypes.DefaultPassword.ToString(), user.defaultpassword.ToString())
-                        });
-
-                        await SignInManager.SignInWithClaimsAsync(user, model.RememberMe, claims);
-
-                        if (user.defaultpassword)
+                        if (user.HasDefaultpassword)
                         {
                             return RedirectToAction("ChangePassword", "Account");
                         }else
@@ -107,8 +97,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = User.GetUserId();
-                if (userId == null)
+                var userId = HttpContext.Session.GetUserId();
+                if (string.IsNullOrEmpty(userId))
                 {
                     return RedirectToAction("Login", "Account");
                 }
@@ -123,7 +113,7 @@ namespace WebApp.Controllers
 
                 if (result.Succeeded)
                 {
-                    user.defaultpassword = false;
+                    user.HasDefaultpassword = false;
                     await UserManager.UpdateAsync(user);
                     await SignInManager.SignOutAsync();
 

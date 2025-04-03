@@ -1,30 +1,22 @@
-﻿using System.Security.Claims;
-using WebApp.Models;
+﻿using WebApp.Models;
 
 namespace WebApp.Extension
 {
     public static class UserExtension
     {
-        public static string? GetUserId(this ClaimsPrincipal user)
+        public static string? GetUserId(this ISession session)
         {
-            return user.FindFirstValue(ExtensionClaimTypes.UserId.ToString()) ?? null;
+            return session.GetString(SessionData.UserId.ToString()) ?? null;
         }
 
-        public static int? GetStudentId(this ClaimsPrincipal user)
+        public static bool HasDefaultPassword(this ISession session)
         {
-            var studentIdClaim = user.FindFirst(ExtensionClaimTypes.StudentId.ToString());
-            return studentIdClaim != null ? int.Parse(studentIdClaim.Value) : null;
+            return bool.TryParse(session.GetString(SessionData.HasDefaultPassword.ToString()), out bool result) && result;
         }
 
-        public static bool HasDefaultPassword(this ClaimsPrincipal user)
+        public static string? GetEmail(this ISession session)
         {
-            var hasDefault = user.FindFirst(ExtensionClaimTypes.DefaultPassword.ToString()); 
-            return hasDefault != null && bool.TryParse(hasDefault.Value, out bool result) && result;
-        }
-
-        public static string? GetEmail(this ClaimsPrincipal user)
-        {
-            return user.FindFirstValue(ClaimTypes.Email) ?? null;
+            return session.GetString(SessionData.Email.ToString()) ?? null;
         }
     }
 }

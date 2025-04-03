@@ -7,6 +7,6 @@ namespace Infrastructure.Context
     {
         public Student? student { get; set; }
         public int? studentId { get; set; }
-        public bool defaultpassword { get; set; }
+        public bool HasDefaultpassword { get; set; }
     }
 }

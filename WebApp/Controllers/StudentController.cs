@@ -47,15 +47,15 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> ProfileAsync()
         {
-            var studentId = User.GetStudentId();
-            var email = User.GetEmail();
+            var userId = HttpContext.Session.GetUserId();
+            var email = HttpContext.Session.GetEmail();
 
-            if (studentId == null || email == null)
+            if (string.IsNullOrEmpty(userId) || email == null)
             {
                 return NotFound();
             }
 
-            var student = await StudentService.GetStudentAsync(studentId.Value);
+            var student = await StudentService.GetStudentByUserIdAsync(userId);
             if (student == null)
             {
                 return NotFound();
@@ -87,8 +87,8 @@ namespace WebApp.Controllers
             }
             else
             {
-                var userId = User.GetUserId();
-                if (userId == null)
+                var userId = HttpContext.Session.GetUserId();
+                if (string.IsNullOrEmpty(userId))
                 {
                     return NotFound();
                 }
@@ -177,7 +177,7 @@ namespace WebApp.Controllers
 
             user.Email = model.Email;
             user.UserName = model.Email;
-            user.defaultpassword = true;
+            user.HasDefaultpassword = true;
 
             var password = PasswordGenerator.GenerateRandom();
 

@@ -49,12 +49,12 @@ namespace WebApp.Controllers
         public async Task<IActionResult> AllCoursesStudentAsync()
         {
             var courses = await CourseService.GetActiveCoursesAsync();
-            var userId = User.GetUserId();
-            if (userId == null)
+            var userId = HttpContext.Session.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
             {
                 return NotFound();
             }
-
 
             var student = await StudentService.GetStudentByUserIdAsync(userId);
             if (student == null)
