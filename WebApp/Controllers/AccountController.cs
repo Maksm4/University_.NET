@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using WebApp.Extension;
 using WebApp.Models;
 using WebApp.Models.InputModel;
@@ -44,15 +43,12 @@ namespace WebApp.Controllers
 
                 if (result.Succeeded)
                 {
-                    HttpContext.Session.SetString(SessionData.UserId.ToString(), user.Id);
-
                     if (await UserManager.IsInRoleAsync(user, Role.Admin))
                     {
                         return RedirectToAction("List", "Student");
                     }
                     else
                     {
-                        HttpContext.Session.SetString(SessionData.HasDefaultPassword.ToString(), user.HasDefaultpassword.ToString());
                         HttpContext.Session.SetString(SessionData.Email.ToString(), model.Email);
                         if (user.studentId == null)
                         {
@@ -97,7 +93,7 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = HttpContext.Session.GetUserId();
+                var userId = UserManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
                     return RedirectToAction("Login", "Account");
@@ -113,7 +109,7 @@ namespace WebApp.Controllers
 
                 if (result.Succeeded)
                 {
-                    user.HasDefaultpassword = false;
+                    HttpContext.Session.SetIfDefaultpassword(user, false);
                     await UserManager.UpdateAsync(user);
                     await SignInManager.SignOutAsync();
 

@@ -2,7 +2,6 @@
 {
     public enum SessionData
     {
-        UserId,
         HasDefaultPassword,
         Email
     }

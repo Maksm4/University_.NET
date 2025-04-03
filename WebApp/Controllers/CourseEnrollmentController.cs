@@ -20,11 +20,13 @@ namespace WebApp.Controllers
     {
         private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
+        private readonly UserManager<User> UserManager;
         private readonly IMapper Mapper;
         public CourseEnrollmentController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) 
         {
             StudentService = studentService;
             CourseService = courseService;
+            UserManager = userManager;
             Mapper = mapper;
         }
 
@@ -45,7 +47,7 @@ namespace WebApp.Controllers
 
             }else
             {
-                var userId = HttpContext.Session.GetUserId();
+                var userId = UserManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
                     return NotFound();
@@ -80,7 +82,7 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> CourseEnrollAsync([FromQuery] int courseId)
         {
-            var userId = HttpContext.Session.GetUserId();
+            var userId = UserManager.GetUserId(User);
            
             var course = await CourseService.GetCourseAsync(courseId);
             if (course == null || string.IsNullOrEmpty(userId))

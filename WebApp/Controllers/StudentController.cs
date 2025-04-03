@@ -47,7 +47,7 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> ProfileAsync()
         {
-            var userId = HttpContext.Session.GetUserId();
+            var userId = UserManager.GetUserId(User);
             var email = HttpContext.Session.GetEmail();
 
             if (string.IsNullOrEmpty(userId) || email == null)
@@ -87,7 +87,7 @@ namespace WebApp.Controllers
             }
             else
             {
-                var userId = HttpContext.Session.GetUserId();
+                var userId = UserManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
                     return NotFound();
@@ -177,7 +177,7 @@ namespace WebApp.Controllers
 
             user.Email = model.Email;
             user.UserName = model.Email;
-            user.HasDefaultpassword = true;
+            HttpContext.Session.SetIfDefaultpassword(user, true);
 
             var password = PasswordGenerator.GenerateRandom();
 

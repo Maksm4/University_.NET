@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.externalServices;
+using WebApp.Middlewares;
+using WebApp.ViewModelMappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +31,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddSession(opt =>
 {
-    opt.IdleTimeout = TimeSpan.FromMinutes(5);
+    opt.IdleTimeout = TimeSpan.FromMinutes(10);
     opt.Cookie.HttpOnly = true;
     opt.Cookie.IsEssential = true;
 });
@@ -57,7 +59,7 @@ builder.Services.AddScoped<IPasswordGenerator, PasswordGenerator>();
 builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
 
 builder.Services.AddRazorPages();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(typeof(MapperViewModelProfile));
 
 var app = builder.Build();
 
@@ -83,6 +85,8 @@ app.UseRouting();
 
 app.UseSession();
 app.UseAuthentication();
+
+app.UseDefaultPasswordMiddleware();
 
 app.UseAuthorization();
 
