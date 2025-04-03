@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using WebApp.Extension;
 using WebApp.Models;
 using WebApp.Models.InputModel;
 using WebApp.Models.ViewModel;
@@ -33,24 +34,42 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var signInResult = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-
-                if (signInResult.Succeeded)
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if (user == null)
                 {
-                    SetCurrentUser();
+                    return View(model);
+                }
 
-                    if (User.IsInRole(Role.Admin))
+                var result = await SignInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    var claims = new List<Claim>
                     {
+                        new Claim(ExtensionClaimTypes.UserId.ToString(), user.Id)
+                    };
+
+                    if (await UserManager.IsInRoleAsync(user, Role.Admin))
+                    {
+                        await SignInManager.SignInWithClaimsAsync(user, model.RememberMe, claims);
                         return RedirectToAction("List", "Student");
                     }
                     else
                     {
-                        if(CurrentUser == null)
+                        if (user.studentId == null)
                         {
                             return NotFound();
                         }
 
-                        if (CurrentUser.defaultpassword)
+                        claims.AddRange(new List<Claim>()
+                        {
+                            new Claim(ExtensionClaimTypes.StudentId.ToString(), user.studentId.Value.ToString()),
+                            new Claim(ExtensionClaimTypes.DefaultPassword.ToString(), user.defaultpassword.ToString())
+                        });
+
+                        await SignInManager.SignInWithClaimsAsync(user, model.RememberMe, claims);
+
+                        if (user.defaultpassword)
                         {
                             return RedirectToAction("ChangePassword", "Account");
                         }else
@@ -72,7 +91,6 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await SignInManager.SignOutAsync();
-            HttpContext.Session.Remove("CurrentUser");
             return RedirectToAction("Login", "Account");
         }
 
@@ -89,13 +107,13 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (CurrentUser == null)
+                var userId = User.GetUserId();
+                if (userId == null)
                 {
                     return RedirectToAction("Login", "Account");
                 }
 
-                //to be safe reterive user from db 
-                var user = await UserManager.FindByIdAsync(CurrentUser.Id);
+                var user = await UserManager.FindByIdAsync(userId);
                 if (user == null)
                 {
                     return NotFound();
@@ -127,28 +145,6 @@ namespace WebApp.Controllers
         public IActionResult SuccessfullPasswordChange()
         {
             return View();
-        }
-
-
-        private void SetCurrentUser()
-        {
-            if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                //User? user;
-                if (User.IsInRole(Role.Admin))
-                {
-                    
-                    CurrentUser = UserManager.GetUserAsync(User).Result;
-                    //HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(user));
-                }
-                else if (User.IsInRole(Role.Student))
-                {
-                    //need student data for profile info
-                    CurrentUser = UserManager.Users.Include(u => u.student)
-                        .FirstOrDefault(u => u.Id == UserManager.GetUserId(User));
-                    //HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(user));
-                }
-            }
         }
     }
 }

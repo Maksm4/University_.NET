@@ -3,7 +3,6 @@ using Domain.Models.Aggregate;
 using Infrastructure.TypeCofigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Context
@@ -25,20 +24,16 @@ namespace Infrastructure.Context
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-
             modelBuilder.ApplyConfiguration(new CourseModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CourseTypeConfiguration());
             modelBuilder.ApplyConfiguration(new EnrolledCourseTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LearningPlanTypeConfiguration());
             modelBuilder.ApplyConfiguration(new MarkedModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StudentTypeConfiguration());
-
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.student)
-                .WithOne()
-                .HasForeignKey<User>(u => u.studentId);
+            modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
         }
 
+        //for better testing
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

@@ -16,7 +16,10 @@ builder.Services.AddDbContext<UniversityContext>(
     opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("UniversityConnection"))
     );
 
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole>(opt =>
+    {
+        opt.User.RequireUniqueEmail = true;
+    })
     .AddEntityFrameworkStores<UniversityContext>()
     .AddDefaultTokenProviders();
 

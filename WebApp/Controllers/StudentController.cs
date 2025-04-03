@@ -3,9 +3,11 @@ using AutoMapper;
 using Domain.Models;
 using Domain.Models.Aggregate;
 using Infrastructure.Context;
+using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Extension;
 using WebApp.externalServices;
 using WebApp.Models;
 using WebApp.Models.InputModel;
@@ -43,14 +45,30 @@ namespace WebApp.Controllers
         }
 
         [Authorize(Roles = Role.Student)]
-        public IActionResult Profile()
+        public async Task<IActionResult> ProfileAsync()
         {
-            if (CurrentUser == null)
+            var studentId = User.GetStudentId();
+            var email = User.GetEmail();
+
+            if (studentId == null || email == null)
             {
                 return NotFound();
             }
 
-            return View(Mapper.Map<ProfileViewModel>(CurrentUser));
+            var student = await StudentService.GetStudentAsync(studentId.Value);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            var model = new ProfileViewModel
+            {
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                BirthDate = student.BirthDate,
+                Email = email
+            };
+            
+            return View(model);
         }
 
         [Authorize(Roles = $"{Role.Student}, {Role.Admin}")]
@@ -69,12 +87,13 @@ namespace WebApp.Controllers
             }
             else
             {
-                if (CurrentUser == null)
+                var userId = User.GetUserId();
+                if (userId == null)
                 {
                     return NotFound();
                 }
 
-                student = await StudentService.GetStudentByUserIdAsync(CurrentUser.Id);
+                student = await StudentService.GetStudentByUserIdAsync(userId);
             }
 
             if (student == null)

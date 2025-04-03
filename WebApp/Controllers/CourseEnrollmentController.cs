@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Extension;
 using WebApp.Models;
 using WebApp.Models.ViewModel;
 
@@ -43,11 +44,12 @@ namespace WebApp.Controllers
 
             }else
             {
-                if (CurrentUser == null)
+                var userId = User.GetUserId();
+                if (userId == null)
                 {
                     return NotFound();
                 }
-                student = await StudentService.GetStudentByUserIdAsync(CurrentUser.Id);
+                student = await StudentService.GetStudentByUserIdAsync(userId);
             }
 
             if (student == null)
@@ -77,18 +79,16 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> CourseEnrollAsync([FromQuery] int courseId)
         {
-            if (CurrentUser == null || CurrentUser.studentId ==  null)
-            {
-                return NotFound();
-            }
+            var studentId = User.GetStudentId();
+           
             var course = await CourseService.GetCourseAsync(courseId);
-            if (course == null)
+            if (course == null || studentId == null)
             {
                 return NotFound();
             }
 
             //check if already enrolled
-            var student = await StudentService.GetStudentAsync(CurrentUser.studentId.Value);
+            var student = await StudentService.GetStudentAsync(studentId.Value);
             if (student == null)
             {
                 return NotFound();

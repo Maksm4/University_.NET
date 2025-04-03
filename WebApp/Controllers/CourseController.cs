@@ -5,6 +5,7 @@ using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Extension;
 using WebApp.Models;
 using WebApp.Models.ViewModel;
 
@@ -48,14 +49,14 @@ namespace WebApp.Controllers
         public async Task<IActionResult> AllCoursesStudentAsync()
         {
             var courses = await CourseService.GetActiveCoursesAsync();
-
-            if (CurrentUser == null)
+            var userId = User.GetUserId();
+            if (userId == null)
             {
                 return NotFound();
             }
 
 
-            var student = await StudentService.GetStudentByUserIdAsync(CurrentUser.Id);
+            var student = await StudentService.GetStudentByUserIdAsync(userId);
             if (student == null)
             {
                 return NotFound();
