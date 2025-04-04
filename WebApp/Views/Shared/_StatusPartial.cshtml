@@ -1,16 +1,14 @@
 ﻿@model BaseCourseViewModel
 
-<h1>@Model.Name</h1>
-<p>@Model.Description</p>
 @if (Model.IsActive)
 {
     <div class="status">
-        Active: <img src="~/images/positive_tick.jpg" class="small-img" alt="yes" />
+        <img src="~/images/positive_tick.jpg" class="small-img" alt="yes" />
     </div>
 }
 else
 {
     <div class="status">
-        Active: <img src="~/images/negative_tick.jpg" class="small-img" alt="no" />
+        <img src="~/images/negative_tick.jpg" class="small-img" alt="no" />
     </div>
 }

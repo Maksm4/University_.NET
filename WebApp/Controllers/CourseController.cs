@@ -1,9 +1,7 @@
 ﻿using ApplicationCore.IService;
-using AutoMapper;
-using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Extension;
 using WebApp.Models;
 using WebApp.Models.ViewModel;
 
@@ -15,21 +13,17 @@ namespace WebApp.Controllers
     {
         private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
-        private readonly UserManager<User> UserManager;
-        private readonly IMapper Mapper;
-        public CourseController(IStudentService studentService, ICourseService courseService, UserManager<User> userManager, IMapper mapper) 
+        public CourseController(IStudentService studentService, ICourseService courseService) 
         {
             StudentService = studentService;
             CourseService = courseService;
-            UserManager = userManager;
-            Mapper = mapper;
         }
 
         [Route("ListAdmin")]
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AllCoursesAdminAsync()
         {
-            var courses = await CourseService.GetActiveCoursesAsync();
+            var courses = await CourseService.GetCoursesAsync();
 
             var model = courses.Select(
                 c =>
@@ -48,22 +42,15 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> AllCoursesStudentAsync()
         {
-            var courses = await CourseService.GetActiveCoursesAsync();
-            var userId = UserManager.GetUserId(User);
-
-            if (string.IsNullOrEmpty(userId))
+            var studentId = HttpContext.Session.GetStudentId();
+            var courses = await CourseService.GetCoursesAsync();
+            
+            if (studentId == null)
             {
                 return NotFound();
             }
 
-            var student = await StudentService.GetStudentByUserIdAsync(userId);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            var studentCourses = student.GetEnrolledCourses();
-
+            var studentCourses = await StudentService.GetEnrolledCoursesAsync(studentId.Value);
             return View(courses.Select(c =>
             new CourseViewModel
             {

@@ -1,8 +1,11 @@
-﻿using Infrastructure.Context;
+﻿using ApplicationCore.IService;
+using Domain.Models;
+using Domain.Models.Aggregate;
+using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.Extension;
+using WebApp.externalServices;
 using WebApp.Models;
 using WebApp.Models.InputModel;
 using WebApp.Models.ViewModel;
@@ -14,11 +17,17 @@ namespace WebApp.Controllers
     {
         private readonly SignInManager<User> SignInManager;
         private readonly UserManager<User> UserManager;
+        private readonly IPasswordGenerator PasswordGenerator;
+        private readonly IEmailSender EmailSender;
+        private readonly IStudentService StudentService;
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager)
+        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IPasswordGenerator passwordGenerator, IEmailSender emailSender, IStudentService studentService)
         {
             SignInManager = signInManager;
             UserManager = userManager;
+            PasswordGenerator = passwordGenerator;
+            EmailSender = emailSender;
+            StudentService = studentService;
         }
 
         [HttpGet]
@@ -29,7 +38,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> LoginAsync(LoginModel model)
         {
             if (ModelState.IsValid)
             {
@@ -43,17 +52,19 @@ namespace WebApp.Controllers
 
                 if (result.Succeeded)
                 {
+                    HttpContext.Session.SetString(SessionData.Email.ToString(), model.Email);
                     if (await UserManager.IsInRoleAsync(user, Role.Admin))
                     {
                         return RedirectToAction("List", "Student");
                     }
                     else
                     {
-                        HttpContext.Session.SetString(SessionData.Email.ToString(), model.Email);
                         if (user.studentId == null)
                         {
                             return NotFound();
                         }
+                        HttpContext.Session.SetInt32(SessionData.StudentId.ToString(), user.studentId.Value);
+                        HttpContext.Session.SetString(SessionData.HasDefaultPassword.ToString(), user.HasDefaultpassword.ToString());
 
                         if (user.HasDefaultpassword)
                         {
@@ -74,7 +85,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> LogoutAsync()
         {
             await SignInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
@@ -89,7 +100,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [Authorize(Roles = Role.Student)]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePasswordAsync(ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -109,7 +120,7 @@ namespace WebApp.Controllers
 
                 if (result.Succeeded)
                 {
-                    HttpContext.Session.SetIfDefaultpassword(user, false);
+                    user.HasDefaultpassword = false;
                     await UserManager.UpdateAsync(user);
                     await SignInManager.SignOutAsync();
 
@@ -127,10 +138,52 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public IActionResult SuccessfullPasswordChange()
+        [Authorize(Roles = Role.Admin)]
+        public IActionResult RegisterStudent()
         {
             return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> RegisterStudentAsync([FromForm] RegisterStudentModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = CreateUser();
+
+            user.Email = model.Email;
+            user.UserName = model.Email;
+            user.HasDefaultpassword = true;
+
+            var password = PasswordGenerator.GenerateRandom();
+
+            await UserManager.CreateAsync(user, password);
+
+            var student = new Student(model.FirstName, model.LastName, model.BirthDate, new LearningPlan(model.FirstName + user.Id));
+
+            user.student = student;
+            await StudentService.SaveStudentAsync(student);
+
+            await UserManager.AddToRoleAsync(user, Role.Student);
+
+            EmailSender.SendEmail($"your temporarry password: {password}", user.Email);
+            return RedirectToAction("List", "Student");
+        }
+
+        private User CreateUser()
+        {
+            try
+            {
+                return Activator.CreateInstance<User>();
+            }
+            catch
+            {
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}");
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
     public enum SessionData
     {
         HasDefaultPassword,
-        Email
+        Email,
+        StudentId
     }
 }

@@ -86,7 +86,7 @@ namespace ConsoleUI
 
         private async static Task<IEnumerable<CourseResponse>> GetActiveCourses()
         {
-            var activeCourses = await courseService.GetActiveCoursesAsync();
+            var activeCourses = await courseService.GetCoursesAsync();
 
             return mapper.Map<IEnumerable<CourseResponse>>(activeCourses);
         }

@@ -70,16 +70,67 @@ namespace ApplicationCore.Service
             return student.GetMarksFromCourse(courseId);
         }
 
-        public async Task<Student?> GetStudentByUserIdAsync(string userId)
+        public async Task<IReadOnlyCollection<EnrolledCourse>> GetStudentEnrolledCourses(int studentId)
         {
-            var student = await studentRepository.GetStudentByUserIdAsync(userId);
-
+            var student = await studentRepository.FindByIdAsync(studentId);
             if (student == null)
             {
-                return null;
+                return [];
+            }
+            return student.GetEnrolledCourses();
+        }
+
+        public async Task<IReadOnlyCollection<EnrolledCourse>> GetEnrolledCoursesAsync(int studentId)
+        {
+            var student = await studentRepository.FindByIdAsync(studentId);
+            if (student == null)
+            {
+                return [];
             }
 
-            return student;
+            return student.GetEnrolledCourses();
+        }
+
+        public async Task<bool> EnrollStudentInCourseAsync(int studentId, int courseId)
+        {
+            var course = await courseRepository.FindByIdAsync(courseId);
+            var student = await studentRepository.FindByIdAsync(studentId);
+            if (student == null || course == null)
+            {
+                return false;
+            }
+
+            var coursesTaken = await GetCoursesTakenByStudentAsync(student.StudentId);
+            if (!coursesTaken.Contains(course))
+            {
+                student.EnrollInCourse(course);
+                await SaveStudentAsync(student);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> GiveMarkForCourseModuleAsync(int studentId,int courseId, int courseModuleId, int mark)
+        {
+            var student = await studentRepository.FindByIdAsync(studentId);
+            var course = await courseRepository.FindByIdAsync(courseId);
+
+            if (student == null || course == null)
+            {
+                return false;
+            }
+
+            var courseModule = course.CourseModules.FirstOrDefault(cm => cm.CourseModuleId == courseModuleId);
+
+            if (courseModule == null)
+
+            {
+                return false;
+            }
+
+            student.GiveMark(courseModule, mark);
+            await SaveStudentAsync(student);
+            return true;
         }
     }
 }

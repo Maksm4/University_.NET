@@ -1,6 +1,23 @@
 ﻿@model IEnumerable<BaseCourseViewModel>
 
-@foreach (var course in Model)
-{
-    @await Html.PartialAsync("_StatusPartial", course)
-}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col"> Name</th>
+            <th scope="col"> Description</th>
+            <th scope="col"> IsActive</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
+        {
+            <tr>
+                <td>@course.Name</td>
+                <td>@course.Description</td>
+                <td>
+                    @await Html.PartialAsync("_StatusPartial", course)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

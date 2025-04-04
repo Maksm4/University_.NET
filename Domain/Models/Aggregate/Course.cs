@@ -26,5 +26,10 @@
             var module = new CourseModule(CourseId, description);
             _courseModules.Add(module);
         }
+
+        public IReadOnlyCollection<CourseModule> GetCourseModules()
+        {
+            return _courseModules.AsReadOnly();
+        }
     }
 }

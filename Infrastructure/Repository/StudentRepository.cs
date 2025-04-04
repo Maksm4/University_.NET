@@ -30,22 +30,6 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync(s => s.StudentId == studentId);
         }
 
-        public async Task<Student?> GetStudentByUserIdAsync(string userId)
-        {
-            var user = await dbContext.Users
-                .Include(u => u.student)
-                .ThenInclude(s => s.LearningPlan)
-                .ThenInclude(lp => lp.EnrolledCourses)
-                .FirstOrDefaultAsync(u => u.Id.Equals(userId));
-
-            if(user == null)
-            {
-                return null;
-            }
-
-            return user.student;
-        }
-
         public bool IsDetached(Student student)
         {
             return dbContext.Entry(student).State == EntityState.Detached;

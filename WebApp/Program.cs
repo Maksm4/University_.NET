@@ -6,14 +6,18 @@ using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Conventions;
 using WebApp.externalServices;
-using WebApp.Middlewares;
 using WebApp.ViewModelMappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(opt =>
+{
+    opt.Conventions.Add(new StudentFilterConvention());
+});
+
 builder.Services.AddDbContext<UniversityContext>(
     opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("UniversityConnection"))
     );
@@ -86,7 +90,7 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 
-app.UseDefaultPasswordMiddleware();
+//app.UseDefaultPasswordMiddleware();
 
 app.UseAuthorization();
 

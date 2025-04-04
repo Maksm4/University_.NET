@@ -28,7 +28,7 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync(c => c.CourseId == courseId);
         }
 
-        public async Task<IReadOnlyCollection<Course>> GetActiveCoursesAsync()
+        public async Task<IReadOnlyCollection<Course>> GetCoursesAsync()
         {
             return await dbContext.Courses
                .ToListAsync();
