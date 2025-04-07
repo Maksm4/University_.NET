@@ -11,7 +11,7 @@ namespace WebApp.Controllers
 {
     [Route("[controller]")]
     [Controller]
-    public class StudentController : BaseController
+    public class StudentController : Controller
     {
         private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
@@ -73,23 +73,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var marks = await StudentService.GetStudentMarksForCourseAsync(studentId.Value, courseId);
-            var courseModules = await CourseService.GetCourseModules(courseId);
+            var courseModules = await CourseService.GetCourseModulesWithMark(studentId.Value, courseId);
 
-            var model = new MarkedModulesViewModel
+            return View(new MarkedModulesViewModel
             {
                 StudentId = studentId.Value,
                 CourseId = courseId,
-                CourseModuleMarks = courseModules.Select(cm =>
-                    new MarkViewModel
-                    {
-                        CourseModuleId = cm.CourseModuleId,
-                        Mark = marks.FirstOrDefault(m => m.CourseModuleId == cm.CourseModuleId)?.Mark,
-                        CourseDescription = cm.Description
-                    }).ToList()
-            };
-
-            return View(model);
+                CourseModuleMarks = Mapper.Map<List<MarkViewModel>>(courseModules)
+            });
         }
 
         [HttpPost]

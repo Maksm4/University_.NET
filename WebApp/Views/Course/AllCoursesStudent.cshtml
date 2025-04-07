@@ -1,17 +1,37 @@
-﻿@model IEnumerable<CourseViewModel>
+﻿@model IReadOnlyCollection<CourseViewModel>
 
-@foreach (var course in Model)
-{
-    //jako tabela
-    <h1>@course.Name</h1>
-    <p>@course.Description</p>
-    @await Html.PartialAsync("_StatusPartial", course)
-
-    @if (User.IsInRole("Student"))
-    {
-        @if (course.IsActive && course.isEnrolled == false)
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col"> Name</th>
+            <th scope="col"> Description</th>
+            <th scope="col"> IsActive</th>
+            <th scope="col"> Can Enroll</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
         {
-            <a asp-controller="CourseEnrollment" asp-action="Enroll" asp-route-courseId="@course.CourseId">Enroll</a>
+            <tr>
+                <td>@course.Name</td>
+                <td>@course.Description</td>
+                <td>
+                    @await Html.PartialAsync("_StatusPartial", course)
+                </td>
+                <td>
+                    @if (User.IsInRole("Student"))
+                    {
+                        @if (course.IsActive && course.isEnrolled == false)
+                        {
+                            <a asp-controller="CourseEnrollment" asp-action="Enroll" asp-route-courseId="@course.CourseId" class="btn btn-primary">Enroll</a>
+                        }
+                        else
+                        {
+                            <img src="~/images/negative_tick.jpg" class="small-img" alt="no" />
+                        }
+                    }
+                </td>
+            </tr>
         }
-    }
-}
+    </tbody>
+</table>

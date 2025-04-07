@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using ApplicationCore.DTO;
+using Domain.Models;
 using Domain.Models.Aggregate;
 
 namespace ApplicationCore.IService
@@ -6,11 +7,11 @@ namespace ApplicationCore.IService
     public interface IStudentService
     {
         Task<IReadOnlyCollection<Student>> GetAllStudentsAsync();
-        Task<IReadOnlyCollection<Course>> GetCoursesTakenByStudentAsync(int studentId);
-        Task<IReadOnlyCollection<MarkedModule>> GetStudentMarksForCourseAsync(int studentId, int courseId);
+        //Task<IReadOnlyCollection<Course>> GetCoursesTakenByStudentAsync(int studentId);
+        //Task<IReadOnlyCollection<MarkedModule>> GetStudentMarksForCourseAsync(int studentId, int courseId);
         Task<Student?> GetStudentAsync(int studentId);
         Task<Student> SaveStudentAsync(Student student);
-        Task<IReadOnlyCollection<EnrolledCourse>> GetEnrolledCoursesAsync(int studentId);
+        Task<IReadOnlyCollection<StudentCourseTakenDTO?>> GetEnrolledCoursesAsync(int studentId);
         Task<bool> EnrollStudentInCourseAsync(int studentId, int courseId);
         Task<bool> GiveMarkForCourseModuleAsync(int studentId, int courseId, int courseModuleId, int mark);
     }

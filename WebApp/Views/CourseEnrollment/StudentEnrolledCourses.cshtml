@@ -2,26 +2,53 @@
 
 <h1>Your enrolled courses:</h1>
 <br />
-@foreach (var course in Model)
-{
-    @await Html.PartialAsync("_StatusPartial", course)
-    <h1>Started: @course.DateTimeRange.StartTime</h1>
-    @if(course.DateTimeRange.EndTime != null)
-    {
-        <h1>Ended: @course.DateTimeRange.EndTime</h1>
-    }else
-    {
-        <h1>Still in progress</h1>
-    }
-    @if (User.Identity != null && User.Identity.IsAuthenticated)
-    {
-        @if (User.IsInRole("Admin"))
-        {
-            <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId" asp-route-studentId="@course.StudentId">View Marks</a>
 
-        }else
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col"> Name</th>
+            <th scope="col"> Description</th>
+            <th scope="col"> IsActive</th>
+            <th scope="col"> Started</th>
+            <th scope="col"> Ended</th>
+            <th scope="col"> Marks</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
         {
-            <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId">View Marks</a>
+            <tr>
+                <td>@course.Name</td>
+                <td>@course.Description</td>
+                <td>
+                    @await Html.PartialAsync("_StatusPartial", course)
+                </td>
+                <td>Started: @course.DateTimeRange.StartTime</td>
+                <td>
+                    @if (course.DateTimeRange.EndTime != null)
+                    {
+                        <p>Ended: @course.DateTimeRange.EndTime</p>
+                    }
+                    else
+                    {
+                        <p>Still in progress</p>
+                    }
+                </td>
+                <td>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId" asp-route-studentId="@course.StudentId" class="btn btn-primary">View Marks</a>
+
+                        }
+                        else
+                        {
+                            <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId" class="btn btn-primary">View Marks</a>
+                        }
+                    }
+                </td>
+            </tr>
         }
-    }
-}
+    </tbody>
+</table>

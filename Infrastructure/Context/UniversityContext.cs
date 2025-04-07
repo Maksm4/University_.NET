@@ -3,7 +3,6 @@ using Domain.Models.Aggregate;
 using Infrastructure.TypeCofigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Context
 {
@@ -31,14 +30,6 @@ namespace Infrastructure.Context
             modelBuilder.ApplyConfiguration(new MarkedModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StudentTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
-        }
-
-        //for better testing
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.IRepository;
-using Domain.Models;
 using Domain.Models.Aggregate;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -32,13 +31,6 @@ namespace Infrastructure.Repository
         {
             return await dbContext.Courses
                .ToListAsync();
-        }
-
-        public async Task<IReadOnlyCollection<Course>> GetActiveCoursesAsync(IEnumerable<int> courseIds)
-        {
-            return await dbContext.Courses
-                .Where(c => courseIds.Contains(c.CourseId))
-                .ToListAsync();
         }
     }
 }

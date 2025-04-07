@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using ApplicationCore.DTO;
+using AutoMapper;
 using Domain.Models;
 using Domain.Models.Aggregate;
 using Infrastructure.Context;
@@ -21,6 +22,8 @@ namespace WebApp.ViewModelMappers
 
             CreateMap<Student, StudentInfoViewModel>();
             CreateMap<MarkedModule, MarkViewModel>();
+            CreateMap<CourseWithEnrollmentStatusDTO, CourseViewModel>();
+            CreateMap<CourseModuleWithMarkDTO, MarkViewModel>();
         }
     }
 }

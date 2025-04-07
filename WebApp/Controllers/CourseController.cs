@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.IService;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Extension;
@@ -9,14 +10,14 @@ namespace WebApp.Controllers
 {
     [Route("[controller]")]
     [Controller]
-    public class CourseController : BaseController
+    public class CourseController : Controller
     {
-        private readonly IStudentService StudentService;
         private readonly ICourseService CourseService;
-        public CourseController(IStudentService studentService, ICourseService courseService) 
+        private readonly IMapper Mapper;
+        public CourseController(ICourseService courseService, IMapper mapper) 
         {
-            StudentService = studentService;
             CourseService = courseService;
+            Mapper = mapper;
         }
 
         [Route("ListAdmin")]
@@ -43,23 +44,14 @@ namespace WebApp.Controllers
         public async Task<IActionResult> AllCoursesStudentAsync()
         {
             var studentId = HttpContext.Session.GetStudentId();
-            var courses = await CourseService.GetCoursesAsync();
             
             if (studentId == null)
             {
                 return NotFound();
             }
 
-            var studentCourses = await StudentService.GetEnrolledCoursesAsync(studentId.Value);
-            return View(courses.Select(c =>
-            new CourseViewModel
-            {
-                CourseId = c.CourseId,
-                Name = c.Name,
-                Description = c.Description,
-                IsActive = !c.IsDeprecated,
-                isEnrolled = studentCourses.Any(sc => sc.CourseId == c.CourseId)
-            }));
+            var courses = await CourseService.GetAllCoursesWithEnrollmentStatusAsync(studentId.Value);
+            return View(Mapper.Map<IReadOnlyCollection<CourseViewModel>>(courses));
         }
     }
 }

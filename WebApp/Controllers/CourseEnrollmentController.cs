@@ -10,14 +10,12 @@ namespace WebApp.Controllers
 {
     [Route("[controller]")]
     [Controller]
-    public class CourseEnrollmentController : BaseController
+    public class CourseEnrollmentController : Controller
     {
         private readonly IStudentService StudentService;
-        private readonly ICourseService CourseService;
-        public CourseEnrollmentController(IStudentService studentService, ICourseService courseService) 
+        public CourseEnrollmentController(IStudentService studentService) 
         {
             StudentService = studentService;
-            CourseService = courseService;
         }
 
         [HttpGet]
@@ -36,20 +34,19 @@ namespace WebApp.Controllers
             }
 
             var enrolledCourses = await StudentService.GetEnrolledCoursesAsync(studentId.Value);
-            var courses = await StudentService.GetCoursesTakenByStudentAsync(studentId.Value);
 
-            var viewModel = enrolledCourses.Select(ec =>
+            var model = enrolledCourses.Where(ec => ec != null).Select(ec =>
             new CourseEnrolledViewModel
             {
-                CourseId = ec.CourseId,
-                Name = courses.First(c => c.CourseId == ec.CourseId).Name,
-                Description = courses.First(c => c.CourseId == ec.CourseId).Description,
-                IsActive = !courses.First(c => c.CourseId == ec.CourseId).IsDeprecated,
+                CourseId = ec!.CourseId,
+                Name = ec.CourseName,
+                Description = ec.CourseDescription,
+                IsActive = ec.IsActive,
                 DateTimeRange = new DateTimeRange(ec.DateTimeRange.StartTime, ec.DateTimeRange.EndTime),
                 StudentId = studentId.Value
             });
 
-            return View(viewModel);
+            return View(model);
         }
 
         [HttpGet("courseId")]

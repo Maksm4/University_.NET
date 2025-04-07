@@ -1,41 +1,43 @@
 ﻿@model MarkedModulesViewModel
 
-@foreach (var markedModule in Model.CourseModuleMarks)
-{
-    <h1>courseModule: @markedModule.CourseDescription</h1>
-
-    @if (markedModule.Mark != null)
-    {
-        @if (User.IsInRole("Admin"))
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col"> Course Description</th>
+            <th scope="col"> Mark</th>
+            @if(User.IsInRole("Admin"))
+            {
+                <th scope="col"> New Mark</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var markedModule in Model.CourseModuleMarks)
         {
-            <form asp-controller="Student" asp-action="GiveMark" method="post">
-                <input type="hidden" name="studentId" value="@Model.StudentId" />
-                <input type="hidden" name="CourseId" value="@Model.CourseId" />
-                <input type="hidden" name="courseModuleId" value="@markedModule.CourseModuleId" />
-                <label>Grade: @markedModule.Mark Edit Mark:</label>
-                <input type="number" name="Mark" required />
-                <button type="submit"> Change Mark</button>
-            </form>
-        }else
-        {
-            <p>Grade: @markedModule.Mark</p>
+            <tr>
+                <td>@markedModule.Description</td>
+                <td>@markedModule.Mark</td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <form asp-controller="Student" asp-action="GiveMark" method="post">
+                            <input type="hidden" name="studentId" value="@Model.StudentId" />
+                            <input type="hidden" name="CourseId" value="@Model.CourseId" />
+                            <input type="hidden" name="courseModuleId" value="@markedModule.CourseModuleId" />
+                            @if (markedModule.Mark != null)
+                            {
+                                <label>Edit Mark:</label>
+                            }
+                            else
+                            {
+                                <label>give Mark:</label>
+                            }
+                            <input type="number" name="Mark" required />
+                            <button type="submit" class="btn-primary"> Change Mark</button>
+                        </form>
+                    }
+                </td>
+            </tr>
         }
-    }
-    else
-    {
-        @if (User.IsInRole("Admin"))
-        {
-            <form asp-controller="Student" asp-action="GiveMark" method="post">
-                <input type="hidden" name="studentId" value="@Model.StudentId" />
-                <input type="hidden" name="CourseId" value="@Model.CourseId" />
-                <input type="hidden" name="courseModuleId" value="@markedModule.CourseModuleId" />
-                <label> Enter Mark:</label>
-                <input type="number" name="Mark" required />
-                <button type="submit"> Give mark</button>
-            </form>
-        }else
-        {
-            <p>Grade: @markedModule.Mark</p>
-        }
-    }
-}
+    </tbody>
+</table>

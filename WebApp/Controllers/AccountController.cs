@@ -13,7 +13,7 @@ using WebApp.Models.ViewModel;
 namespace WebApp.Controllers
 {
     [Controller]
-    public class AccountController : BaseController
+    public class AccountController : Controller
     {
         private readonly SignInManager<User> SignInManager;
         private readonly UserManager<User> UserManager;

@@ -1,7 +1,8 @@
-﻿using ApplicationCore.IRepository;
+﻿using ApplicationCore.DTO;
+using ApplicationCore.IRepository;
 using ApplicationCore.IService;
-using Domain.Models;
 using Domain.Models.Aggregate;
+using Domain.Models.VObject;
 
 namespace ApplicationCore.Service
 {
@@ -37,58 +38,40 @@ namespace ApplicationCore.Service
             return await studentRepository.GetAllStudentsWithEnrolledCoursesAsync();
         }
 
-        public async Task<IReadOnlyCollection<Course>> GetCoursesTakenByStudentAsync(int studentId)
+        public async Task<Student?> GetStudentAsync(int studentId)
+        {
+            return await studentRepository.FindByIdAsync(studentId);
+        }
+
+        public async Task<IReadOnlyCollection<StudentCourseTakenDTO?>> GetEnrolledCoursesAsync(int studentId)
         {
             var student = await studentRepository.FindByIdAsync(studentId);
-
             if (student == null)
             {
                 return [];
             }
 
             var enrolledCourses = student.GetEnrolledCourses();
+            var courses = await courseRepository.GetCoursesAsync();
 
-            //ienumerable 
-            var courseIds = enrolledCourses.Select(ec => ec.CourseId);
-            return await courseRepository.GetActiveCoursesAsync(courseIds);
-        }
-
-        public async Task<Student?> GetStudentAsync(int studentId)
-        {
-            return await studentRepository.FindByIdAsync(studentId);
-        }
-
-        public async Task<IReadOnlyCollection<MarkedModule>> GetStudentMarksForCourseAsync(int studentId, int courseId)
-        {
-            var student = await studentRepository.FindByIdAsync(studentId);
-
-            if (student == null)
+            return enrolledCourses.Select(ec =>
             {
-                return [];
+                var course = courses.FirstOrDefault(c => c.CourseId == ec.CourseId);
+                if (course == null)
+                {
+                    return null;
+                }
+                return new StudentCourseTakenDTO
+                {
+                    CourseId = ec.CourseId,
+                    StudentId = studentId,
+                    CourseName = course.Name,
+                    CourseDescription = course.Description,
+                    IsActive = !course.IsDeprecated,
+                    DateTimeRange = new DateTimeRange(ec.DateTimeRange.StartTime, ec.DateTimeRange.EndTime)
+                };
             }
-
-            return student.GetMarksFromCourse(courseId);
-        }
-
-        public async Task<IReadOnlyCollection<EnrolledCourse>> GetStudentEnrolledCourses(int studentId)
-        {
-            var student = await studentRepository.FindByIdAsync(studentId);
-            if (student == null)
-            {
-                return [];
-            }
-            return student.GetEnrolledCourses();
-        }
-
-        public async Task<IReadOnlyCollection<EnrolledCourse>> GetEnrolledCoursesAsync(int studentId)
-        {
-            var student = await studentRepository.FindByIdAsync(studentId);
-            if (student == null)
-            {
-                return [];
-            }
-
-            return student.GetEnrolledCourses();
+            ).ToList();
         }
 
         public async Task<bool> EnrollStudentInCourseAsync(int studentId, int courseId)
@@ -100,10 +83,11 @@ namespace ApplicationCore.Service
                 return false;
             }
 
-            var coursesTaken = await GetCoursesTakenByStudentAsync(student.StudentId);
-            if (!coursesTaken.Contains(course))
+            var enrolledCourses = student.GetEnrolledCourses().Select(ec => ec.CourseId).ToHashSet();
+
+            if (!enrolledCourses.Contains(courseId))
             {
-                student.EnrollInCourse(course);
+                student.EnrollInCourse(course); 
                 await SaveStudentAsync(student);
                 return true;
             }

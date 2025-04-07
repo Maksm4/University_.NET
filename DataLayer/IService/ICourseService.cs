@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using ApplicationCore.DTO;
+using Domain.Models;
 using Domain.Models.Aggregate;
 
 namespace ApplicationCore.IService
@@ -8,5 +9,7 @@ namespace ApplicationCore.IService
         Task<IReadOnlyCollection<Course>> GetCoursesAsync();
         Task<Course?> GetCourseAsync(int courseId);
         Task<IReadOnlyCollection<CourseModule>> GetCourseModules(int courseId);
+        Task<IReadOnlyCollection<CourseWithEnrollmentStatusDTO>> GetAllCoursesWithEnrollmentStatusAsync(int studentId);
+        Task<IReadOnlyCollection<CourseModuleWithMarkDTO>> GetCourseModulesWithMark(int studentId, int courseId);
     }
 }
