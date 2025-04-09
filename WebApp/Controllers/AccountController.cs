@@ -15,19 +15,19 @@ namespace WebApp.Controllers
     [Controller]
     public class AccountController : Controller
     {
-        private readonly SignInManager<User> SignInManager;
-        private readonly UserManager<User> UserManager;
-        private readonly IPasswordGenerator PasswordGenerator;
-        private readonly IEmailSender EmailSender;
-        private readonly IStudentService StudentService;
+        private readonly SignInManager<User> signInManager;
+        private readonly UserManager<User> userManager;
+        private readonly IPasswordGenerator passwordGenerator;
+        private readonly IEmailSender emailSender;
+        private readonly IStudentService studentService;
 
         public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IPasswordGenerator passwordGenerator, IEmailSender emailSender, IStudentService studentService)
         {
-            SignInManager = signInManager;
-            UserManager = userManager;
-            PasswordGenerator = passwordGenerator;
-            EmailSender = emailSender;
-            StudentService = studentService;
+            this.signInManager = signInManager;
+            this.userManager = userManager;
+            this.passwordGenerator = passwordGenerator;
+            this.emailSender = emailSender;
+            this.studentService = studentService;
         }
 
         [HttpGet]
@@ -42,18 +42,18 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByEmailAsync(model.Email);
+                var user = await userManager.FindByEmailAsync(model.Email);
                 if (user == null)
                 {
                     return View(model);
                 }
 
-                var result = await SignInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
                     HttpContext.Session.SetString(SessionData.Email.ToString(), model.Email);
-                    if (await UserManager.IsInRoleAsync(user, Role.Admin))
+                    if (await userManager.IsInRoleAsync(user, Role.Admin))
                     {
                         return RedirectToAction("List", "Student");
                     }
@@ -87,7 +87,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> LogoutAsync()
         {
-            await SignInManager.SignOutAsync();
+            await signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
 
@@ -104,25 +104,25 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = UserManager.GetUserId(User);
+                var userId = userManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
                     return RedirectToAction("Login", "Account");
                 }
 
-                var user = await UserManager.FindByIdAsync(userId);
+                var user = await userManager.FindByIdAsync(userId);
                 if (user == null)
                 {
                     return NotFound();
                 }
 
-                var result = await UserManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
 
                 if (result.Succeeded)
                 {
                     user.HasDefaultpassword = false;
-                    await UserManager.UpdateAsync(user);
-                    await SignInManager.SignOutAsync();
+                    await userManager.UpdateAsync(user);
+                    await signInManager.SignOutAsync();
 
                     return RedirectToAction("Login", "Account");
                 }else
@@ -159,18 +159,18 @@ namespace WebApp.Controllers
             user.UserName = model.Email;
             user.HasDefaultpassword = true;
 
-            var password = PasswordGenerator.GenerateRandom();
+            var password = passwordGenerator.GenerateRandom();
 
-            await UserManager.CreateAsync(user, password);
+            await userManager.CreateAsync(user, password);
 
-            var student = new Student(model.FirstName, model.LastName, model.BirthDate, new LearningPlan(model.FirstName + user.Id));
+            var student = new Student(model.FirstName, model.LastName, model.BirthDate, new LearningPlan($"{model.FirstName}{user.Id}"));
 
             user.student = student;
-            await StudentService.SaveStudentAsync(student);
+            await studentService.SaveStudentAsync(student);
 
-            await UserManager.AddToRoleAsync(user, Role.Student);
+            await userManager.AddToRoleAsync(user, Role.Student);
 
-            EmailSender.SendEmail($"your temporarry password: {password}", user.Email);
+            emailSender.SendEmail($"your temporarry password: {password}", user.Email);
             return RedirectToAction("List", "Student");
         }
 

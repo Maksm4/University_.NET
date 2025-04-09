@@ -13,23 +13,23 @@ namespace WebApp.Controllers
     [Controller]
     public class StudentController : Controller
     {
-        private readonly IStudentService StudentService;
-        private readonly ICourseService CourseService;
-        private readonly IMapper Mapper;
+        private readonly IStudentService studentService;
+        private readonly ICourseService courseService;
+        private readonly IMapper mapper;
 
         public StudentController(IStudentService studentService, ICourseService courseService, IMapper mapper)
         {
-            StudentService = studentService;
-            CourseService = courseService;
-            Mapper = mapper;
+            this.studentService = studentService;
+            this.courseService = courseService;
+            this.mapper = mapper;
         }
 
         [Authorize(Roles = Role.Admin)]
         [Route("List")]
         public async Task<IActionResult> AllStudentsAsync()
         {
-            var students = await StudentService.GetAllStudentsAsync();
-            return View(Mapper.Map<IReadOnlyCollection<StudentInfoViewModel>>(students));
+            var students = await studentService.GetAllStudentsAsync();
+            return View(mapper.Map<IReadOnlyCollection<StudentInfoViewModel>>(students));
         }
 
         [Authorize(Roles = Role.Student)]
@@ -43,7 +43,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var student = await StudentService.GetStudentAsync(studentId.Value);
+            var student = await studentService.GetStudentAsync(studentId.Value);
             if (student == null)
             {
                 return NotFound();
@@ -73,13 +73,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var courseModules = await CourseService.GetCourseModulesWithMark(studentId.Value, courseId);
+            var courseModules = await courseService.GetCourseModulesWithMark(studentId.Value, courseId);
 
             return View(new MarkedModulesViewModel
             {
                 StudentId = studentId.Value,
                 CourseId = courseId,
-                CourseModuleMarks = Mapper.Map<List<MarkViewModel>>(courseModules)
+                CourseModuleMarks = mapper.Map<List<MarkViewModel>>(courseModules)
             });
         }
 
@@ -87,7 +87,7 @@ namespace WebApp.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> GiveMarkAsync([FromForm] GiveMarkModel model)
         {
-            if(await StudentService.GiveMarkForCourseModuleAsync(model.StudentId, model.CourseId, model.CourseModuleId, model.Mark))
+            if(await studentService.GiveMarkForCourseModuleAsync(model.StudentId, model.CourseId, model.CourseModuleId, model.Mark))
             {
                 return RedirectToAction("List", "Student");
             }

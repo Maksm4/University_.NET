@@ -12,28 +12,28 @@ namespace WebApp.Controllers
     [Controller]
     public class CourseController : Controller
     {
-        private readonly ICourseService CourseService;
-        private readonly IMapper Mapper;
+        private readonly ICourseService courseService;
+        private readonly IMapper mapper;
         public CourseController(ICourseService courseService, IMapper mapper) 
         {
-            CourseService = courseService;
-            Mapper = mapper;
+            this.courseService = courseService;
+            this.mapper = mapper;
         }
 
         [Route("ListAdmin")]
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AllCoursesAdminAsync()
         {
-            var courses = await CourseService.GetCoursesAsync();
+            var courses = await courseService.GetCoursesAsync();
 
             var model = courses.Select(
-                c =>
+                crs =>
             new BaseCourseViewModel
             {
-                CourseId = c.CourseId,
-                Name = c.Name,
-                Description = c.Description,
-                IsActive = !c.IsDeprecated
+                CourseId = crs.CourseId,
+                Name = crs.Name,
+                Description = crs.Description,
+                IsActive = !crs.IsDeprecated
             });
 
             return View(model);
@@ -50,8 +50,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var courses = await CourseService.GetAllCoursesWithEnrollmentStatusAsync(studentId.Value);
-            return View(Mapper.Map<IReadOnlyCollection<CourseViewModel>>(courses));
+            var courses = await courseService.GetAllCoursesWithEnrollmentStatusAsync(studentId.Value);
+            return View(mapper.Map<IReadOnlyCollection<CourseViewModel>>(courses));
         }
     }
 }

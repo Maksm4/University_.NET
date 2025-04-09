@@ -12,10 +12,10 @@ namespace WebApp.Controllers
     [Controller]
     public class CourseEnrollmentController : Controller
     {
-        private readonly IStudentService StudentService;
+        private readonly IStudentService studentService;
         public CourseEnrollmentController(IStudentService studentService) 
         {
-            StudentService = studentService;
+            this.studentService = studentService;
         }
 
         [HttpGet]
@@ -33,16 +33,16 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var enrolledCourses = await StudentService.GetEnrolledCoursesAsync(studentId.Value);
+            var enrolledCourses = await studentService.GetEnrolledCoursesAsync(studentId.Value);
 
-            var model = enrolledCourses.Where(ec => ec != null).Select(ec =>
+            var model = enrolledCourses.Where(enrolledCrs => enrolledCrs != null).Select(enrolledCrs =>
             new CourseEnrolledViewModel
             {
-                CourseId = ec!.CourseId,
-                Name = ec.CourseName,
-                Description = ec.CourseDescription,
-                IsActive = ec.IsActive,
-                DateTimeRange = new DateTimeRange(ec.DateTimeRange.StartTime, ec.DateTimeRange.EndTime),
+                CourseId = enrolledCrs!.CourseId,
+                Name = enrolledCrs.CourseName,
+                Description = enrolledCrs.CourseDescription,
+                IsActive = enrolledCrs.IsActive,
+                DateTimeRange = new DateTimeRange(enrolledCrs.DateTimeRange.StartTime, enrolledCrs.DateTimeRange.EndTime),
                 StudentId = studentId.Value
             });
 
@@ -59,7 +59,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            await StudentService.EnrollStudentInCourseAsync(studentId.Value, courseId);
+            await studentService.EnrollStudentInCourseAsync(studentId.Value, courseId);
             return RedirectToAction("List");
         }
     }
