@@ -20,7 +20,7 @@
                 <td>
                     @if (User.IsInRole("Admin"))
                     {
-                        <form asp-controller="Student" asp-action="GiveMark" method="post">
+                        <form asp-controller="Student" asp-action="giveMark" method="post">
                             <input type="hidden" name="studentId" value="@Model.StudentId" />
                             <input type="hidden" name="CourseId" value="@Model.CourseId" />
                             <input type="hidden" name="courseModuleId" value="@markedModule.CourseModuleId" />

@@ -39,12 +39,12 @@
                     {
                         @if (User.IsInRole("Admin"))
                         {
-                            <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId" asp-route-studentId="@course.StudentId" class="btn btn-primary">View Marks</a>
+                            <a asp-controller="Student" asp-action="adminMarks" asp-route-courseId="@course.CourseId" asp-route-studentId="@course.StudentId" class="btn btn-primary">View Marks</a>
 
                         }
                         else
                         {
-                            <a asp-controller="Student" asp-action="Marks" asp-route-courseId="@course.CourseId" class="btn btn-primary">View Marks</a>
+                            <a asp-controller="Student" asp-action="marks" asp-route-courseId="@course.CourseId" class="btn btn-primary">View Marks</a>
                         }
                     }
                 </td>

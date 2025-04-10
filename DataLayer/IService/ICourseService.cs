@@ -10,6 +10,6 @@ namespace ApplicationCore.IService
         Task<Course?> GetCourseAsync(int courseId);
         Task<IReadOnlyCollection<CourseModule>> GetCourseModules(int courseId);
         Task<IReadOnlyCollection<CourseWithEnrollmentStatusDTO>> GetAllCoursesWithEnrollmentStatusAsync(int studentId);
-        Task<IReadOnlyCollection<CourseModuleWithMarkDTO>> GetCourseModulesWithMark(int studentId, int courseId);
+        Task<IReadOnlyCollection<CourseModuleWithMarkDTO>> GetCourseModulesWithMarkAsync(int studentId, int courseId);
     }
 }

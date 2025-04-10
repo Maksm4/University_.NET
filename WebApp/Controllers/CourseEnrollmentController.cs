@@ -19,18 +19,15 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        [Route("List")]
-        [Authorize(Roles = $"{Role.Admin}, {Role.Student}")]
-        public async Task<IActionResult> StudentEnrolledCoursesAsync([FromQuery] int? studentId)
+        [Authorize(Roles = Role.Student)]
+        [Route("list")]
+        public async Task<IActionResult> GetStudentEnrolledCoursesAsync()
         {
-            if (!User.IsInRole(Role.Admin))
-            {
-                studentId = HttpContext.Session.GetStudentId();
-            }
+            int? studentId = HttpContext.Session.GetStudentId();
 
-            if (studentId == null)
+            if (!studentId.HasValue)
             {
-                return NotFound();
+                return Forbid();
             }
 
             var enrolledCourses = await studentService.GetEnrolledCoursesAsync(studentId.Value);
@@ -49,16 +46,51 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        [HttpGet("courseId")]
-        [Route("Enroll")]
+
+        [HttpGet("studentId")]
+        [Authorize(Roles = Role.Admin)]
+        [Route("adminList")]
+        public async Task<IActionResult> GetStudentEnrolledCoursesAsync([FromQuery] int studentId)
+        {
+            if (studentId < 0)
+            {
+                return BadRequest();
+            }
+
+            var enrolledCourses = await studentService.GetEnrolledCoursesAsync(studentId);
+
+            var model = enrolledCourses.Where(enrolledCrs => enrolledCrs != null).Select(enrolledCrs =>
+            new CourseEnrolledViewModel
+            {
+                CourseId = enrolledCrs!.CourseId,
+                Name = enrolledCrs.CourseName,
+                Description = enrolledCrs.CourseDescription,
+                IsActive = enrolledCrs.IsActive,
+                DateTimeRange = new DateTimeRange(enrolledCrs.DateTimeRange.StartTime, enrolledCrs.DateTimeRange.EndTime),
+                StudentId = studentId
+            });
+
+            return View(model);
+        }
+
+
+        [HttpPost("courseId")]
         [Authorize(Roles = Role.Student)]
+        [Route("enroll")]
         public async Task<IActionResult> CourseEnrollAsync([FromQuery] int courseId)
         {
             var studentId = HttpContext.Session.GetStudentId();
-            if (studentId == null)
+
+            if (!studentId.HasValue)
             {
-                return NotFound();
+                return Forbid();
             }
+
+            if (courseId < 0)
+            {
+                return BadRequest();
+            }
+
             await studentService.EnrollStudentInCourseAsync(studentId.Value, courseId);
             return RedirectToAction("List");
         }

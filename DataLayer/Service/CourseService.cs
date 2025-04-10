@@ -63,7 +63,7 @@ namespace ApplicationCore.Service
             }).ToList();
         }
 
-        public async Task<IReadOnlyCollection<CourseModuleWithMarkDTO>> GetCourseModulesWithMark(int studentId, int courseId)
+        public async Task<IReadOnlyCollection<CourseModuleWithMarkDTO>> GetCourseModulesWithMarkAsync(int studentId, int courseId)
         {
             var course = await courseRepository.FindByIdAsync(courseId);
             var student = await studentRepository.FindByIdAsync(studentId);

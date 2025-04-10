@@ -24,23 +24,31 @@ namespace WebApp.Controllers
             this.mapper = mapper;
         }
 
+        [HttpGet]
         [Authorize(Roles = Role.Admin)]
-        [Route("List")]
-        public async Task<IActionResult> AllStudentsAsync()
+        [Route("list")]
+        public async Task<IActionResult> GetAllStudentsAsync()
         {
             var students = await studentService.GetAllStudentsAsync();
             return View(mapper.Map<IReadOnlyCollection<StudentInfoViewModel>>(students));
         }
 
+        [HttpGet]
         [Authorize(Roles = Role.Student)]
-        public async Task<IActionResult> ProfileAsync()
+        [Route("profile")]
+        public async Task<IActionResult> GetProfileAsync()
         {
-            var email = HttpContext.Session.GetEmail();
-            var studentId = HttpContext.Session.GetStudentId();
+            string? email = HttpContext.Session.GetEmail();
+            int? studentId = HttpContext.Session.GetStudentId();
 
-            if (email == null || studentId == null)
+            if (!studentId.HasValue)
             {
-                return NotFound();
+                return Forbid();
+            }
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest();
             }
 
             var student = await studentService.GetStudentAsync(studentId.Value);
@@ -59,37 +67,63 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = $"{Role.Student}, {Role.Admin}")]
-        [Route("Marks")]
-        public async Task<IActionResult> MarksFromCourseAsync([FromQuery] int? studentId, [FromQuery] int courseId)
+        [HttpGet]
+        [Authorize(Roles = Role.Student)]
+        [Route("marks")]
+        public async Task<IActionResult> GetMarksFromCourseAsync([FromQuery] int courseId)
         {
-            if (!User.IsInRole(Role.Admin))
+            int? studentId = HttpContext.Session.GetStudentId();
+
+            if(!studentId.HasValue)
             {
-                studentId = HttpContext.Session.GetStudentId();
+                return Forbid();
             }
 
-            if (studentId == null)
+            if (courseId < 0)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            var courseModules = await courseService.GetCourseModulesWithMark(studentId.Value, courseId);
+            return View(await GetStudentCourseMarkedModulesAsync(studentId.Value, courseId));
+        }
 
-            return View(new MarkedModulesViewModel
+        [HttpGet]
+        [Authorize(Roles = Role.Admin)]
+        [Route("adminMarks")]
+        public async Task<IActionResult> GetMarksFromCourseAsync([FromQuery] int studentId, [FromQuery] int courseId)
+        {
+            if (studentId < 0 || courseId < 0)
             {
-                StudentId = studentId.Value,
+                return BadRequest();
+            }
+
+            return View(await GetStudentCourseMarkedModulesAsync(studentId, courseId));
+        }
+        private async Task<MarkedModulesViewModel> GetStudentCourseMarkedModulesAsync(int studentId, int courseId)
+        {
+            var courseModules = await courseService.GetCourseModulesWithMarkAsync(studentId, courseId);
+
+            return new MarkedModulesViewModel
+            {
+                StudentId = studentId,
                 CourseId = courseId,
                 CourseModuleMarks = mapper.Map<List<MarkViewModel>>(courseModules)
-            });
+            };
         }
 
         [HttpPost]
+        [Route("giveMark")]
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> GiveMarkAsync([FromForm] GiveMarkModel model)
         {
+            if (model.CourseId < 0 || model.CourseModuleId < 0 || model.StudentId < 0)
+            {
+                return BadRequest();
+            }
+
             if(await studentService.GiveMarkForCourseModuleAsync(model.StudentId, model.CourseId, model.CourseModuleId, model.Mark))
             {
-                return RedirectToAction("List", "Student");
+                return RedirectToAction("list", "Student");
             }
             return View(model);
         }

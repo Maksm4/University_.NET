@@ -42,7 +42,7 @@ builder.Services.AddSession(opt =>
 
 builder.Services.ConfigureApplicationCookie(opt =>
 {
-    opt.LoginPath = "/Account/Login";
+    opt.LoginPath = "/Account/login";
     opt.LogoutPath = "/Account/logout";
     opt.ExpireTimeSpan = TimeSpan.FromMinutes(10);
     opt.SlidingExpiration = true;
@@ -90,14 +90,12 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 
-//app.UseDefaultPasswordMiddleware();
-
 app.UseAuthorization();
 
 app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "/{controller=Account}/{action=Login}/{id:int?}");
+    pattern: "/{controller=Account}/{action=login}/{id?}");
 
 app.Run();

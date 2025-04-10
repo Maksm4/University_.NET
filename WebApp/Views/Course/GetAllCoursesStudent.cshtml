@@ -23,7 +23,7 @@
                     {
                         @if (course.IsActive && course.isEnrolled == false)
                         {
-                            <a asp-controller="CourseEnrollment" asp-action="Enroll" asp-route-courseId="@course.CourseId" class="btn btn-primary">Enroll</a>
+                            <a asp-controller="CourseEnrollment" asp-action="enroll" asp-route-courseId="@course.CourseId" class="btn btn-primary">Enroll</a>
                         }
                         else
                         {

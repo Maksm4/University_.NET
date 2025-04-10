@@ -19,26 +19,26 @@
                             @if (User != null && User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="RegisterStudent">RegisterStudent</a>
+                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="registerStudent">RegisterStudent</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Student" asp-action="List">Students</a>
+                                    <a class="nav-link text-dark" asp-controller="Student" asp-action="list">Students</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Course" asp-action="ListAdmin">Courses</a>
+                                    <a class="nav-link text-dark" asp-controller="Course" asp-action="listAdmin">Courses</a>
                                 </li>
                             }
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Student" asp-action="Profile">Profile</a>
+                                    <a class="nav-link text-dark" asp-controller="Student" asp-action="profile">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Course" asp-action="List">Courses</a>
+                                    <a class="nav-link text-dark" asp-controller="Course" asp-action="list">Courses</a>
                                 </li>
                             }
                             <li class="nav-item">
-                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                <form asp-controller="Account" asp-action="logout" method="post">
                                     <button type="submit" class="btn  btn-link">Logout</button>
                                 </form>
                             </li>
@@ -46,7 +46,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark"  asp-controller="Account" asp-action="Login" >Login</a>
+                                <a class="nav-link text-dark"  asp-controller="Account" asp-action="login" >Login</a>
                             </li>
                         }
                     </ul>

@@ -17,7 +17,7 @@
                 <td>@student.FirstName</td>
                 <td>@student.LastName</td>
                 <td>
-                    <a asp-controller="CourseEnrollment" asp-action="List" asp-route-studentId="@student.StudentId" class="btn btn-primary">enrolled courses</a>
+                    <a asp-controller="CourseEnrollment" asp-action="adminList" asp-route-studentId="@student.StudentId" class="btn btn-primary">enrolled courses</a>
                 </td>
             </tr>
         }

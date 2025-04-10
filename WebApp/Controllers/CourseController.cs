@@ -20,9 +20,10 @@ namespace WebApp.Controllers
             this.mapper = mapper;
         }
 
-        [Route("ListAdmin")]
+        [HttpGet]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> AllCoursesAdminAsync()
+        [Route("listAdmin")]
+        public async Task<IActionResult> GetAllCoursesAdminAsync()
         {
             var courses = await courseService.GetCoursesAsync();
 
@@ -39,15 +40,16 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        [Route("List")]
+        [HttpGet]
         [Authorize(Roles = Role.Student)]
-        public async Task<IActionResult> AllCoursesStudentAsync()
+        [Route("list")]
+        public async Task<IActionResult> GetAllCoursesStudentAsync()
         {
             var studentId = HttpContext.Session.GetStudentId();
             
-            if (studentId == null)
+            if (!studentId.HasValue)
             {
-                return NotFound();
+                return Forbid();
             }
 
             var courses = await courseService.GetAllCoursesWithEnrollmentStatusAsync(studentId.Value);

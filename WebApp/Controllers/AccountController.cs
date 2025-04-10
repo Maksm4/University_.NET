@@ -12,6 +12,7 @@ using WebApp.Models.ViewModel;
 
 namespace WebApp.Controllers
 {
+    [Route("[controller]")]
     [Controller]
     public class AccountController : Controller
     {
@@ -31,6 +32,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Route("login")]
         [AllowAnonymous]
         public IActionResult Login()
         {
@@ -38,6 +40,8 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [Route("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> LoginAsync(LoginModel model)
         {
             if (ModelState.IsValid)
@@ -55,23 +59,23 @@ namespace WebApp.Controllers
                     HttpContext.Session.SetString(SessionData.Email.ToString(), model.Email);
                     if (await userManager.IsInRoleAsync(user, Role.Admin))
                     {
-                        return RedirectToAction("List", "Student");
+                        return RedirectToAction("list", "Student");
                     }
                     else
                     {
-                        if (user.studentId == null)
+                        if (!user.studentId.HasValue)
                         {
-                            return NotFound();
+                            return Forbid();
                         }
                         HttpContext.Session.SetInt32(SessionData.StudentId.ToString(), user.studentId.Value);
                         HttpContext.Session.SetString(SessionData.HasDefaultPassword.ToString(), user.HasDefaultpassword.ToString());
 
                         if (user.HasDefaultpassword)
                         {
-                            return RedirectToAction("ChangePassword", "Account");
+                            return RedirectToAction("changePassword", "Account");
                         }else
                         {
-                            return RedirectToAction("Profile", "Student");
+                            return RedirectToAction("profile", "Student");
                         }
                     }
 
@@ -85,20 +89,23 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [Route("logout")]
         public async Task<IActionResult> LogoutAsync()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("login", "Account");
         }
 
         [HttpGet]
         [Authorize(Roles = Role.Student)]
+        [Route("changePassword")]
         public IActionResult ChangePassword()
         {
             return View();
         }
 
         [HttpPost]
+        [Route("changePassword")]
         [Authorize(Roles = Role.Student)]
         public async Task<IActionResult> ChangePasswordAsync(ChangePasswordViewModel model)
         {
@@ -107,13 +114,13 @@ namespace WebApp.Controllers
                 var userId = userManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("login", "Account");
                 }
 
                 var user = await userManager.FindByIdAsync(userId);
                 if (user == null)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
 
                 var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
@@ -124,7 +131,7 @@ namespace WebApp.Controllers
                     await userManager.UpdateAsync(user);
                     await signInManager.SignOutAsync();
 
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("login", "Account");
                 }else
                 {
                     foreach (var error in result.Errors)
@@ -139,12 +146,14 @@ namespace WebApp.Controllers
 
         [HttpGet]
         [Authorize(Roles = Role.Admin)]
+        [Route("registerStudent")]
         public IActionResult RegisterStudent()
         {
             return View();
         }
 
         [HttpPost]
+        [Route("registerStudent")]
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> RegisterStudentAsync([FromForm] RegisterStudentModel model)
         {
@@ -153,16 +162,16 @@ namespace WebApp.Controllers
                 return View(model);
             }
 
-            var user = CreateUser();
-
-            user.Email = model.Email;
-            user.UserName = model.Email;
-            user.HasDefaultpassword = true;
+            var user = new User
+            { 
+                Email = model.Email,
+                UserName = model.Email,
+                HasDefaultpassword = true
+            };
 
             var password = passwordGenerator.GenerateRandom();
 
             await userManager.CreateAsync(user, password);
-
             var student = new Student(model.FirstName, model.LastName, model.BirthDate, new LearningPlan($"{model.FirstName}{user.Id}"));
 
             user.student = student;
@@ -171,19 +180,7 @@ namespace WebApp.Controllers
             await userManager.AddToRoleAsync(user, Role.Student);
 
             emailSender.SendEmail($"your temporarry password: {password}", user.Email);
-            return RedirectToAction("List", "Student");
-        }
-
-        private User CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<User>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}");
-            }
+            return RedirectToAction("list", "Student");
         }
     }
 }
