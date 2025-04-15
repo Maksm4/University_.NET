@@ -85,5 +85,35 @@ namespace ApplicationCore.Service
                 };
             }).ToList();
         }
+
+        public async Task<int?> CreateCourseAsync(Course course)
+        {
+            if (course == null)
+            {
+                return null;
+            }
+
+            course = await courseRepository.CreateAsync(course);
+            if (course == null)
+            {
+                return null;
+            }
+
+            await courseRepository.SaveAsync();
+            return course.CourseId;
+        }
+
+        public async Task<bool> DeleteCourseAsync(int courseId)
+        {
+            var course = await courseRepository.FindByIdAsync(courseId);
+
+            if (course == null)
+            {
+                return false;
+            }
+
+            courseRepository.Delete(course);
+            return true;
+        }
     }
 }
