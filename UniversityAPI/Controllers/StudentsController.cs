@@ -1,12 +1,13 @@
 ﻿using ApplicationCore.IService;
 using AutoMapper;
 using Domain.Models.Aggregate;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using UniversityAPI.Models.Student;
 
 namespace UniversityAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/students")]
     [ApiController]
     public class StudentsController : ControllerBase
     {
@@ -45,7 +46,7 @@ namespace UniversityAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStudentAsync([FromBody] StudentForCreationDTO studentDTO)
+        public async Task<IActionResult> CreateStudentAsync([FromBody] StudentRequestDTO studentDTO)
         {
             if (studentDTO == null)
             {
@@ -64,6 +65,55 @@ namespace UniversityAPI.Controllers
                 mapper.Map<StudentResponseDTO>(studentEntity));
         }
 
+        [HttpPut("{studentId}")]
+        public async Task<IActionResult> UpdateStudentAsync([FromRoute] int studentId, [FromBody] StudentRequestDTO studentDTO)
+        {
+            if (studentId < 0)
+            {
+                return BadRequest();
+            }
+
+            var student = await studentService.GetStudentAsync(studentId);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            mapper.Map(studentDTO, student);
+
+            await studentService.SaveStudentAsync(student);
+            return NoContent();
+        }
+
+        [HttpPatch("{studentId}")]
+        public async Task<IActionResult> PartiallyUpdateCourseAsync([FromRoute] int studentId, [FromBody] JsonPatchDocument<StudentRequestDTO> patchDocument)
+        {
+            if (studentId < 0)
+            {
+                return BadRequest();
+            }
+
+            var studentEntity = await studentService.GetStudentAsync(studentId);
+
+            if (studentEntity == null)
+            {
+                return NotFound();
+            }
+
+            var studentToPatch = mapper.Map<StudentRequestDTO>(studentEntity);
+
+            patchDocument.ApplyTo(studentToPatch, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            mapper.Map(studentToPatch, studentEntity);
+            await studentService.SaveStudentAsync(studentEntity);
+            return NoContent();
+        }
+
         [HttpDelete("{studentId}")]
         public async Task<IActionResult> DeleteStudentAsync([FromRoute] int studentId)
         {
@@ -79,5 +129,12 @@ namespace UniversityAPI.Controllers
 
             return NoContent();
         }
+
+        [Route("{studentId}/courses")]
+        public async Task<IActionResult> GetAllStudentCourses([FromRoute] int studentId)
+        {
+
+        }
+
     }
 }

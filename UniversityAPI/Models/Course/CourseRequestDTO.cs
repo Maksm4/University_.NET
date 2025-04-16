@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UniversityAPI.Models
+namespace UniversityAPI.Models.Course
 {
-    public class CourseForCreationDTO
+    public class CourseRequestDTO
     {
         [Required]
         public string Name { get; set; }
         [Required]
         [MaxLength(1000)]
         public string Description { get; set; }
-        [Required]
-        public bool IsActive { get; set; }
     }
 }

@@ -3,16 +3,17 @@ using AutoMapper;
 using Domain.Models.Aggregate;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using UniversityAPI.Models;
+using UniversityAPI.Models.Course;
 
 namespace UniversityAPI.Controllers
 {
-    [Route("api/[controller]")]
+    //[Consumes("application/json")]
+    [Route("api/courses")]
     [ApiController]
     public class CoursesController : ControllerBase
     {
-        private ICourseService courseService;
-        private IMapper mapper;
+        private readonly ICourseService courseService;
+        private readonly IMapper mapper;
         public CoursesController(ICourseService courseService, IMapper mapper)
         {
             this.courseService = courseService;
@@ -27,7 +28,7 @@ namespace UniversityAPI.Controllers
             return Ok(mapper.Map<IReadOnlyCollection<CourseResponseDTO>>(courses));
         }
 
-        [HttpGet("{courseId}", Name = "GetCourseAsync")]
+        [HttpGet("{courseId}", Name = nameof(GetCourseAsync))]
         public async Task<IActionResult> GetCourseAsync([FromRoute] int courseId)
         {
             if (courseId < 0)
@@ -44,7 +45,7 @@ namespace UniversityAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCourseAsync([FromBody] CourseForCreationDTO courseDTO)
+        public async Task<IActionResult> CreateCourseAsync([FromBody] CourseRequestDTO courseDTO)
         {
             if (courseDTO == null)
             {
@@ -63,7 +64,7 @@ namespace UniversityAPI.Controllers
         }
 
         [HttpPut("{courseId}")]
-        public async Task<IActionResult> UpdateCourseAsync([FromRoute] int courseId, [FromBody] CourseForUpdateDTO courseDTO)
+        public async Task<IActionResult> UpdateCourseAsync([FromRoute] int courseId, [FromBody] CourseRequestDTO courseDTO)
         {
             if (courseId < 0)
             {
@@ -82,7 +83,7 @@ namespace UniversityAPI.Controllers
         }
 
         [HttpPatch("{courseId}")]
-        public async Task<IActionResult> PartiallyUpdateCourseAsync([FromRoute] int courseId,[FromBody]JsonPatchDocument<CourseForUpdateDTO> patchDocument)
+        public async Task<IActionResult> PartiallyUpdateCourseAsync([FromRoute] int courseId,[FromBody]JsonPatchDocument<CourseRequestDTO> patchDocument)
         {
             if (courseId < 0)
             {
@@ -96,7 +97,7 @@ namespace UniversityAPI.Controllers
                 return NotFound();
             }
 
-            var courseToPatch = mapper.Map<CourseForUpdateDTO>(courseEntity);
+            var courseToPatch = mapper.Map<CourseRequestDTO>(courseEntity);
 
             patchDocument.ApplyTo(courseToPatch, ModelState);
 

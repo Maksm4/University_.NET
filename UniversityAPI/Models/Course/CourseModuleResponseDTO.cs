@@ -1,4 +1,4 @@
-﻿namespace UniversityAPI.Models
+﻿namespace UniversityAPI.Models.Course
 {
     public class CourseModuleResponseDTO
     {
