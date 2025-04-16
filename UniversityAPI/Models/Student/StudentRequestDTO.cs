@@ -1,6 +1,6 @@
 ﻿namespace UniversityAPI.Models.Student
 {
-    public class StudentForCreationDTO
+    public class StudentRequestDTO
     {
         public string FirstName { get; }
         public string LastName { get; }

@@ -133,8 +133,19 @@ namespace UniversityAPI.Controllers
         [Route("{studentId}/courses")]
         public async Task<IActionResult> GetAllStudentCourses([FromRoute] int studentId)
         {
+            if (studentId < 0)
+            {
+                return BadRequest();
+            }
+            //change to accept student (instead of studentId) so that I can check first if the student is not found
+            var studentCourses = await studentService.GetEnrolledCoursesAsync(studentId);
 
+            if (studentCourses.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<IReadOnlyCollection<EnrolledCourseDTO>>(studentCourses));
         }
-
     }
 }
