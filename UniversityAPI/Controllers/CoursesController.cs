@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.IService;
 using AutoMapper;
 using Domain.Models.Aggregate;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using UniversityAPI.Models;
 
@@ -19,14 +20,14 @@ namespace UniversityAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyCollection<CourseDTO>>> GetAllCoursesAsync()
+        public async Task<ActionResult<IReadOnlyCollection<CourseResponseDTO>>> GetAllCoursesAsync()
         {
             var courses = await courseService.GetCoursesAsync();
 
-            return Ok(mapper.Map<IReadOnlyCollection<CourseDTO>>(courses));
+            return Ok(mapper.Map<IReadOnlyCollection<CourseResponseDTO>>(courses));
         }
 
-        [HttpGet("{courseId}", Name = nameof(GetCourseAsync))]
+        [HttpGet("{courseId}", Name = "GetCourseAsync")]
         public async Task<IActionResult> GetCourseAsync([FromRoute] int courseId)
         {
             if (courseId < 0)
@@ -39,7 +40,7 @@ namespace UniversityAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<CourseDTO>(course));
+            return Ok(mapper.Map<CourseResponseDTO>(course));
         }
 
         [HttpPost]
@@ -57,23 +58,59 @@ namespace UniversityAPI.Controllers
                 return BadRequest();
             }
 
-            return CreatedAtAction(nameof(GetCourseAsync), new { courseId },
-                mapper.Map<CourseDTO>(courseEntity));
+            return CreatedAtRoute(nameof(GetCourseAsync), new { courseId},
+                mapper.Map<CourseResponseDTO>(courseEntity));
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateCourseAsync()
+        [HttpPut("{courseId}")]
+        public async Task<IActionResult> UpdateCourseAsync([FromRoute] int courseId, [FromBody] CourseForUpdateDTO courseDTO)
         {
+            if (courseId < 0)
+            {
+                return BadRequest();
+            }
 
+            var course = await courseService.GetCourseAsync(courseId);
+            if ( course == null)
+            {
+                return NotFound();
+            }
+
+            mapper.Map(courseDTO, course);
+            await courseService.SaveCourseAsync(course);
+            return NoContent();
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> UpdatePartiallyCourseAsync()
+        [HttpPatch("{courseId}")]
+        public async Task<IActionResult> PartiallyUpdateCourseAsync([FromRoute] int courseId,[FromBody]JsonPatchDocument<CourseForUpdateDTO> patchDocument)
         {
+            if (courseId < 0)
+            {
+                return BadRequest();
+            }
 
+            var courseEntity = await courseService.GetCourseAsync(courseId);
+
+            if (courseEntity == null)
+            {
+                return NotFound();
+            }
+
+            var courseToPatch = mapper.Map<CourseForUpdateDTO>(courseEntity);
+
+            patchDocument.ApplyTo(courseToPatch, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            mapper.Map(courseToPatch, courseEntity);
+            await courseService.SaveCourseAsync(courseEntity);
+            return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("{courseId}")]
         public async Task<IActionResult> DeleteCourse([FromRoute] int courseId)
         {
             if (courseId < 0)
@@ -85,6 +122,7 @@ namespace UniversityAPI.Controllers
             {
                 return NotFound();
             }
+
             return NoContent();
         }
     }

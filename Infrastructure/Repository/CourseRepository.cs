@@ -29,7 +29,7 @@ namespace Infrastructure.Repository
 
         public async Task<IReadOnlyCollection<Course>> GetCoursesAsync()
         {
-            return await dbContext.Courses
+            return await dbContext.Courses.Include(c => c.CourseModules)
                .ToListAsync();
         }
     }

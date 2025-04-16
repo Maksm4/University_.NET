@@ -13,5 +13,6 @@ namespace ApplicationCore.IService
         Task<IReadOnlyCollection<CourseModuleWithMarkDTO>> GetCourseModulesWithMarkAsync(int studentId, int courseId);
         Task<int?> CreateCourseAsync(Course course);
         Task<bool> DeleteCourseAsync(int courseId);
+        Task SaveCourseAsync(Course course);
     }
 }

@@ -113,7 +113,13 @@ namespace ApplicationCore.Service
             }
 
             courseRepository.Delete(course);
+            await courseRepository.SaveAsync();
             return true;
+        }
+
+        public async Task SaveCourseAsync(Course course)
+        {
+            await courseRepository.SaveAsync();
         }
     }
 }
