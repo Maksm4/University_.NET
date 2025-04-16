@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Domain.Models.Aggregate;
+using UniversityAPI.Models.Student;
 
 namespace UniversityAPI.Mapper
 {
@@ -7,7 +9,7 @@ namespace UniversityAPI.Mapper
 
         public StudentMapper()
         {
-            
+            CreateMap<Student, StudentResponseDTO>();
         }
     }
 }

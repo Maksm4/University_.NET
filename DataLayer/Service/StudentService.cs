@@ -116,5 +116,33 @@ namespace ApplicationCore.Service
             await SaveStudentAsync(student);
             return true;
         }
+
+        public async Task<int?> CreateStudentAsync(Student student)
+        {
+            if (student == null)
+            {
+                return null;
+            }
+            student = await studentRepository.CreateAsync(student);
+
+            if (student == null)
+            {
+                return null;
+            }
+
+            return student.StudentId;
+        }
+
+        public async Task<bool> DeleteStudentAsync(int studentId)
+        {
+            var student = await studentRepository.FindByIdAsync(studentId);
+            if (student == null)
+            {
+                return false;
+            }
+            studentRepository.Delete(student);
+            await SaveStudentAsync(student);
+            return true;
+        }
     }
 }
