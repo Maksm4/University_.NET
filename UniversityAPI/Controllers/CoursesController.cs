@@ -74,11 +74,20 @@ namespace UniversityAPI.Controllers
             var course = await courseService.GetCourseAsync(courseId);
             if ( course == null)
             {
-                return NotFound();
+                var courseEntity = mapper.Map<Course>(courseDTO);
+                int? createdCourseId = await courseService.CreateCourseAsync(courseEntity);
+
+                if (createdCourseId == null)
+                {
+                    return BadRequest();
+                }
+
+                return CreatedAtRoute(nameof(GetCourseAsync), new { courseId = createdCourseId },
+                    mapper.Map<CourseResponseDTO>(courseEntity));
             }
 
             mapper.Map(courseDTO, course);
-            await courseService.SaveCourseAsync(course);
+            await courseService.SaveAsync(course);
             return NoContent();
         }
 
@@ -107,7 +116,7 @@ namespace UniversityAPI.Controllers
             }
 
             mapper.Map(courseToPatch, courseEntity);
-            await courseService.SaveCourseAsync(courseEntity);
+            await courseService.SaveAsync(courseEntity);
             return NoContent();
         }
 

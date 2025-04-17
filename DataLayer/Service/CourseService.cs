@@ -117,9 +117,19 @@ namespace ApplicationCore.Service
             return true;
         }
 
-        public async Task SaveCourseAsync(Course course)
+        public async Task SaveAsync()
         {
             await courseRepository.SaveAsync();
+        }
+
+        public async Task<bool> CourseExists(int courseId)
+        {
+            var course = await courseRepository.FindByIdAsync(courseId);
+            if (course == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

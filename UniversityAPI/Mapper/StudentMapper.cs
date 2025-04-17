@@ -1,6 +1,8 @@
 ﻿using ApplicationCore.DTO;
 using AutoMapper;
+using Domain.Models;
 using Domain.Models.Aggregate;
+using Domain.Models.VObject;
 using UniversityAPI.Models.Student;
 
 namespace UniversityAPI.Mapper
@@ -12,7 +14,12 @@ namespace UniversityAPI.Mapper
         {
             CreateMap<Student, StudentResponseDTO>();
 
-            CreateMap<StudentCourseTakenDTO, EnrolledCourseDTO>();
+            CreateMap<StudentCourseTakenDTO, EnrolledCourseResponseDTO>()
+               .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.DateTimeRange.StartTime))
+               .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.DateTimeRange.EndTime));
+
+            CreateMap<EnrolledCourseRequestDTO, EnrolledCourse>()
+               .ForMember(dest => dest.DateTimeRange, opt => opt.MapFrom(src => new DateTimeRange(src.StartDate ?? DateOnly.FromDateTime(DateTime.Now), src.EndDate)));
         }
     }
 }

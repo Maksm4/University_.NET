@@ -1,13 +1,12 @@
-﻿using Domain.Models.VObject;
-
-namespace UniversityAPI.Models.Student
+﻿namespace UniversityAPI.Models.Student
 {
-    public class EnrolledCourseDTO
+    public class EnrolledCourseResponseDTO
     {
         public int CourseId { get; set; }
         public string CourseName { get; set; }
         public string CourseDescription { get; set; }
         public bool IsActive { get; set; }
-        public DateTimeRange DateTimeRange { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.DTO;
 using ApplicationCore.IRepository;
 using ApplicationCore.IService;
+using Domain.Models;
 using Domain.Models.Aggregate;
 using Domain.Models.VObject;
 
@@ -94,6 +95,26 @@ namespace ApplicationCore.Service
             return false;
         }
 
+        public async Task<bool> EnrollStudentInCourseAsync(int studentId, int courseId, DateTimeRange DateRange)
+        {
+            var course = await courseRepository.FindByIdAsync(courseId);
+            var student = await studentRepository.FindByIdAsync(studentId);
+            if (student == null || course == null)
+            {
+                return false;
+            }
+
+            var enrolledCourses = student.GetEnrolledCourses().Select(ec => ec.CourseId).ToHashSet();
+
+            if (!enrolledCourses.Contains(courseId))
+            {
+                student.EnrollInCourse(course, DateRange);
+                await SaveStudentAsync(student);
+                return true;
+            }
+            return false;
+        }
+
         public async Task<bool> GiveMarkForCourseModuleAsync(int studentId,int courseId, int courseModuleId, int mark)
         {
             var student = await studentRepository.FindByIdAsync(studentId);
@@ -143,6 +164,39 @@ namespace ApplicationCore.Service
             studentRepository.Delete(student);
             await SaveStudentAsync(student);
             return true;
+        }
+
+        public async Task<bool> StudentExistsAsync(int studentId)
+        {
+            var student = await studentRepository.FindByIdAsync(studentId);
+            if (student == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task WithdrawFromCourse(int studentId, int courseId)
+        {
+            var student = await studentRepository.FindByIdAsync(studentId);
+            if (student == null)
+            {
+                return;
+            }
+
+            student.WithdrawFromCourse(courseId);
+            await SaveStudentAsync(student);
+        }
+
+        public async Task<EnrolledCourse?> GetEnrolledCourseAsync(int studentId, int courseId)
+        {
+            var student = await studentRepository.FindByIdAsync(studentId);
+            if (student == null)
+            {
+                return null;
+            }
+
+            return student.GetEnrolledCourse(courseId);
         }
     }
 }

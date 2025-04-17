@@ -29,6 +29,25 @@ namespace Domain.Models.Aggregate
             var enrolledCourse = new EnrolledCourse(LearningPlan.LearningPlanId, course.CourseId, new DateTimeRange(DateOnly.FromDateTime(DateTime.Now), null));
             LearningPlan.AddCourse(enrolledCourse);
         }
+        public void EnrollInCourse(Course course, DateTimeRange dateRange)
+        {
+            var enrolledCourse = new EnrolledCourse(LearningPlan.LearningPlanId, course.CourseId, dateRange);
+            LearningPlan.AddCourse(enrolledCourse);
+        }
+
+        public EnrolledCourse? GetEnrolledCourse(int courseId)
+        {
+            return LearningPlan.GetEnrolledCourse(courseId);
+        }
+
+        public void WithdrawFromCourse(int courseId)
+        {
+            var enrolledCourse = LearningPlan.GetEnrolledCourse(courseId);
+            if (enrolledCourse != null)
+            {
+                LearningPlan.RemoveCourse(enrolledCourse);
+            }
+        }
 
         public void FinishCourse(Course course)
         {
