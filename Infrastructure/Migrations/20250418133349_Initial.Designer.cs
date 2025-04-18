@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(UniversityContext))]
-    [Migration("20250403120448_NameChange")]
-    partial class NameChange
+    [Migration("20250418133349_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -383,7 +383,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Aggregate.Course", null)
                         .WithMany("CourseModules")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -398,7 +398,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.LearningPlan", null)
                         .WithMany("EnrolledCourses")
                         .HasForeignKey("LearningPlanId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.OwnsOne("Domain.Models.VObject.DateTimeRange", "DateTimeRange", b1 =>
@@ -434,7 +434,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Aggregate.Student", null)
                         .WithOne("LearningPlan")
                         .HasForeignKey("Domain.Models.LearningPlan", "StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -443,13 +443,13 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.CourseModule", null)
                         .WithMany()
                         .HasForeignKey("CourseModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.EnrolledCourse", null)
                         .WithMany("MarkedModules")
                         .HasForeignKey("LearningPlanId", "CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -457,8 +457,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Models.Aggregate.Student", "student")
                         .WithOne()
-                        .HasForeignKey("Infrastructure.Context.User", "studentId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("Infrastructure.Context.User", "studentId");
 
                     b.Navigation("student");
                 });
@@ -468,7 +467,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -477,7 +476,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Infrastructure.Context.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -486,7 +485,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Infrastructure.Context.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -495,13 +494,13 @@ namespace Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Infrastructure.Context.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -510,7 +509,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Infrastructure.Context.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

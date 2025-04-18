@@ -15,9 +15,9 @@ namespace UniversityAPI.Mapper
         {
             CreateMap<Student, StudentResponseDTO>();
 
-            CreateMap<StudentRequestDTO, Student>()
-                .ConstructUsing(studentDto => new Student(studentDto.FirstName, studentDto.LastName, studentDto.BirthDate, new LearningPlan("learningPlan")));
+            CreateMap<StudentRequestDTO, Student>();
 
+            CreateMap<Student, StudentRequestDTO>();
             CreateMap<StudentCourseTakenDTO, EnrolledCourseResponseDTO>()
                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.DateTimeRange.StartTime))
                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.DateTimeRange.EndTime))

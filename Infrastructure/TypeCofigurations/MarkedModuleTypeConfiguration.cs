@@ -15,7 +15,8 @@ namespace Infrastructure.TypeCofigurations
 
             builder.HasOne<CourseModule>()
                 .WithMany()
-                .HasForeignKey(mm => mm.CourseModuleId);
+                .HasForeignKey(mm => mm.CourseModuleId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(mm => mm.Mark)
                 .IsRequired();

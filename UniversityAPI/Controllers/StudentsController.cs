@@ -76,11 +76,18 @@ namespace UniversityAPI.Controllers
             var student = await studentService.GetStudentAsync(studentId);
             if (student == null)
             {
-                return NotFound();
+                var studentEntity = mapper.Map<Student>(studentDTO);
+                int? createdStudentId = await studentService.CreateStudentAsync(studentEntity);
+                if (createdStudentId == null)
+                {
+                    return BadRequest();
+                }
+
+                return CreatedAtRoute(nameof(GetStudentAsync), new { studentId = createdStudentId },
+                    mapper.Map<StudentResponseDTO>(studentEntity));
             }
 
             mapper.Map(studentDTO, student);
-
             await studentService.SaveStudentAsync(student);
             return NoContent();
         }

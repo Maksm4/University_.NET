@@ -5,9 +5,9 @@ namespace Domain.Models.Aggregate
     public class Student : IAggregateRoot
     {
         public int StudentId { get; }
-        public string FirstName { get; }
-        public string LastName { get; }
-        public DateOnly BirthDate { get; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateOnly BirthDate { get; set; }
         public LearningPlan LearningPlan { get; private set; }
 
         private Student() { }

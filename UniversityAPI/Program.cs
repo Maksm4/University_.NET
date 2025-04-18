@@ -22,6 +22,7 @@ namespace UniversityAPI
                 //options =>
                 //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 );
+            builder.Services.AddProblemDetails();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

@@ -16,12 +16,6 @@ namespace Infrastructure.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //toogle off default delete cascades
-
-            foreach (var fk in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            {
-                fk.DeleteBehavior = DeleteBehavior.Restrict;
-            }
 
             modelBuilder.ApplyConfiguration(new CourseModuleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CourseTypeConfiguration());

@@ -69,8 +69,7 @@ namespace UniversityAPI.Controllers
         {
             try
             {
-                if (studentId < 0 || enrolledCourseDTO == null ||
-                    enrolledCourseDTO.StartDate?.CompareTo(enrolledCourseDTO.EndDate) > 0)
+                if (studentId < 0 || enrolledCourseDTO == null)
                 {
                     return BadRequest();
                 }
@@ -118,11 +117,13 @@ namespace UniversityAPI.Controllers
         }
 
         [HttpPut("{courseId}")]
-        public async Task<IActionResult> UpdateStudentCourseAsync([FromRoute] int studentId, [FromRoute] int courseId, [FromBody] EnrolledCourseRequestDTO enrolledCourseDTO)
+        public async Task<IActionResult> UpdateStudentCourseAsync([FromRoute] int studentId, [FromRoute] int courseId,
+            [FromBody] EnrolledCourseRequestDTO enrolledCourseDTO)
         {
             try
             {
-                if (studentId < 0 || enrolledCourseDTO == null)
+                if (studentId < 0 || enrolledCourseDTO == null ||
+                    enrolledCourseDTO.StartDate?.CompareTo(enrolledCourseDTO.EndDate) > 0)
                 {
                     return BadRequest();
                 }
@@ -138,7 +139,7 @@ namespace UniversityAPI.Controllers
                 await courseService.SaveAsync();
                 return NoContent();
 
-            }catch (DateRangeException ex)
+            }catch (AutoMapperMappingException ex) when (ex.InnerException is DateRangeException)
             {
                 return BadRequest(ex.Message);
             }
