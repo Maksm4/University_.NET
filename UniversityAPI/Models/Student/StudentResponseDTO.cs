@@ -1,9 +1,13 @@
-﻿namespace UniversityAPI.Models.Student
+﻿using Newtonsoft.Json;
+
+namespace UniversityAPI.Models.Student
 {
     public class StudentResponseDTO
     {
-        public string FirstName { get; }
-        public string LastName { get; }
-        public DateOnly BirthDate { get; }
+        [JsonProperty("Id")]
+        public int StudentId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateOnly BirthDate { get; set; }
     }
 }

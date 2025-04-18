@@ -1,4 +1,6 @@
-﻿namespace UniversityAPI.Models.Student
+﻿using Newtonsoft.Json;
+
+namespace UniversityAPI.Models.EnrolledCourse
 {
     public class EnrolledCourseResponseDTO
     {
@@ -7,6 +9,8 @@
         public string CourseDescription { get; set; }
         public bool IsActive { get; set; }
         public DateOnly StartDate { get; set; }
-        public DateOnly EndDate { get; set; }
+        public DateOnly? EndDate { get; set; }
+        [JsonProperty("gradedModules")]
+        public IReadOnlyCollection<MarkedCourseModuleResponseDTO> markedCourseModules { get; set; }
     }
 }

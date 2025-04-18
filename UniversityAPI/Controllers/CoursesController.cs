@@ -21,7 +21,7 @@ namespace UniversityAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyCollection<CourseResponseDTO>>> GetAllCoursesAsync()
+        public async Task<IActionResult> GetAllCoursesAsync()
         {
             var courses = await courseService.GetCoursesAsync();
 
@@ -41,6 +41,10 @@ namespace UniversityAPI.Controllers
             {
                 return NotFound();
             }
+
+            var courseModules = course.GetCourseModules();
+
+
             return Ok(mapper.Map<CourseResponseDTO>(course));
         }
 
@@ -59,7 +63,7 @@ namespace UniversityAPI.Controllers
                 return BadRequest();
             }
 
-            return CreatedAtRoute(nameof(GetCourseAsync), new { courseId},
+            return CreatedAtRoute(nameof(GetCourseAsync), new { courseId },
                 mapper.Map<CourseResponseDTO>(courseEntity));
         }
 
@@ -72,7 +76,7 @@ namespace UniversityAPI.Controllers
             }
 
             var course = await courseService.GetCourseAsync(courseId);
-            if ( course == null)
+            if (course == null)
             {
                 var courseEntity = mapper.Map<Course>(courseDTO);
                 int? createdCourseId = await courseService.CreateCourseAsync(courseEntity);
@@ -87,14 +91,14 @@ namespace UniversityAPI.Controllers
             }
 
             mapper.Map(courseDTO, course);
-            await courseService.SaveAsync(course);
+            await courseService.SaveAsync();
             return NoContent();
         }
 
         [HttpPatch("{courseId}")]
-        public async Task<IActionResult> PartiallyUpdateCourseAsync([FromRoute] int courseId,[FromBody]JsonPatchDocument<CourseRequestDTO> patchDocument)
+        public async Task<IActionResult> PartiallyUpdateCourseAsync([FromRoute] int courseId, [FromBody] JsonPatchDocument<CourseRequestDTO> patchDocument)
         {
-            if (courseId < 0)
+            if (courseId < 0 || patchDocument == null)
             {
                 return BadRequest();
             }
@@ -116,12 +120,12 @@ namespace UniversityAPI.Controllers
             }
 
             mapper.Map(courseToPatch, courseEntity);
-            await courseService.SaveAsync(courseEntity);
+            await courseService.SaveAsync();
             return NoContent();
         }
 
         [HttpDelete("{courseId}")]
-        public async Task<IActionResult> DeleteCourse([FromRoute] int courseId)
+        public async Task<IActionResult> DeleteCourseAsync([FromRoute] int courseId)
         {
             if (courseId < 0)
             {

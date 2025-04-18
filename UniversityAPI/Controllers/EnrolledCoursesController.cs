@@ -1,9 +1,10 @@
-﻿using ApplicationCore.IService;
+﻿using ApplicationCore.CustomExceptions;
+using ApplicationCore.IService;
 using AutoMapper;
 using Domain.Models;
 using Domain.Models.VObject;
 using Microsoft.AspNetCore.Mvc;
-using UniversityAPI.Models.Student;
+using UniversityAPI.Models.EnrolledCourse;
 
 namespace UniversityAPI.Controllers
 {
@@ -35,8 +36,7 @@ namespace UniversityAPI.Controllers
                 return NotFound();
             }
 
-            var studentCourses = await studentService.GetEnrolledCoursesAsync(studentId);
-
+            var studentCourses = await studentService.GetEnrolledCoursesWithGradesAsync(studentId);
             return Ok(mapper.Map<IReadOnlyCollection<EnrolledCourseResponseDTO>>(studentCourses));
         }
 
@@ -53,7 +53,7 @@ namespace UniversityAPI.Controllers
                 return NotFound();
             }
 
-            var studentCourses = await studentService.GetEnrolledCoursesAsync(studentId);
+            var studentCourses = await studentService.GetEnrolledCoursesWithGradesAsync(studentId);
             var course = studentCourses.FirstOrDefault(enrolledCrs => enrolledCrs?.CourseId == courseId);
 
             if (course == null)
@@ -67,24 +67,31 @@ namespace UniversityAPI.Controllers
         [HttpPost("{courseId}")]
         public async Task<IActionResult> CreateStudentCourseAsync([FromRoute] int studentId, [FromRoute] int courseId, [FromBody] EnrolledCourseRequestDTO enrolledCourseDTO)
         {
-            if (studentId < 0 || enrolledCourseDTO == null)
+            try
             {
-                return BadRequest();
-            }
+                if (studentId < 0 || enrolledCourseDTO == null)
+                {
+                    return BadRequest();
+                }
 
-            if (!await studentService.StudentExistsAsync(studentId))
-            {
-                return NotFound();
-            }
-                
-            if (!await studentService.EnrollStudentInCourseAsync(studentId, courseId, 
-                new DateTimeRange(enrolledCourseDTO.StartDate ?? DateOnly.FromDateTime(DateTime.Now), enrolledCourseDTO.EndDate)))
-            {
-                return BadRequest();
-            }
+                if (!await studentService.StudentExistsAsync(studentId))
+                {
+                    return NotFound();
+                }
 
-            return CreatedAtRoute(nameof(GetStudentEnrolledCourseAsync),
-                new { studentId, courseId }, new { });
+                if (!await studentService.EnrollStudentInCourseAsync(studentId, courseId,
+                    new DateTimeRange(enrolledCourseDTO.StartDate ?? DateOnly.FromDateTime(DateTime.Now), enrolledCourseDTO.EndDate)))
+                {
+                    return BadRequest();
+                }
+
+                return CreatedAtRoute(nameof(GetStudentEnrolledCourseAsync),
+                    new { studentId, courseId }, new { });
+
+            }catch (DateRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{courseId}")]
@@ -112,21 +119,28 @@ namespace UniversityAPI.Controllers
         [HttpPut("{courseId}")]
         public async Task<IActionResult> UpdateStudentCourseAsync([FromRoute] int studentId, [FromRoute] int courseId, [FromBody] EnrolledCourseRequestDTO enrolledCourseDTO)
         {
-            if (studentId < 0 || enrolledCourseDTO == null)
+            try
             {
-                return BadRequest();
-            }
+                if (studentId < 0 || enrolledCourseDTO == null)
+                {
+                    return BadRequest();
+                }
 
-            EnrolledCourse? enrolledCourseEntity =  await studentService.GetEnrolledCourseAsync(studentId, courseId);
+                EnrolledCourse? enrolledCourseEntity = await studentService.GetEnrolledCourseAsync(studentId, courseId);
 
-            if (enrolledCourseEntity == null)
+                if (enrolledCourseEntity == null)
+                {
+                    return NotFound();
+                }
+
+                mapper.Map(enrolledCourseDTO, enrolledCourseEntity);
+                await courseService.SaveAsync();
+                return NoContent();
+
+            }catch (DateRangeException ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-
-            mapper.Map(enrolledCourseDTO, enrolledCourseEntity);
-            await courseService.SaveAsync();
-            return NoContent();
         }
     }
 }

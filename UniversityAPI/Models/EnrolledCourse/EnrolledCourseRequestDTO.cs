@@ -1,4 +1,4 @@
-﻿namespace UniversityAPI.Models.Student
+﻿namespace UniversityAPI.Models.EnrolledCourse
 {
     public class EnrolledCourseRequestDTO
     {

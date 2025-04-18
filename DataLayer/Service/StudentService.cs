@@ -44,7 +44,7 @@ namespace ApplicationCore.Service
             return await studentRepository.FindByIdAsync(studentId);
         }
 
-        public async Task<IReadOnlyCollection<StudentCourseTakenDTO?>> GetEnrolledCoursesAsync(int studentId)
+        public async Task<IReadOnlyCollection<StudentCourseTakenDTO?>> GetEnrolledCoursesWithGradesAsync(int studentId)
         {
             var student = await studentRepository.FindByIdAsync(studentId);
             if (student == null)
@@ -55,21 +55,30 @@ namespace ApplicationCore.Service
             var enrolledCourses = student.GetEnrolledCourses();
             var courses = await courseRepository.GetCoursesAsync();
 
-            return enrolledCourses.Select(ec =>
+            return enrolledCourses.Select(enrolledCrs =>
             {
-                var course = courses.FirstOrDefault(c => c.CourseId == ec.CourseId);
+                var course = courses.FirstOrDefault(c => c.CourseId == enrolledCrs.CourseId);
                 if (course == null)
                 {
                     return null;
                 }
                 return new StudentCourseTakenDTO
                 {
-                    CourseId = ec.CourseId,
+                    CourseId = enrolledCrs.CourseId,
                     StudentId = studentId,
                     CourseName = course.Name,
                     CourseDescription = course.Description,
                     IsActive = !course.IsDeprecated,
-                    DateTimeRange = new DateTimeRange(ec.DateTimeRange.StartTime, ec.DateTimeRange.EndTime)
+                    DateTimeRange = new DateTimeRange(enrolledCrs.DateTimeRange.StartTime, enrolledCrs.DateTimeRange.EndTime),
+                    courseModuleWithMarkDTOs = enrolledCrs.MarkedModules.Select(module =>
+                    {
+                        return new CourseModuleWithMarkDTO
+                        {
+                            Mark = module.Mark,
+                            CourseModuleId = module.CourseModuleId,
+                            Description = course.CourseModules.FirstOrDefault(cm => cm.CourseModuleId == module.CourseModuleId)?.Description ?? "description not available"
+                        };
+                    }).ToList()
                 };
             }
             ).ToList();
@@ -150,7 +159,7 @@ namespace ApplicationCore.Service
             {
                 return null;
             }
-
+            await studentRepository.SaveAsync();
             return student.StudentId;
         }
 

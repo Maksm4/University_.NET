@@ -18,7 +18,10 @@ namespace UniversityAPI
             builder.Services.AddControllers(options =>
             {
                 options.ReturnHttpNotAcceptable = true;
-            }).AddNewtonsoftJson();
+            }).AddNewtonsoftJson(
+                //options =>
+                //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                );
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

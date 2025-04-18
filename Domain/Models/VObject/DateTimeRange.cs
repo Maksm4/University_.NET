@@ -1,4 +1,6 @@
 ﻿
+using ApplicationCore.CustomExceptions;
+
 namespace Domain.Models.VObject
 {
     public class DateTimeRange
@@ -10,7 +12,7 @@ namespace Domain.Models.VObject
         {
             if (startTime > endTime && endTime != null)
             {
-                throw new ArgumentException("start time cant be after end time");
+                throw new DateRangeException("start time cant be after end time");
             }
             StartTime = startTime;
             EndTime = endTime;

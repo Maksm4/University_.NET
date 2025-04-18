@@ -10,7 +10,7 @@ namespace ApplicationCore.IService
         Task<IReadOnlyCollection<Student>> GetAllStudentsAsync();
         Task<Student?> GetStudentAsync(int studentId);
         Task<Student> SaveStudentAsync(Student student);
-        Task<IReadOnlyCollection<StudentCourseTakenDTO?>> GetEnrolledCoursesAsync(int studentId);
+        Task<IReadOnlyCollection<StudentCourseTakenDTO?>> GetEnrolledCoursesWithGradesAsync(int studentId);
         Task<bool> EnrollStudentInCourseAsync(int studentId, int courseId);
         Task<bool> EnrollStudentInCourseAsync(int studentId, int courseId, DateTimeRange DateRange);
         Task<bool> GiveMarkForCourseModuleAsync(int studentId, int courseId, int courseModuleId, int mark);

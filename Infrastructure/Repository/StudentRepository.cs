@@ -18,6 +18,7 @@ namespace Infrastructure.Repository
             return await dbContext.Students
                 .Include(s => s.LearningPlan)
                 .ThenInclude(lp => lp.EnrolledCourses)
+                .ThenInclude(ec => ec.MarkedModules)
                 .ToListAsync();
         }
 

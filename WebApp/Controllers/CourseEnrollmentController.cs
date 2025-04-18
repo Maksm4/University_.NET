@@ -30,7 +30,7 @@ namespace WebApp.Controllers
                 return Forbid();
             }
 
-            var enrolledCourses = await studentService.GetEnrolledCoursesAsync(studentId.Value);
+            var enrolledCourses = await studentService.GetEnrolledCoursesWithGradesAsync(studentId.Value);
 
             var model = enrolledCourses.Where(enrolledCrs => enrolledCrs != null).Select(enrolledCrs =>
             new CourseEnrolledViewModel
@@ -57,7 +57,7 @@ namespace WebApp.Controllers
                 return BadRequest();
             }
 
-            var enrolledCourses = await studentService.GetEnrolledCoursesAsync(studentId);
+            var enrolledCourses = await studentService.GetEnrolledCoursesWithGradesAsync(studentId);
 
             var model = enrolledCourses.Where(enrolledCrs => enrolledCrs != null).Select(enrolledCrs =>
             new CourseEnrolledViewModel
