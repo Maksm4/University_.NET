@@ -69,7 +69,8 @@ namespace UniversityAPI.Controllers
         {
             try
             {
-                if (studentId < 0 || enrolledCourseDTO == null)
+                if (studentId < 0 || enrolledCourseDTO == null ||
+                    enrolledCourseDTO.StartDate?.CompareTo(enrolledCourseDTO.EndDate) > 0)
                 {
                     return BadRequest();
                 }

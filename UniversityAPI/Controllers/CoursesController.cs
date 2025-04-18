@@ -42,7 +42,7 @@ namespace UniversityAPI.Controllers
                 return NotFound();
             }
 
-            var courseModules = course.GetCourseModules();
+            var courseModules = course.CourseModules;
 
 
             return Ok(mapper.Map<CourseResponseDTO>(course));

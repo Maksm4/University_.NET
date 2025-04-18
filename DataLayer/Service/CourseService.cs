@@ -72,7 +72,7 @@ namespace ApplicationCore.Service
                 return [];
             }
 
-            var courseModules = course.GetCourseModules();
+            var courseModules = course.CourseModules;
             var studentMarks = student.GetMarksFromCourse(courseId);
 
             return courseModules.Select(cm =>

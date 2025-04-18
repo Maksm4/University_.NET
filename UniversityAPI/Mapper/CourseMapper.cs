@@ -16,7 +16,7 @@ namespace UniversityAPI.Mapper
                .ForMember(dest => dest.CourseModuleDTOs, opt => opt.MapFrom(src => src.CourseModules));
 
             CreateMap<CourseRequestDTO, Course>()
-               .ForMember(dest => dest.IsDeprecated, opt => opt.MapFrom(src => false));
+               .ForMember(dest => dest.IsDeprecated, opt => opt.MapFrom(src => true));
 
             CreateMap<Course, CourseRequestDTO>();
 
