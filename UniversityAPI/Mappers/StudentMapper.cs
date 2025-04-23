@@ -6,7 +6,7 @@ using Domain.Models.VObject;
 using UniversityAPI.Models.EnrolledCourse;
 using UniversityAPI.Models.Student;
 
-namespace UniversityAPI.Mapper
+namespace UniversityAPI.Mappers
 {
     public class StudentMapper : Profile
     {

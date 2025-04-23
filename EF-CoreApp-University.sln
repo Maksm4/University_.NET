@@ -23,6 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csp
 		{E84BC89B-214F-4191-8062-9CCB43BC9AD8} = {E84BC89B-214F-4191-8062-9CCB43BC9AD8}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversityAPI.Test", "UniversityAPI.Test\UniversityAPI.Test.csproj", "{391094FA-6528-4D8B-A68C-03680BC8DED0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{22C2182E-7129-4CFB-8638-FC453F9481AC} = {22C2182E-7129-4CFB-8638-FC453F9481AC}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +58,10 @@ Global
 		{3BA7F9AA-C15E-4D5F-B823-E31EB04C694C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BA7F9AA-C15E-4D5F-B823-E31EB04C694C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BA7F9AA-C15E-4D5F-B823-E31EB04C694C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{391094FA-6528-4D8B-A68C-03680BC8DED0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{391094FA-6528-4D8B-A68C-03680BC8DED0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{391094FA-6528-4D8B-A68C-03680BC8DED0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{391094FA-6528-4D8B-A68C-03680BC8DED0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

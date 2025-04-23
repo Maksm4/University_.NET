@@ -5,7 +5,7 @@ using Domain.Models.Aggregate;
 using UniversityAPI.Models.Course;
 using UniversityAPI.Models.EnrolledCourse;
 
-namespace UniversityAPI.Mapper
+namespace UniversityAPI.Mappers
 {
     public class CourseMapper : Profile
     {
