@@ -31,7 +31,7 @@ namespace UniversityAPI.Controllers
                 return BadRequest();
             }
 
-            if (! await studentService.StudentExistsAsync(studentId))
+            if (!await studentService.StudentExistsAsync(studentId))
             {
                 return NotFound();
             }
