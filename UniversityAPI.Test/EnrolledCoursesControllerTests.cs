@@ -1,13 +1,13 @@
-﻿using ApplicationCore.DTO;
+﻿using ApplicationCore.CustomExceptions;
+using ApplicationCore.DTO;
 using ApplicationCore.IService;
 using AutoMapper;
-using Domain.Models.Aggregate;
+using Domain.Models;
+using Domain.Models.VObject;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Security.Cryptography.Xml;
 using UniversityAPI.Controllers;
 using UniversityAPI.Mappers;
-using UniversityAPI.Models.Course;
 using UniversityAPI.Models.EnrolledCourse;
 
 namespace UniversityAPI.Test
@@ -17,13 +17,15 @@ namespace UniversityAPI.Test
         private readonly EnrolledCoursesController enrolledController;
         private Mock<ICourseService> courseServiceMock;
         private Mock<IStudentService> studentServiceMock;
-        private StudentCourseTakenDTO dummyEnrolledCourse;
+        private EnrolledCourseRequestDTO dummyEnrolledCourseDTO;
         public EnrolledCoursesControllerTests()
         {
-            //dummyEnrolledCourse = new StudentCourseTakenDTO()
-            //{
-            //    stu
-            //};
+            dummyEnrolledCourseDTO = new EnrolledCourseRequestDTO()
+            {
+                StartDate = DateOnly.FromDateTime(DateTime.Now),
+                EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5))
+            };
+
             courseServiceMock = new Mock<ICourseService>();
             studentServiceMock = new Mock<IStudentService>();
 
@@ -122,6 +124,7 @@ namespace UniversityAPI.Test
         [Theory]
         [InlineData(0, -1)]
         [InlineData(-1, 0)]
+        [InlineData(-1, -1)]
         public async Task GetStudentEnrolledCourseAsync_NegativeIds_ReturnsBadRequest(int studentId, int courseId)
         {
             //im not sure here if I should mock the methods from services that are used in this method
@@ -179,22 +182,16 @@ namespace UniversityAPI.Test
         public async Task CreateStudentCourseAsync_HappyPath_ReturnsCreatedAtRouteWithCreatedEnrolledCourse(int studentId, int courseId)
         {
             //arrange
-            var enrolledCourseDTO = new EnrolledCourseRequestDTO()
-            {
-                StartDate = DateOnly.FromDateTime(DateTime.Now),
-                EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5))
-            };
-
             studentServiceMock
                .Setup(m => m.StudentExistsAsync(It.IsAny<int>()))
                .ReturnsAsync(true);
 
             studentServiceMock
-                .Setup(m => m.EnrollStudentInCourseAsync(studentId, courseId))
+                .Setup(m => m.EnrollStudentInCourseAsync(studentId, courseId, new DateTimeRange(dummyEnrolledCourseDTO.StartDate ?? DateOnly.FromDateTime(DateTime.Now), dummyEnrolledCourseDTO.EndDate)))
                 .ReturnsAsync(true);
 
             //act
-            var result = await enrolledController.CreateStudentCourseAsync(studentId, courseId, enrolledCourseDTO);
+            var result = await enrolledController.CreateStudentCourseAsync(studentId, courseId, dummyEnrolledCourseDTO);
 
             //assert
             var resultObject = Assert.IsType<CreatedAtRouteResult>(result);
@@ -203,6 +200,157 @@ namespace UniversityAPI.Test
             Assert.Equal(2, resultObject.RouteValues.Count);
             Assert.NotNull(resultObject.RouteValues.GetValueOrDefault("studentId"));
             Assert.NotNull(resultObject.RouteValues.GetValueOrDefault("courseId"));
+        }
+
+        [Fact]
+        public async Task CreateStudentCourseAsync_EndDateBeforeStartDate_throwsDateRangeException()
+        {
+            //arrange
+            int correctStudentId = 5;
+            int correctCourseId = 5;
+
+            studentServiceMock
+                .Setup(m => m.StudentExistsAsync(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            studentServiceMock
+                .Setup(m => m.EnrollStudentInCourseAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTimeRange>()))
+                .ThrowsAsync(new DateRangeException());
+
+            //act
+            var result = await enrolledController.CreateStudentCourseAsync(correctStudentId, correctCourseId, dummyEnrolledCourseDTO);
+
+            //assert
+            var objectResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<string>(objectResult.Value);
+        }
+
+        [Theory]
+        [InlineData(-1, 1)]
+        [InlineData(1, -1)]
+        [InlineData(-1, -1)]
+        public async Task CreateStudentCourseAsync_wrongIds_ReturnsBadRequest(int studentId, int courseId)
+        {
+            //act 
+            var result = await enrolledController.CreateStudentCourseAsync(studentId, courseId, dummyEnrolledCourseDTO);
+
+            //assert
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Theory]
+        [InlineData(-1, 1)]
+        [InlineData(1, -1)]
+        [InlineData(-1, -1)]
+        public async Task DeleteStudentCourseAsync_wrongIds_ReturnsBadRequest(int studentId, int courseId)
+        {
+            //act 
+            var result = await enrolledController.DeleteStudentCourseAsync(studentId, courseId);
+
+            //assert
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Fact]
+        public async Task DeleteStudentCourseAsync_enrolledCourseNotExistant_ReturnsNotFound()
+        {
+            //arrange
+            studentServiceMock
+                .Setup(m => m.GetEnrolledCourseAsync(It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync((EnrolledCourse?)null);
+
+            studentServiceMock
+               .Setup(m => m.StudentExistsAsync(It.IsAny<int>()))
+               .ReturnsAsync(true);
+
+            courseServiceMock
+               .Setup(m => m.CourseExists(It.IsAny<int>()))
+               .ReturnsAsync(true);
+
+            //act 
+            var result = await enrolledController.DeleteStudentCourseAsync(5, 5);
+
+            //assert
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task UpdateStudentCourseAsync_HappyPathFullUpdate_ReturnsNoContent()
+        {
+            //arrange
+            studentServiceMock
+                .Setup(m => m.GetEnrolledCourseAsync(It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(new EnrolledCourse(1,1, new DateTimeRange(DateOnly.FromDateTime(DateTime.Now), DateOnly.FromDateTime(DateTime.Now))));
+
+            //act
+            var result = await enrolledController.UpdateStudentCourseAsync(5,5, dummyEnrolledCourseDTO);
+
+            //assert
+            Assert.IsType<NoContentResult>(result);
+        }
+
+        [Fact]
+        public async Task UpdateStudentCourseAsync_HappyPathPartialUpdate_ReturnsNoContent()
+        {
+            //arrange
+            var enrolledCourseDTO = new EnrolledCourseRequestDTO()
+            {
+                EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10))
+            };
+
+            studentServiceMock
+                .Setup(m => m.GetEnrolledCourseAsync(It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(new EnrolledCourse(1, 1, new DateTimeRange(DateOnly.FromDateTime(DateTime.Now), DateOnly.FromDateTime(DateTime.Now))));
+
+            //act
+            var result = await enrolledController.UpdateStudentCourseAsync(5, 5, enrolledCourseDTO);
+
+            //assert
+            Assert.IsType<NoContentResult>(result);
+        }
+
+        [Theory]
+        [InlineData(-1, 1)]
+        [InlineData(1, -1)]
+        [InlineData(-1, -1)]
+        public async Task UpdateStudentCourseAsync_WrongIds_ReturnsBadRequest(int studentId, int courseId)
+        {
+            //act
+            var result = await enrolledController.UpdateStudentCourseAsync(studentId, courseId, dummyEnrolledCourseDTO);
+
+            //assert
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Fact]
+        public async Task UpdateStudentCourseAsync_NotExistantEnrolledCourse_ReturnsNotFound()
+        {
+            //arrange
+            studentServiceMock
+                .Setup(m => m.GetEnrolledCourseAsync(It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync((EnrolledCourse?)null);
+
+            //act
+            var result = await enrolledController.UpdateStudentCourseAsync(5,5, dummyEnrolledCourseDTO);
+
+            //assert
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task UpdateStudentCourseAsync_EndTimeBeforeStartTimeThrowsException_ReturnsBadRequest()
+        {
+            //arrange
+            studentServiceMock
+              .Setup(m => m.GetEnrolledCourseAsync(It.IsAny<int>(), It.IsAny<int>()))
+              .ThrowsAsync(new AutoMapperMappingException("", new DateRangeException()));
+
+            //act
+            var result = await enrolledController.UpdateStudentCourseAsync(5, 5, dummyEnrolledCourseDTO);
+
+            //assert
+            var objectresult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<string>(objectresult.Value);
         }
     }
 }

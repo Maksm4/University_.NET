@@ -69,7 +69,7 @@ namespace UniversityAPI.Controllers
         {
             try
             {
-                if (studentId < 0 || enrolledCourseDTO == null)
+                if (courseId < 0 || studentId < 0 || enrolledCourseDTO == null)
                 {
                     return BadRequest();
                 }
@@ -122,8 +122,7 @@ namespace UniversityAPI.Controllers
         {
             try
             {
-                if (studentId < 0 || enrolledCourseDTO == null ||
-                    enrolledCourseDTO.StartDate?.CompareTo(enrolledCourseDTO.EndDate) > 0)
+                if (courseId < 0 || studentId < 0 || enrolledCourseDTO == null)
                 {
                     return BadRequest();
                 }
@@ -141,7 +140,7 @@ namespace UniversityAPI.Controllers
 
             }catch (AutoMapperMappingException ex) when (ex.InnerException is DateRangeException)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.InnerException.Message);
             }
         }
     }
