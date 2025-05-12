@@ -10,5 +10,6 @@ namespace ApplicationCore.DTO
         public string CourseDescription { get; set; }
         public bool IsActive { get; set; }
         public DateTimeRange DateTimeRange { get; set; }
+        public IReadOnlyCollection<CourseModuleWithMarkDTO> courseModuleWithMarkDTOs { get; set; }
     }
 }

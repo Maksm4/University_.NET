@@ -72,7 +72,7 @@ namespace ApplicationCore.Service
                 return [];
             }
 
-            var courseModules = course.GetCourseModules();
+            var courseModules = course.CourseModules;
             var studentMarks = student.GetMarksFromCourse(courseId);
 
             return courseModules.Select(cm =>
@@ -84,6 +84,52 @@ namespace ApplicationCore.Service
                     CourseModuleId = cm.CourseModuleId
                 };
             }).ToList();
+        }
+
+        public async Task<int?> CreateCourseAsync(Course course)
+        {
+            if (course == null)
+            {
+                return null;
+            }
+
+            course = await courseRepository.CreateAsync(course);
+            if (course == null)
+            {
+                return null;
+            }
+
+            await courseRepository.SaveAsync();
+            return course.CourseId;
+        }
+
+        public async Task<bool> DeleteCourseAsync(int courseId)
+        {
+            var course = await courseRepository.FindByIdAsync(courseId);
+
+            if (course == null)
+            {
+                return false;
+            }
+
+            courseRepository.Delete(course);
+            await courseRepository.SaveAsync();
+            return true;
+        }
+
+        public async Task SaveAsync()
+        {
+            await courseRepository.SaveAsync();
+        }
+
+        public async Task<bool> CourseExists(int courseId)
+        {
+            var course = await courseRepository.FindByIdAsync(courseId);
+            if (course == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

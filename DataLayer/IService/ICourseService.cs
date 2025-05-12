@@ -11,5 +11,9 @@ namespace ApplicationCore.IService
         Task<IReadOnlyCollection<CourseModule>> GetCourseModules(int courseId);
         Task<IReadOnlyCollection<CourseWithEnrollmentStatusDTO>> GetAllCoursesWithEnrollmentStatusAsync(int studentId);
         Task<IReadOnlyCollection<CourseModuleWithMarkDTO>> GetCourseModulesWithMarkAsync(int studentId, int courseId);
+        Task<int?> CreateCourseAsync(Course course);
+        Task<bool> DeleteCourseAsync(int courseId);
+        Task SaveAsync();
+        Task<bool> CourseExists(int courseId);
     }
 }

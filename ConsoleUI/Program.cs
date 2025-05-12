@@ -51,11 +51,11 @@ namespace ConsoleUI
                                 Console.WriteLine("enter student id");
                                 if (int.TryParse(Console.ReadLine(), out int studentId))
                                 {
-                                    var courses = GetStudentCourses(studentId).Result;
-                                    foreach (var course in courses)
-                                    {
-                                        Console.WriteLine($"{course.Name} {course.Description}");
-                                    }
+                                    //var courses = GetStudentCourses(studentId).Result;
+                                    //foreach (var course in courses)
+                                    //{
+                                    //    Console.WriteLine($"{course.Name} {course.Description}");
+                                    //}
                                 }
                             }
                             break;
@@ -65,12 +65,12 @@ namespace ConsoleUI
                                 if (int.TryParse(Console.ReadLine(), out int studentId) &&
                                     int.TryParse(Console.ReadLine(), out int courseId))
                                 {
-                                    var studentMarks = GetMarksFromCourse(studentId, courseId).Result;
+                                    //var studentMarks = GetMarksFromCourse(studentId, courseId).Result;
                                     Console.WriteLine($"Marks for:\n studentId: {studentId} courseId: {courseId}");
-                                    foreach (var mark in studentMarks)
-                                    {
-                                        Console.WriteLine($"courseModule: {mark.CourseModuleId} mark: {mark.Mark}");
-                                    }
+                                    //foreach (var mark in studentMarks)
+                                    //{
+                                    //    Console.WriteLine($"courseModule: {mark.CourseModuleId} mark: {mark.Mark}");
+                                    //}
                                 }
                             }
                             break;
@@ -98,18 +98,18 @@ namespace ConsoleUI
             return mapper.Map<IEnumerable<StudentResponse>>(students);
         }
 
-        private async static Task<IEnumerable<CourseResponse>> GetStudentCourses(int studentId)
-        {
-            var studentCourses = await studentService.GetCoursesTakenByStudentAsync(studentId);
+        //private async static Task<IEnumerable<CourseResponse>> GetStudentCourses(int studentId)
+        //{
+        //    var studentCourses = await studentService.GetCoursesTakenByStudentAsync(studentId);
 
-            return mapper.Map<IEnumerable<CourseResponse>>(studentCourses);
-        }
+        //    return mapper.Map<IEnumerable<CourseResponse>>(studentCourses);
+        //}
 
-        private async static Task<IEnumerable<MarkResponse>> GetMarksFromCourse(int studentId, int courseId)
-        {
-            var markedModules =await studentService.GetStudentMarksForCourseAsync(studentId, courseId);
+        //private async static Task<IEnumerable<MarkResponse>> GetMarksFromCourse(int studentId, int courseId)
+        //{
+        //    var markedModules =await studentService.GetStudentMarksForCourseAsync(studentId, courseId);
 
-            return mapper.Map<IEnumerable<MarkResponse>>(markedModules);
-        }
+        //    return mapper.Map<IEnumerable<MarkResponse>>(markedModules);
+        //}
     }
 }

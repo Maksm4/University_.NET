@@ -11,7 +11,7 @@ namespace Domain.Models
         public IReadOnlyCollection<MarkedModule> MarkedModules => _markedModules.AsReadOnly();
 
         private EnrolledCourse() { }
-        internal EnrolledCourse(int learningPlanId, int courseId, DateTimeRange dateTimeRange)
+        public EnrolledCourse(int learningPlanId, int courseId, DateTimeRange dateTimeRange)
         {
             LearningPlanId = learningPlanId;
             CourseId = courseId;

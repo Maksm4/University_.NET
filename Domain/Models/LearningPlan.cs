@@ -25,6 +25,11 @@
             _enrolledCourses.Add(course);
         }
 
+        public void RemoveCourse(EnrolledCourse course)
+        {
+            _enrolledCourses.Remove(course);
+        }
+
         public EnrolledCourse? GetEnrolledCourse(int courseId)
         {
             return EnrolledCourses.FirstOrDefault(ec => ec.CourseId == courseId);
